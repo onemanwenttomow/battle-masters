@@ -2,7 +2,7 @@
     <div class="container">
         <div class="board">
             <fragment v-for="row in board">
-                <div v-for="hex in row" class="hexagon" :class="hex"></div>
+                <div v-for="hex in row.type" class="hexagon" :class="[hex, row.row]"></div>
 
             </fragment>
         </div>
@@ -74,12 +74,76 @@ export default {
 }
 
 
+.row2 {
+    grid-row: 2/3;
+    transform: translate(-50px, -30px);
+}
+
+.row3 {
+    grid-row: 3/4;
+    transform: translate(0, -60px);
+}
+
+.row4 {
+    grid-row: 4/5;
+    transform: translate(-50px, -90px);
+}
+
+.row5 {
+    grid-row: 5/6;
+    transform: translate(0, -120px);
+}
+
+.row6 {
+    grid-row: 6/7;
+    transform: translate(-50px, -150px);
+}
+
+.row7 {
+    grid-row: 7/8;
+    transform: translate(0, -180px);
+}
+
+.row8 {
+    grid-row: 8/9;
+    transform: translate(-50px, -210px);
+}
+
+.row9 {
+    grid-row: 9/10;
+    transform: translate(0, -240px);
+}
+
+.row10 {
+    grid-row: 10/11;
+    transform: translate(-50px, -270px);
+}
+
+.row11 {
+    grid-row: 11/12;
+    transform: translate(0, -300px);
+}
+
+.row12 {
+    grid-row: 12/13;
+    transform: translate(-50px, -330px);
+}
+
+
 .road {
     background-color: #8e5a46;
 }
 
 .field {
     background-color: #76a828;
+}
+
+.field:nth-child(4n) {
+    filter: saturate(0.7);
+}
+
+.field:nth-child(7n) {
+    filter: grayscale(0.4);
 }
 
 .river {
