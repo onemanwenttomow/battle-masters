@@ -1,0 +1,19 @@
+{
+  "name": "nuxt-battle-masters",
+  "version": "1.0.0",
+  "description": "Battle Masters",
+  "author": "Peter Anderson",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.9.5",
+    "nuxt": "^2.0.0",
+    "vue-fragment": "^1.5.1"
+  },
+  "devDependencies": {}
+}
