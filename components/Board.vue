@@ -2,7 +2,12 @@
     <div class="container">
         <div class="board">
             <fragment v-for="row in board">
-                <div v-for="hex in row.type" class="hexagon" :class="[hex, row.row]"></div>
+                <div 
+                    v-for="(hex, index) in row.type" 
+                    class="hexagon" 
+                    :class="[hex, row.row]"
+                    @click="testing(hex, row.row, index)"
+                ></div>
 
             </fragment>
         </div>
@@ -18,6 +23,11 @@ export default {
   props: ['board'],
   mounted: function() {
     console.log("board mounted!", this.board);
+  },
+  methods: {
+      testing: function(squareType, row, index) {
+          console.log("testing", squareType, row, index)
+      }
   }
 }
 </script>
