@@ -43,6 +43,7 @@ export default {
 .board {
     display: grid;
     grid-template-columns: repeat(12, 100px);
+    height: 1050px;
     width: 1200px;
     overflow: hidden;
 }

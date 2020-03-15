@@ -1,8 +1,9 @@
 <template>
-  <div class="out-container">
-    <div>
-      <Board :board="board"/>
-    </div>
+  <div class="outer-container">
+      <div>
+        <div class="card" v-if="setup.armies.length" v-for="unit in setup.armies[0]">{{unit.name}}</div>
+      </div>
+      <Board :board="setup.board"/>
   </div>
 </template>
 
@@ -18,12 +19,13 @@ export default {
   }, 
   data() {
     return {
-      board: []
+      setup: {}
     }
   },
   async asyncData ({ $axios }) {
-    const board = await $axios.$get('/api/initial-board');
-    return { board }
+    const setup = await $axios.$get('/api/initial-board');
+    console.log('setup: ',setup);
+    return { setup }
   },
   mounted: function() {
     console.log("index mounted")
@@ -32,34 +34,38 @@ export default {
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.outer-container {
+  display: grid;
+  grid-template-columns: 1fr 9fr;
 }
 
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+.card {
+  background-color: white;
   display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+  /* width: 300px; */
+  min-height: 90px;
+  border: 3px solid blue;
+  padding: 15px;
+  margin: calc(50vh - 30px) auto 0 auto;
+  box-shadow: 5px -5px 0 -3px white, 5px -5px green,
+        10px -10px 0 -3px white, 10px -10px yellow, 
+        15px -15px 0 -3px white, 15px -15px orange, 
+        20px -20px 0 -3px white, 20px -20px red; 
+  transition: box-shadow 1s, top 1s, left 1s;
+  position: relative;
+  top: 0;
+  left: 0;
+  cursor: pointer;
 }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
+.card:hover {
+  top: -20px;
+  left: 20px;
+  box-shadow: 0 0 0 -3px white, 0 0 0 0 green,
+      0 0 0 -3px white, 0 0 0 0 yellow,
+      0 0 0 -3px white, 0 0 0 0 orange,
+      0 0 0 -3px  white, 0 0 0 0 red;
 }
 
-.links {
-  padding-top: 15px;
-}
+
 </style>
