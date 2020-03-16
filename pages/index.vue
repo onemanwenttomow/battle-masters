@@ -1,7 +1,7 @@
 <template>
   <div class="outer-container">
       <div>
-        <div class="card" v-if="setup.armies.length" v-for="unit in setup.armies[0]">{{unit.name}}</div>
+        <div class="cards" v-if="setup.armies.length" @click="selectCard">{{setup.armies[0][0].name}}</div>
       </div>
       <Board :board="setup.board"/>
   </div>
@@ -24,11 +24,17 @@ export default {
   },
   async asyncData ({ $axios }) {
     const setup = await $axios.$get('/api/initial-board');
-    console.log('setup: ',setup);
+    // console.log('setup: ',setup);
     return { setup }
   },
   mounted: function() {
     console.log("index mounted")
+  },
+  methods: {
+    selectCard: function() {
+      console.log("selcted!", this.setup.armies[0].length)
+      this.setup.armies[0].shift();
+    }
   }
 };
 </script>
@@ -39,10 +45,10 @@ export default {
   grid-template-columns: 1fr 9fr;
 }
 
-.card {
+.cards {
   background-color: white;
   display: block;
-  /* width: 300px; */
+  width: 200px;
   min-height: 90px;
   border: 3px solid blue;
   padding: 15px;
@@ -58,14 +64,14 @@ export default {
   cursor: pointer;
 }
 
-.card:hover {
+/* .card:hover {
   top: -20px;
   left: 20px;
   box-shadow: 0 0 0 -3px white, 0 0 0 0 green,
       0 0 0 -3px white, 0 0 0 0 yellow,
       0 0 0 -3px white, 0 0 0 0 orange,
       0 0 0 -3px  white, 0 0 0 0 red;
-}
+} */
 
 
 </style>
