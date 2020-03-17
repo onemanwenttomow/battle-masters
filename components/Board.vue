@@ -7,8 +7,9 @@
                     class="hexagon" 
                     :class="[hex, row.row]"
                     @click="testing(hex, row.row, index)"
-                ></div>
-
+                >
+                <slot />
+                </div>
             </fragment>
         </div>
     </div>
@@ -22,7 +23,7 @@ export default {
   },
   props: ['board'],
   mounted: function() {
-    console.log("board mounted!", this.board);
+    // console.log("board mounted!", this.board);
   },
   methods: {
       testing: function(squareType, row, index) {

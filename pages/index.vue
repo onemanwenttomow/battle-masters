@@ -1,21 +1,23 @@
 <template>
   <div class="outer-container">
-      <div>
-        <div class="cards" v-if="setup.armies.length" @click="selectCard">{{setup.armies[0][0].name}}</div>
-      </div>
-      <Board :board="setup.board"/>
+      <ArmyCards :armies="setup.armies"/>
+      <Board :board="setup.board">
+      </Board>
   </div>
 </template>
 
 <script>
 import Logo from "~/components/Logo.vue";
 import Board from "~/components/Board.vue";
+import ArmyCards from "~/components/Army-Card.vue";
+
 
 
 export default {
   components: {
     Logo,
-    Board
+    Board,
+    ArmyCards
   }, 
   data() {
     return {
@@ -42,7 +44,11 @@ export default {
 <style>
 .outer-container {
   display: grid;
-  grid-template-columns: 1fr 9fr;
+  grid-template-columns: 150px 9fr;
+}
+
+.pink {
+  background-color: hotpink;
 }
 
 .cards {
@@ -52,7 +58,7 @@ export default {
   min-height: 90px;
   border: 3px solid blue;
   padding: 15px;
-  margin: calc(50vh - 30px) auto 0 auto;
+  /* margin: calc(50vh - 30px) auto 0 auto; */
   box-shadow: 5px -5px 0 -3px white, 5px -5px green,
         10px -10px 0 -3px white, 10px -10px yellow, 
         15px -15px 0 -3px white, 15px -15px orange, 

@@ -4,7 +4,7 @@ const { board } = require('./board');
 const { armies } = require('./armies');
 
 app.get("/initial-board", (req, res) => {
-    console.log("made it to api");
+    // console.log("made it to api");
     res.json(
         {
             board,
