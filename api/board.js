@@ -41,7 +41,7 @@ module.exports.board = [
     },
     {
         row: 'row11',
-        type: ['field', 'field', 'road', 'field', 'field', 'field', 'road', 'field', 'field', 'field', 'road', 'field', 'field'],
+        type: ['field', 'field', 'road', 'field', 'field', 'field', 'road', 'field', 'field', 'field', 'road', 'field'],
     },
     {
         row: 'row12',

@@ -7,6 +7,8 @@
                     class="hexagon" 
                     :class="[hex, row.row]"
                     @click="testing(hex, row.row, index)"
+                    @dragover.prevent
+                    @drop.prevent="drop"
                 >
                 <slot />
                 </div>
@@ -26,9 +28,21 @@ export default {
     // console.log("board mounted!", this.board);
   },
   methods: {
-      testing: function(squareType, row, index) {
-          console.log("testing", squareType, row, index)
-      }
+        testing: function(squareType, row, index) {
+            console.log("testing", squareType, row, index)
+        },
+        drop: function(e) {
+            console.log("DROP!", !Array.from(e.target.classList).includes('river'));
+            console.log("children?", e.target.children)
+            const piece = document.getElementById(e.dataTransfer.getData('id'));
+            if (!Array.from(e.target.classList).includes('river')) {
+                piece.style.top = -45 + 'px';
+                piece.style.left = -40 + 'px';
+                piece.style.zIndex = 10;
+                e.target.appendChild(piece)
+            } 
+            piece.style.opacity = 1;
+        }
   }
 }
 </script>
@@ -46,7 +60,7 @@ export default {
     grid-template-columns: repeat(12, 100px);
     height: 1050px;
     width: 1200px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .hexagon {

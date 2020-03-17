@@ -1,11 +1,13 @@
 <template>
     <div>
         <div 
-            class="piece" 
+            class="piece"
+            :id="card.id"
             v-for="card in armies[0]"
             draggable="true"
             @dragstart="dragStart"
-            @dragover.prevent
+            @dragover.stop
+            @dragend.prevent="dragEnd"
         ></div>
     </div>
 </template>
@@ -23,10 +25,15 @@ export default {
   methods: {
     dragStart: function(e) {
         const target = e.target;
-        console.log("drag start!", e)
+        e.dataTransfer.setData('id', e.target.id)
+        console.log("drag start!", e, e.target.id)
         setTimeout(function(){
-            target.style.display = "none";
+            target.style.opacity = 0.3;
         }, 0)
+    },
+    dragEnd: function(e) {
+      console.log("drag end: ", e);
+      e.target.style.opacity = 1;
     }
   }
 }
@@ -48,6 +55,9 @@ export default {
   background-color: #64C7CC;
   margin: 50px;
   background-image: url("/tile.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: grabbing;
 
 }
 
