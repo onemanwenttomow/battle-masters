@@ -4,6 +4,7 @@
             class="piece"
             :id="card.id"
             v-for="card in armies[0]"
+            :key="card.id"
             draggable="true"
             @dragstart="dragStart"
             @dragover.stop
@@ -25,14 +26,26 @@ export default {
   methods: {
     dragStart: function(e) {
         const target = e.target;
+        let column, row;
         e.dataTransfer.setData('id', e.target.id)
-        console.log("drag start!", e, e.target.id)
+        const rowClass = Array.from(e.target.parentNode.classList).filter(str => str.startsWith('row'));
+        const fullRow = document.getElementsByClassName(rowClass);
+        for (let i = 0; i < fullRow.length; i++) {
+          if (fullRow[i] === e.target.parentNode) {
+            column = i;
+            break;
+          }
+        }
+        if (rowClass.length) {
+          row = rowClass[0].slice(3) -1;
+        }
+          console.log("column: ", column, "row: ", row)
+
         setTimeout(function(){
             target.style.opacity = 0.3;
         }, 0)
     },
     dragEnd: function(e) {
-      console.log("drag end: ", e);
       e.target.style.opacity = 1;
     }
   }

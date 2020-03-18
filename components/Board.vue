@@ -32,8 +32,6 @@ export default {
             console.log("testing", squareType, row, index)
         },
         drop: function(e) {
-            console.log("DROP!", !Array.from(e.target.classList).includes('river'));
-            console.log("children?", e.target.children)
             const piece = document.getElementById(e.dataTransfer.getData('id'));
             if (!Array.from(e.target.classList).includes('river')) {
                 piece.style.top = -45 + 'px';
