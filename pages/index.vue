@@ -1,7 +1,7 @@
 <template>
   <div class="outer-container">
-      <ArmyCards :armies="setup.armies"/>
-      <Board :board="setup.board">
+      <ArmyCards :armies="setup.armies" @rowAndColumn="updateRowAndCol"/>
+      <Board :board="setup.board" :rowAndColumn="rowAndColumn">
       </Board>
   </div>
 </template>
@@ -21,7 +21,8 @@ export default {
   }, 
   data() {
     return {
-      setup: {}
+      setup: {},
+      rowAndColumn: {}
     }
   },
   async asyncData ({ $axios }) {
@@ -36,6 +37,9 @@ export default {
     selectCard: function() {
       console.log("selcted!", this.setup.armies[0].length)
       this.setup.armies[0].shift();
+    },
+    updateRowAndCol: function(rowAndColumn) {
+      this.rowAndColumn = rowAndColumn
     }
   }
 };

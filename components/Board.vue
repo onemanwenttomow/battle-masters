@@ -23,7 +23,7 @@ export default {
     return {
     }
   },
-  props: ['board'],
+  props: ['board', 'rowAndColumn'],
   mounted: function() {
     // console.log("board mounted!", this.board);
   },
@@ -33,6 +33,11 @@ export default {
         },
         drop: function(e) {
             const piece = document.getElementById(e.dataTransfer.getData('id'));
+            const row = this.rowAndColumn.row;
+            const column = this.rowAndColumn.column
+            console.log('rowAndColumn in BOARD: ',row, column);
+            console.log('row' + (row))
+            
             if (!Array.from(e.target.classList).includes('river')) {
                 piece.style.top = -45 + 'px';
                 piece.style.left = -40 + 'px';
@@ -162,13 +167,13 @@ export default {
     background-color: #76a828;
 }
 
-.field:nth-child(4n) {
+/* .field:nth-child(4n) {
     filter: saturate(0.7);
 }
 
 .field:nth-child(7n) {
     filter: grayscale(0.4);
-}
+} */
 
 .river {
     background-color: #5babd5;
