@@ -9,6 +9,8 @@
       @dragstart="dragStart"
       @dragover.stop
       @dragend.prevent="dragEnd"
+      :style="{ backgroundImage: `url(${card.img})`}"
+
     ></div>
   </div>
 </template>
@@ -89,7 +91,6 @@ export default {
   height: 46.19px;
   background-color: #64c7cc;
   margin: 50px;
-  background-image: url("/tile.png");
   background-repeat: no-repeat;
   background-position: center;
   cursor: grabbing;
