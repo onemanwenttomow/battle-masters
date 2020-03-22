@@ -53,8 +53,8 @@ export default {
 				e.target.appendChild(piece);
             }
             piece.style.opacity = 1;
-            console.log("this.selectedRow: ", this.selectedRow, this.selectedColumn)
-            !isNaN(row) && this.$emit("newposition", {row, col});
+            console.log("this.selectedRow: ", this.selectedRow, this.selectedColumn);
+            !isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}]);
             this.selectedRow = null;
             this.selectedColumn = null;
 		}

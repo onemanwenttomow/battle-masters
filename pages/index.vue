@@ -28,7 +28,7 @@ export default {
 		return { setup };
 	},
 	mounted: function() {
-		console.log("index mounted");
+		console.log("index mounted", this.setup);
 	},
 	methods: {
 		selectCard: function() {
@@ -38,8 +38,10 @@ export default {
 			this.rowAndColumn = rowAndColumn;
 		},
 		updatePositions: function(positions) {
-			this.boardPositions.push(positions);
-			console.log('this.boardPositions: ',this.boardPositions);
+			this.boardPositions = this.boardPositions.filter(pos => {
+				return pos.row != positions[1].row && pos.col != positions[1].col
+			});
+			this.boardPositions.push(positions[0]);
 		}
 	}
 };
