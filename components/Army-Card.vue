@@ -19,9 +19,11 @@
 <script>
 export default {
 	data() {
-		return {};
+		return {
+			piecesThatCanMove: []
+		};
 	},
-	props: ["armies"],
+	props: ["armies", "boardPositions"],
 	methods: {
 		dragStart: function(e) {
 			const target = e.target;

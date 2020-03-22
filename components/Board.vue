@@ -18,7 +18,7 @@
                     ]"
 					@click="testing(hex, row.row, column)"
 					@dragover.prevent
-					@drop.prevent="drop"
+					@drop.prevent="drop($event, row.row, column)"
 				>
 					<slot />
 				</div>
@@ -35,17 +35,16 @@ export default {
             selectedColumn: null
         };
 	},
-	props: ["board", "rowAndColumn"],
+	props: ["board", "rowAndColumn", "boardPositions"],
 	methods: {
 		testing: function(squareType, row, index) {
 			console.log("testing squareType, row, col: ", squareType, row.slice(3), index);
 		},
-		drop: function(e) {
+		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
-			const row = this.rowAndColumn.row;
-			const column = this.rowAndColumn.column;
-			console.log("rowAndColumn in BOARD: ", row, column);
-			console.log("row" + row);
+            console.log("rowAndColumn in BOARD: ", Number(row.slice(3) -1) , col);
+            row = Number(row.slice(3) -1);
+            console.log('e.currentTarget: ',e.target);
 
 			if (!Array.from(e.target.classList).includes("river")) {
 				piece.style.top = -45 + "px";
@@ -54,6 +53,8 @@ export default {
 				e.target.appendChild(piece);
             }
             piece.style.opacity = 1;
+            console.log("this.selectedRow: ", this.selectedRow, this.selectedColumn)
+            !isNaN(row) && this.$emit("newposition", {row, col});
             this.selectedRow = null;
             this.selectedColumn = null;
 		}

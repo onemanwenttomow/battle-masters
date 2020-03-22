@@ -1,7 +1,7 @@
 <template>
 	<div class="outer-container">
-		<ArmyCards :armies="setup.armies" @rowAndColumn="updateRowAndCol" />
-		<Board :board="setup.board" :rowAndColumn="rowAndColumn"></Board>
+		<ArmyCards :armies="setup.armies" @rowAndColumn="updateRowAndCol" :boardPositions="boardPositions" />
+		<Board :board="setup.board" :rowAndColumn="rowAndColumn" :boardPositions="boardPositions" @newposition="updatePositions"></Board>
 	</div>
 </template>
 
@@ -19,12 +19,12 @@ export default {
 	data() {
 		return {
 			setup: {},
-			rowAndColumn: {}
+			rowAndColumn: {},
+			boardPositions: []
 		};
 	},
 	async asyncData({ $axios }) {
 		const setup = await $axios.$get("/api/initial-board");
-		// console.log('setup: ',setup);
 		return { setup };
 	},
 	mounted: function() {
@@ -36,6 +36,10 @@ export default {
 		},
 		updateRowAndCol: function(rowAndColumn) {
 			this.rowAndColumn = rowAndColumn;
+		},
+		updatePositions: function(positions) {
+			this.boardPositions.push(positions);
+			console.log('this.boardPositions: ',this.boardPositions);
 		}
 	}
 };
