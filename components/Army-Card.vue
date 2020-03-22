@@ -10,7 +10,6 @@
 			@dragover.stop
 			@dragend.prevent="dragEnd"
 			@mousedown="showPossibleMoves"
-			@mouseup="hidePossibleMoves"
 			@click="selected"
 			:style="{ backgroundImage: `url(${card.img})` }"
 		></div>
@@ -27,7 +26,6 @@ export default {
 		dragStart: function(e) {
 			const target = e.target;
 			e.dataTransfer.setData("id", e.target.id);
-			
 			setTimeout(function() {
 				target.style.opacity = 0.3;
 			}, 0);
@@ -54,41 +52,12 @@ export default {
 		},
 		showPossibleMoves: function(e) {
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
-			const row = rowAndColumn.row;
-			const column = rowAndColumn.column;
-			const possibleMoves = [];
-			console.log("row: ", row % 2);
-			let oddRow;
-			row % 2 === 0 ? (oddRow = 1) : (oddRow = -1);
-			console.log("oddRow: ", oddRow);
-			possibleMoves.push(document.getElementsByClassName("row" + (row + 1))[column - 1]);
-			possibleMoves.push(document.getElementsByClassName("row" + (row + 1))[column + 1]);
-			possibleMoves.push(document.getElementsByClassName("row" + row)[column + oddRow]);
-			possibleMoves.push(document.getElementsByClassName("row" + row)[column]);
-			possibleMoves.push(document.getElementsByClassName("row" + (row + 2))[column + oddRow]);
-			possibleMoves.push(document.getElementsByClassName("row" + (row + 2))[column]);
-			// console.log('possibleMoves: ',possibleMoves);
-			possibleMoves.map(elem => {
-				if (elem) {
-					elem.classList.add("highlighted");
-				}
-			});
 			this.$emit("rowAndColumn", rowAndColumn);
-		},
-		hidePossibleMoves: function() {
-			let hightlightsToRemove = document.getElementsByClassName("highlighted");
-			console.log('possibleMoves in hide: ',hightlightsToRemove);
-			for (var i = 0; i < hightlightsToRemove.length; i++) {
-				console.log('posibleMoves[i]: ',hightlightsToRemove[i], i);
-				hightlightsToRemove[i].classList.remove('highlighted');
-			}
-
 		},
 		dragEnd: function(e) {
 			e.target.style.opacity = 1;
 		},
 		selected: function(e) {
-			console.log("selected...");
 			e.target.classList.add("selected");
 		}
 	}

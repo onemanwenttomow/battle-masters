@@ -32,7 +32,6 @@ export default {
 	},
 	methods: {
 		selectCard: function() {
-			console.log("selcted!", this.setup.armies[0].length);
 			this.setup.armies[0].shift();
 		},
 		updateRowAndCol: function(rowAndColumn) {
