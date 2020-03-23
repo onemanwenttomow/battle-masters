@@ -2,6 +2,7 @@
 	<div>
 		<div
 			class="piece"
+			:class="[unitsToMove.includes(card.id) ? 'selected' : '']"
 			:id="card.id"
 			v-for="card in armies[0]"
 			:key="card.id"
@@ -10,7 +11,7 @@
 			@dragover.stop
 			@dragend.prevent="dragEnd"
 			@mousedown="showPossibleMoves"
-			@click="selected"
+			@click="selected(card.id)"
 			:style="{ backgroundImage: `url(${card.img})` }"
 		></div>
 	</div>
@@ -23,7 +24,7 @@ export default {
 			piecesThatCanMove: []
 		};
 	},
-	props: ["armies", "boardPositions"],
+	props: ["armies", "boardPositions", "unitsToMove"],
 	methods: {
 		dragStart: function(e) {
 			const target = e.target;
@@ -59,8 +60,8 @@ export default {
 		dragEnd: function(e) {
 			e.target.style.opacity = 1;
 		},
-		selected: function(e) {
-			e.target.classList.add("selected");
+		selected: function(card) {
+			console.log("show extra info about", card)
 		}
 	}
 };
@@ -112,6 +113,7 @@ export default {
 
 .selected {
 	transform: scale(1);
+	filter: brightness(1.5);
 	animation: pulse 2s infinite;
 }
 

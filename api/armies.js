@@ -40,7 +40,7 @@ module.exports.armies = [
         new Imperial("Imperial Archers of Grunburg", 3,  'grunberg-archers', '/imperial-3.png', 'archer'),
         new Imperial("Men-At-Arms of Reikwald", 3, 'reikwald', '/imperial-1.png'), 
         new Imperial("Men-At-Arms of Altdorf", 3, 'altdorf', '/imperial-1.png'), 
-        new Imperial("Men-At-Arms of Grunburg", 3, 'grunburg-arms', '/imperial-4.png'), 
+        new Imperial("Men-At-Arms of Grunburg", 3, 'grunburg-arms', '/imperial-1.png'), 
         new Imperial("Imperial Knights of Duke Blitzen's", 4, 'blitzens', '/imperial-5.png'), 
         new Imperial("Imperial Knights Prince Normand's", 4, 'normands', '/imperial-5.png'),
         new Imperial('Lord Knights of the Empire', 5, 'empire-knights', '/imperial-6.png'), 

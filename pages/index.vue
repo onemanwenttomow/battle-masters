@@ -1,12 +1,23 @@
 <template>
-	<div class="outer-container">
-		<div>
-			<TurnCards :playingcards="setup.mainPlayingCards" />
-			<ArmyCards :armies="setup.armies" @rowAndColumn="updateRowAndCol" :boardPositions="boardPositions" />
-
+	<fragment>
+		<h1>TURN</h1>
+		<div class="outer-container">
+			<div>
+				<TurnCards 
+					v-if="boardPositions.length == 10"
+					:playingcards="setup.mainPlayingCards" 
+					@currentcard="currentCard"
+				/>
+				<ArmyCards 
+					@rowAndColumn="updateRowAndCol" 
+					:armies="setup.armies" 
+					:boardPositions="boardPositions"
+					:unitsToMove="unitsToMove" 
+				/>
+			</div>
+			<Board :board="setup.board" :rowAndColumn="rowAndColumn" :boardPositions="boardPositions" @newposition="updatePositions"></Board>
 		</div>
-		<Board :board="setup.board" :rowAndColumn="rowAndColumn" :boardPositions="boardPositions" @newposition="updatePositions"></Board>
-	</div>
+	</fragment>
 </template>
 
 <script>
@@ -26,7 +37,8 @@ export default {
 		return {
 			setup: {},
 			rowAndColumn: {},
-			boardPositions: []
+			boardPositions: [],
+			unitsToMove: []
 		};
 	},
 	async asyncData({ $axios }) {
@@ -40,14 +52,19 @@ export default {
 		selectCard: function() {
 			this.setup.armies[0].shift();
 		},
+		currentCard: function(card) {
+			console.log("card: ", card);
+			this.unitsToMove = card;
+		},
 		updateRowAndCol: function(rowAndColumn) {
 			this.rowAndColumn = rowAndColumn;
 		},
 		updatePositions: function(positions) {
+		this.boardPositions.push(positions[0]);
 			this.boardPositions = this.boardPositions.filter(pos => {
 				return pos.row != positions[1].row && pos.col != positions[1].col
 			});
-			this.boardPositions.push(positions[0]);
+			console.log("number of units on the board: ", this.boardPositions.length)
 		}
 	}
 };

@@ -13,7 +13,8 @@ export default {
 	mounted: function() {
         console.log("playingcards: ", this.playingcards);
         this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
-        console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards);
+        console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards[0]);
+        this.$emit('currentcard', this.shuffledPlayingCards[0])
 	},
 	methods: {
 		shuffle: function(a) {
@@ -29,6 +30,7 @@ export default {
         nextCard: function() {
             this.shuffledPlayingCards.shift();
             console.log('this.playingcards.length: ',this.playingcards.length);
+            this.$emit('currentcard', this.shuffledPlayingCards[0])
         }
 	}
 };
