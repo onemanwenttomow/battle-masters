@@ -1,6 +1,10 @@
 <template>
 	<div class="outer-container">
-		<ArmyCards :armies="setup.armies" @rowAndColumn="updateRowAndCol" :boardPositions="boardPositions" />
+		<div>
+			<TurnCards :playingcards="setup.mainPlayingCards" />
+			<ArmyCards :armies="setup.armies" @rowAndColumn="updateRowAndCol" :boardPositions="boardPositions" />
+
+		</div>
 		<Board :board="setup.board" :rowAndColumn="rowAndColumn" :boardPositions="boardPositions" @newposition="updatePositions"></Board>
 	</div>
 </template>
@@ -9,12 +13,14 @@
 import Logo from "~/components/Logo.vue";
 import Board from "~/components/Board.vue";
 import ArmyCards from "~/components/Army-Card.vue";
+import TurnCards from "~/components/Turn-Cards.vue";
 
 export default {
 	components: {
 		Logo,
 		Board,
-		ArmyCards
+		ArmyCards,
+		TurnCards
 	},
 	data() {
 		return {
