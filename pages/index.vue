@@ -60,11 +60,11 @@ export default {
 			this.rowAndColumn = rowAndColumn;
 		},
 		updatePositions: function(positions) {
-		this.boardPositions.push(positions[0]);
+			this.boardPositions.push(positions[0]);
 			this.boardPositions = this.boardPositions.filter(pos => {
-				return pos.row != positions[1].row && pos.col != positions[1].col
+				return pos.row != positions[1].row || pos.col != positions[1].col
 			});
-			console.log("number of units on the board: ", this.boardPositions.length)
+			console.log('boardPositions: ',this.boardPositions);
 		}
 	}
 };
