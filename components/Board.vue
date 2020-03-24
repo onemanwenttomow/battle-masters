@@ -35,26 +35,26 @@ export default {
             selectedColumn: null
         };
 	},
-	props: ["board", "rowAndColumn", "boardPositions"],
+	props: ["board", "rowAndColumn", "boardPositions", "allPiecesOnBoard"],
 	methods: {
 		testing: function(squareType, row, index) {
 			console.log("testing squareType, row, col: ", squareType, row.slice(3), index);
 		},
 		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
-            console.log("rowAndColumn in BOARD: ", Number(row.slice(3) -1) , col);
             row = Number(row.slice(3) -1);
-            console.log('e.currentTarget: ',e.target);
-
-			if (!Array.from(e.target.classList).includes("river")) {
+			let moveToHighlighted = true;
+			if (this.allPiecesOnBoard) {
+				moveToHighlighted = Array.from(e.target.classList).includes("highlighted")
+			}
+			if (!Array.from(e.target.classList).includes("river") && moveToHighlighted) {
 				piece.style.top = -45 + "px";
 				piece.style.left = -40 + "px";
 				piece.style.zIndex = 10;
 				e.target.appendChild(piece);
+            	!isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}]);
             }
             piece.style.opacity = 1;
-            console.log("this.selectedRow: ", this.selectedRow, this.selectedColumn);
-            !isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}]);
             this.selectedRow = null;
             this.selectedColumn = null;
 		}

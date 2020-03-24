@@ -6,7 +6,7 @@
 			:id="card.id"
 			v-for="card in armies[0]"
 			:key="card.id"
-			draggable="true"
+			:draggable="checkIfDraggable(card.id)"
 			@dragstart="dragStart"
 			@dragover.stop
 			@dragend.prevent="dragEnd"
@@ -24,11 +24,12 @@ export default {
 			piecesThatCanMove: []
 		};
 	},
-	props: ["armies", "boardPositions", "unitsToMove"],
+	props: ["armies", "boardPositions", "unitsToMove", "allPiecesOnBoard"],
 	methods: {
 		dragStart: function(e) {
 			const target = e.target;
 			e.dataTransfer.setData("id", e.target.id);
+			console.log('e.target: ',e.target);
 			setTimeout(function() {
 				target.style.opacity = 0.3;
 			}, 0);
@@ -52,6 +53,14 @@ export default {
 				row,
 				column
 			};
+		},
+		checkIfDraggable: function(id) {
+			if (!this.allPiecesOnBoard) {
+				return true;
+			}
+			if (this.unitsToMove.includes(id)) {
+				return true;
+			}
 		},
 		showPossibleMoves: function(e) {
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);

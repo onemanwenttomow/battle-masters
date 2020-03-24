@@ -9,13 +9,20 @@
 					@currentcard="currentCard"
 				/>
 				<ArmyCards 
-					@rowAndColumn="updateRowAndCol" 
 					:armies="setup.armies" 
 					:boardPositions="boardPositions"
 					:unitsToMove="unitsToMove" 
+					:allPiecesOnBoard="allPiecesOnBoard"
+					@rowAndColumn="updateRowAndCol" 
 				/>
 			</div>
-			<Board :board="setup.board" :rowAndColumn="rowAndColumn" :boardPositions="boardPositions" @newposition="updatePositions"></Board>
+			<Board 
+				:board="setup.board" 
+				:allPiecesOnBoard="allPiecesOnBoard"
+				:rowAndColumn="rowAndColumn" 
+				:boardPositions="boardPositions" 
+				@newposition="updatePositions"
+			/>
 		</div>
 	</fragment>
 </template>
@@ -38,7 +45,8 @@ export default {
 			setup: {},
 			rowAndColumn: {},
 			boardPositions: [],
-			unitsToMove: []
+			unitsToMove: [],
+			allPiecesOnBoard: false
 		};
 	},
 	async asyncData({ $axios }) {
@@ -65,6 +73,9 @@ export default {
 				return pos.row != positions[1].row || pos.col != positions[1].col
 			});
 			console.log('boardPositions: ',this.boardPositions);
+			if(this.boardPositions.length == 10) {
+ 				this.allPiecesOnBoard = true;
+			}
 		}
 	}
 };
