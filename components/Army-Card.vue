@@ -10,7 +10,7 @@
 			@dragstart="dragStart"
 			@dragover.stop
 			@dragend.prevent="dragEnd"
-			@mousedown="showPossibleMoves"
+			@mousedown="showPossibleMoves($event, card.id)"
 			@click="selected(card.id)"
 			:style="{ backgroundImage: `url(${card.img})` }"
 		></div>
@@ -62,7 +62,10 @@ export default {
 				return true;
 			}
 		},
-		showPossibleMoves: function(e) {
+		showPossibleMoves: function(e, id) {
+			if (!this.unitsToMove.includes(id)) {
+				return;
+			}
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$emit("rowAndColumn", rowAndColumn);
 		},

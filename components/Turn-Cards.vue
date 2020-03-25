@@ -28,9 +28,14 @@ export default {
 			return a;
         },
         nextCard: function() {
-            this.shuffledPlayingCards.shift();
-            console.log('this.playingcards.length: ',this.playingcards.length);
-            this.$emit('currentcard', this.shuffledPlayingCards[0])
+			this.shuffledPlayingCards.shift();
+			if (this.shuffledPlayingCards.length === 0) {
+				console.log("made it to re-shuffle")
+				this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
+				console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards);
+			}
+			console.log('this.playingcards.length: ',this.shuffledPlayingCards.length);
+			this.$emit('currentcard', this.shuffledPlayingCards[0])
         }
 	}
 };
