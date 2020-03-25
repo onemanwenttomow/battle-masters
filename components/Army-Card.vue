@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<div
+			v-for="card in armies"
+			:key="card.id"
 			class="piece"
 			:class="[unitsToMove.includes(card.id) ? 'selected' : '']"
 			:id="card.id"
-			v-for="card in armies[0]"
-			:key="card.id"
 			:draggable="checkIfDraggable(card.id)"
 			@dragstart="dragStart"
 			@dragover.stop

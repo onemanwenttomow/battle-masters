@@ -4,12 +4,19 @@
 		<div class="outer-container">
 			<div>
 				<TurnCards 
-					v-if="boardPositions.length == 10"
+					v-if="boardPositions.length == 25"
 					:playingcards="setup.mainPlayingCards" 
 					@currentcard="currentCard"
 				/>
 				<ArmyCards 
-					:armies="setup.armies" 
+					:armies="imperialArmy" 
+					:boardPositions="boardPositions"
+					:unitsToMove="unitsToMove" 
+					:allPiecesOnBoard="allPiecesOnBoard"
+					@rowAndColumn="updateRowAndCol" 
+				/>
+				<ArmyCards 
+					:armies="chaosArmy" 
 					:boardPositions="boardPositions"
 					:unitsToMove="unitsToMove" 
 					:allPiecesOnBoard="allPiecesOnBoard"
@@ -46,6 +53,8 @@ export default {
 			rowAndColumn: {},
 			boardPositions: [],
 			unitsToMove: [],
+			imperialArmy: [],
+			chaosArmy: [],
 			allPiecesOnBoard: false
 		};
 	},
@@ -55,6 +64,10 @@ export default {
 	},
 	mounted: function() {
 		console.log("index mounted", this.setup);
+		this.imperialArmy = this.setup.armies[0];
+		this.chaosArmy = this.setup.armies[1];
+		console.log('this.imperialArmy: ',this.imperialArmy);
+
 	},
 	methods: {
 		selectCard: function() {
@@ -73,7 +86,7 @@ export default {
 				return pos.row != positions[1].row || pos.col != positions[1].col
 			});
 			console.log('boardPositions: ',this.boardPositions);
-			if(this.boardPositions.length == 10) {
+			if(this.boardPositions.length == 25) {
  				this.allPiecesOnBoard = true;
 			}
 		}
