@@ -1,18 +1,18 @@
 <template>
-	<div>
+	<div class="army-container">
 		<div
-			v-for="card in armies"
-			:key="card.id"
+			v-for="{id, img} in armies"
+			:key="id"
 			class="piece"
-			:class="[unitsToMove.includes(card.id) ? 'selected' : '']"
-			:id="card.id"
-			:draggable="checkIfDraggable(card.id)"
+			:class="[piecesThatCanMove.length && piecesThatCanMove.find(p => p.piece === id) && !piecesThatCanMove.find(p => p.piece === id).hasMoved && unitsToMove.includes(id) ? 'selected' : '']"
+			:id="id"
+			:draggable="checkIfDraggable(id)"
 			@dragstart="dragStart"
 			@dragover.stop
-			@dragend.prevent="dragEnd"
-			@mousedown="showPossibleMoves($event, card.id)"
-			@click="selected(card.id)"
-			:style="{ backgroundImage: `url(${card.img})` }"
+			@dragend.prevent="dragEnd($event, id)"
+			@mousedown="showPossibleMoves($event, id)"
+			@click="selected(id)"
+			:style="{ backgroundImage: `url(${img})`}"
 		></div>
 	</div>
 </template>
@@ -69,17 +69,34 @@ export default {
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$emit("rowAndColumn", rowAndColumn);
 		},
-		dragEnd: function(e) {
+		dragEnd: function(e, id) {
 			e.target.style.opacity = 1;
+			if (this.piecesThatCanMove.length && this.piecesThatCanMove.find(p => p.piece === id)) {
+				this.piecesThatCanMove.find(piece => piece.piece == id).hasMoved = true;
+			}
 		},
 		selected: function(card) {
 			console.log("show extra info about", card)
+		}
+	},
+	watch: {
+		unitsToMove: function() {
+			let piecesThatCanMove = this.unitsToMove.map(piece => {
+				return {
+					piece: piece,
+					hasMoved: false,
+					hasAttacked: false,
+					finishedMove: false
+				}
+			})
+			this.piecesThatCanMove = piecesThatCanMove;
 		}
 	}
 };
 </script>
 
 <style>
+
 .army {
 	border: solid 2px green;
 	margin: 10px;
@@ -87,12 +104,17 @@ export default {
 	background-color: bisque;
 }
 
+.hexagon .piece {
+	margin: 50px;
+}
+
 .piece {
 	position: relative;
+	display: inline-block;
 	width: 80px;
 	height: 46.19px;
 	background-color: #64c7cc;
-	margin: 50px;
+	margin: 25px;
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;

@@ -15,13 +15,7 @@
 					:allPiecesOnBoard="allPiecesOnBoard"
 					@rowAndColumn="updateRowAndCol" 
 				/>
-				<ArmyCards 
-					:armies="chaosArmy" 
-					:boardPositions="boardPositions"
-					:unitsToMove="unitsToMove" 
-					:allPiecesOnBoard="allPiecesOnBoard"
-					@rowAndColumn="updateRowAndCol" 
-				/>
+				
 			</div>
 			<Board 
 				:board="setup.board" 
@@ -31,6 +25,13 @@
 				@newposition="updatePositions"
 			/>
 		</div>
+		<ArmyCards 
+			:armies="chaosArmy" 
+			:boardPositions="boardPositions"
+			:unitsToMove="unitsToMove" 
+			:allPiecesOnBoard="allPiecesOnBoard"
+			@rowAndColumn="updateRowAndCol" 
+		/>
 	</fragment>
 </template>
 
@@ -96,8 +97,7 @@ export default {
 
 <style>
 .outer-container {
-	display: grid;
-	grid-template-columns: 150px 9fr;
+
 }
 
 .pink {
