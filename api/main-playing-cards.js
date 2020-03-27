@@ -1,59 +1,233 @@
 module.exports.mainPlayingCards = [
-    ['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms', 'blitzens', 'normands', 'delbornes','empire-knights'],
-    ['bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms',],
-    ['canon'],
-    ['canon'],
-    ['canon'],
-    ['canon'],
-    ['bogenhaffen', 'grunberg-archers'],
-    ['bogenhaffen', 'grunberg-archers'],
-    ['blitzens', 'normands', 'delbornes'],
-    ['blitzens', 'normands', 'delbornes'],
-    ['blitzens', 'normands', 'delbornes'],
-    ['blitzens', 'normands', 'delbornes'],
-    ['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
-    ['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
-    ['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
-    ['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
-    ['empire-knights'],
-    ['empire-knights'],
-    ['empire-knights','blitzens', 'normands', 'delbornes'],
-    ['empire-knights','blitzens', 'normands', 'delbornes'],
-    ['empire-knights','blitzens', 'normands', 'delbornes'],
-    ['empire-knights','blitzens', 'normands', 'delbornes'],
-    ['empire-knights','blitzens', 'normands', 'delbornes', 'plus1'],
-    ['empire-knights', 'plus1'],
-    ['gorefists', 'doomguard', 'doomguard'],
-    ['gorefists', 'doomguard', 'doomguard', 'gorebands', 'finmars'],
-    ['gorefists', 'doomguard', 'doomguard', 'gorebands', 'finmars'],
-    ['gorefists', 'doomguard', 'doomguard', 'gorebands', 'finmars'],
-    ['gorefists', 'doomguard', 'doomguard', 'gorebands', 'finmars'],
-    ['gorefists', 'plus1'],
-    ['gorefists', 'plus1'],
-    ['grom', 'uglub', 'gazkulls', 'zogrods'],
-    ['grom', 'uglub', 'gazkulls', 'zogrods'],
-    ['grom', 'uglub', 'gazkulls', 'zogrods'],
-    ['gorefists', 'blackfangs', 'bogrots'],
-    ['gorefists', 'blackfangs', 'bogrots'],
-    ['gorefists', 'blackfangs', 'bogrots'],
-    ['gorefists', 'blackfangs', 'bogrots'],
-    ['gorefists', 'blackfangs', 'bogrots'],
-    ['grimorg'],
-    ['grimorg'],
-    ['grimorg'],
-    ['grimorg'],
-    ['grimorg'],
-    ['grom', 'uglub', 'gazkulls', 'zogrods', 'bale', 'flint'],
-    ['grom', 'uglub', 'gazkulls', 'zogrods', 'bale', 'flint'],
-    ['grom', 'uglub', 'gazkulls', 'zogrods', 'bale', 'flint', 'doomguard', 'fellmoors', 'gorebands', 'finmars'],
-    ['gorefists', 'grom', 'uglub', 'bale', 'flint'],
-    ['grom', 'uglub', 'gazkulls', 'zogrods', 'bale', 'flint', 'doomguard', 'fellmoors', 'gorebands', 'finmars', 'blackfangs', 'bogrots'],
-    ['blackfangs', 'bogrots', 'movetwice'],
-    ['blackfangs', 'bogrots', 'movetwice'],
-    ['blackfangs', 'bogrots', 'movetwice'],
-    ['blackfangs', 'bogrots', 'movetwice'],
-    ['blackfangs', 'bogrots', 'movetwice'],
-    ['blackfangs', 'bogrots', 'grom', 'uglub'],
-    ['blackfangs', 'bogrots', 'grom', 'uglub'],
-    ['blackfangs', 'bogrots', 'grom', 'uglub', 'bale', 'flint']
+    {
+        ids: ['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms', 'blitzens', 'normands', 'delbornes','empire-knights'],
+        img: '/playing-card-13.png'
+    },
+    {
+        ids: ['bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
+        img: '/playing-card-14.png'
+    },
+    {
+        ids: ['canon'],
+        img: '/playing-card-15.png'
+    },
+    {
+        ids: ['canon'],
+        img: '/playing-card-15.png'
+    },
+    {
+        ids: ['canon'],
+        img: '/playing-card-15.png'
+    },
+    {
+        ids: ['canon'],
+        img: '/playing-card-15.png'
+    },
+    {
+        ids: ['bogenhaffen', 'grunberg-archers'],
+        img: '/playing-card-16.png'
+    },
+    {
+        ids:['bogenhaffen', 'grunberg-archers'],
+        img: '/playing-card-16.png'
+    },
+    {
+        ids: ['blitzens', 'normands', 'delbornes'],
+        img: '/playing-card-17.png'
+    },
+    {
+        ids: ['blitzens', 'normands', 'delbornes'],
+        img: '/playing-card-17.png'
+    },
+    {
+        ids: ['blitzens', 'normands', 'delbornes'],
+        img: '/playing-card-17.png'
+    },
+    {
+        ids: ['blitzens', 'normands', 'delbornes'],
+        img: '/playing-card-17.png'
+    },
+    {
+        ids:['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
+        img: '/playing-card-18.png'
+    },
+    {
+        ids:['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
+        img: '/playing-card-18.png'
+    },
+    {
+        ids:['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
+        img: '/playing-card-18.png'
+    },
+    {
+        ids:['melgar', 'bogenhaffen', 'grunberg-archers', 'reikwald', 'altdorf', 'grunburg-arms'],
+        img: '/playing-card-18.png'
+    },
+    {
+        ids: ['empire-knights'],
+        img: '/playing-card-19.png'
+    },
+    {
+        ids: ['empire-knights'],
+        img: '/playing-card-19.png'
+    },
+    {
+        ids: ['empire-knights','blitzens', 'normands', 'delbornes'],
+        img: '/playing-card-20.png'
+    },
+    {
+        ids: ['empire-knights','blitzens', 'normands', 'delbornes'],
+        img: '/playing-card-20.png'
+    },
+    {
+        ids: ['empire-knights','blitzens', 'normands', 'delbornes'],
+        img: '/playing-card-20.png'
+    },
+    {
+        ids: ['empire-knights','blitzens', 'normands', 'delbornes'],
+        img: '/playing-card-20.png'
+    },
+    {
+        ids: ['empire-knights','blitzens', 'normands', 'delbornes', 'plus1'],
+        img: '/playing-card-22.png'
+    },
+    {
+        ids: ['empire-knights', 'plus1'],
+        img: '/playing-card-21.png'
+    },
+    {
+        ids: ['gorefists', 'doomguard', 'fellmoors'],
+        img: '/playing-card-1.png'
+    },
+    {
+        ids: ['gorefists', 'doomguard', 'fellmoors', 'gorebands', 'finmars'],
+        img: '/playing-card-2.png'
+    },
+    {
+        ids: ['gorefists', 'doomguard', 'fellmoors', 'gorebands', 'finmars'],
+        img: '/playing-card-2.png'
+    },
+    {
+        ids: ['gorefists', 'doomguard', 'fellmoors', 'gorebands', 'finmars'],
+        img: '/playing-card-2.png'
+    },
+    {
+        ids: ['gorefists', 'doomguard', 'fellmoors', 'gorebands', 'finmars'],
+        img: '/playing-card-2.png'
+    },
+    {
+        ids: ['gorefists', 'plus1'],
+        img: '/playing-card-3.png'
+    },
+    {
+        ids: ['gorefists', 'plus1'],
+        img: '/playing-card-3.png'
+    },
+    {
+        ids: ['grom', 'uglub', 'gazkulls', 'zogrods'],
+        img: '/playing-card-4.png'
+    },
+    {
+        ids: ['grom', 'uglub', 'gazkulls', 'zogrods'],
+        img: '/playing-card-4.png'
+    },
+    {
+        ids: ['grom', 'uglub', 'gazkulls', 'zogrods'],
+        img: '/playing-card-4.png'
+    },
+    {
+        ids: ['gorefists', 'blackfangs', 'bogrots'],
+        img: '/playing-card-5.png'
+    },
+    {
+        ids: ['gorefists', 'blackfangs', 'bogrots'],
+        img: '/playing-card-5.png'
+    },
+    {
+        ids: ['gorefists', 'blackfangs', 'bogrots'],
+        img: '/playing-card-5.png'
+    },
+    {
+        ids: ['gorefists', 'blackfangs', 'bogrots'],
+        img: '/playing-card-5.png'
+    },
+    {
+        ids: ['gorefists', 'blackfangs', 'bogrots'],
+        img: '/playing-card-5.png'
+    },
+    {
+        ids: ['grimorg'],
+        img: '/playing-card-7.png'
+    },
+    {
+        ids: ['grimorg'],
+        img: '/playing-card-7.png'
+    },
+    {
+        ids: ['grimorg'],
+        img: '/playing-card-7.png'
+    },
+    {
+        ids: ['grimorg'],
+        img: '/playing-card-7.png'
+    },
+    {
+        ids: ['grimorg'],
+        img: '/playing-card-7.png'
+    },
+    {
+        ids: ['grom', 'uglub', 'gazkulls', 'zogrods', 'bale', 'flint'],
+        img: '/playing-card-10.png'
+    },
+    {
+        ids:['grom', 'uglub', 'gazkulls', 'zogrods', 'bale', 'flint'],
+        img: '/playing-card-10.png'
+    },
+    {
+        ids: ['grom', 'uglub', 'gazkulls', 'zogrods', 'bale', 'flint', 'doomguard', 'fellmoors', 'gorebands', 'finmars'],
+        img: '/playing-card-11.png'
+    },
+    {
+        ids: ['gorefists', 'grom', 'uglub', 'bale', 'flint'],
+        img: '/playing-card-12.png'
+    },
+    {
+        ids: ['grom', 'uglub', 'gazkulls', 'zogrods', 'bale', 'flint', 'doomguard', 'fellmoors', 'gorebands', 'finmars', 'blackfangs', 'bogrots', 'gorefists'],
+        img: '/playing-card-23.png'
+    },
+    {
+        ids:['blackfangs', 'bogrots', 'movetwice'],
+        img: '/playing-card-6.png'
+    },
+    {
+        ids:['blackfangs', 'bogrots', 'movetwice'],
+        img: '/playing-card-6.png'
+    },
+    {
+        ids:['blackfangs', 'bogrots', 'movetwice'],
+        img: '/playing-card-6.png'
+    },
+    {
+        ids:['blackfangs', 'bogrots', 'movetwice'],
+        img: '/playing-card-6.png'
+    },
+    {
+        ids:['blackfangs', 'bogrots', 'movetwice'],
+        img: '/playing-card-6.png'
+    },
+    {
+        ids:['blackfangs', 'bogrots', 'grom', 'uglub'],
+        img: '/playing-card-9.png'
+    },
+    {
+        ids:['blackfangs', 'bogrots', 'grom', 'uglub'],
+        img: '/playing-card-9.png'
+    },
+    {
+        ids:['blackfangs', 'bogrots', 'grom', 'uglub', 'bale', 'flint'],
+        img: '/playing-card-8.png'
+    }
 ]
+
+
+

@@ -76,7 +76,7 @@ export default {
 		},
 		currentCard: function(card) {
 			console.log("card: ", card);
-			this.unitsToMove = card;
+			this.unitsToMove = card.ids;
 		},
 		updateRowAndCol: function(rowAndColumn) {
 			this.rowAndColumn = rowAndColumn;

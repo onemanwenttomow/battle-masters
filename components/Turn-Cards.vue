@@ -1,8 +1,12 @@
 <template>
-	<fragement>
-		<div class="pack-of-playing-cards"></div>
-		<div @click="nextCard">{{shuffledPlayingCards[0]}}</div>
-	</fragement>
+	<fragment>
+		<div class="pack-of-playing-cards playing-cards"></div>
+		<div 
+			@click="nextCard" 
+			:style="{ backgroundImage: `url(${shuffledPlayingCards[0] && shuffledPlayingCards[0].img})`}"
+			class="playing-cards"
+		></div>
+	</fragment>
 </template>
 
 <script>
@@ -16,7 +20,7 @@ export default {
 	mounted: function() {
         console.log("playingcards: ", this.playingcards);
         this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
-        console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards[0]);
+        console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards[0].img);
         this.$emit('currentcard', this.shuffledPlayingCards[0])
 	},
 	methods: {
@@ -46,9 +50,12 @@ export default {
 
 <style>
 
-.pack-of-playing-cards {
+.playing-cards {
 	height: 260px;
 	width: 400px;
+}
+
+.pack-of-playing-cards {
 	background-image: url('/card-back.png');
 }
 
