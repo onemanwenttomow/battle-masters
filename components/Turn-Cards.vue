@@ -1,5 +1,8 @@
 <template>
-	<div @click="nextCard">{{shuffledPlayingCards[0]}}</div>
+	<fragement>
+		<div class="pack-of-playing-cards"></div>
+		<div @click="nextCard">{{shuffledPlayingCards[0]}}</div>
+	</fragement>
 </template>
 
 <script>
@@ -42,4 +45,11 @@ export default {
 </script>
 
 <style>
+
+.pack-of-playing-cards {
+	height: 260px;
+	width: 400px;
+	background-image: url('/card-back.png');
+}
+
 </style>
