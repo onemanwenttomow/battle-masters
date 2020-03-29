@@ -1,15 +1,17 @@
 <template>
 	<fragment>
-		<div class="pack-of-playing-cards playing-cards"></div>
-		<div class="wrap">
-			<div class="side-a pack-of-playing-cards" @click="nextCard"></div>
-			<div class="side-b" :class="flipped ? 'flipped' : ''" :style="{ backgroundImage: `url(${shuffledPlayingCards[0] && shuffledPlayingCards[0].img})`}"></div>
+		<div class="card-container">
+			<div 
+				v-for="(card, i) in shuffledPlayingCardsCopy" 
+				:key="i"
+				class="card" 
+				:class="card.flipped ? 'flipcard' : ''"
+				:style="card.flipped ? [{ zIndex: `-${i}`}] : ''"
+			>
+				<div class="side pack-of-playing-cards" @click="nextCard(card)"></div>
+				<div class="side back" :style="{ backgroundImage: `url(${card.img})`}"></div>
+			</div>
 		</div>
-		<!-- <div 
-			@click="nextCard" 
-			:style="{ backgroundImage: `url(${shuffledPlayingCards[0] && shuffledPlayingCards[0].img})`}"
-			class="playing-cards"
-		></div> -->
 	</fragment>
 </template>
 
@@ -17,16 +19,20 @@
 export default {
 	data() {
 		return {
-            shuffledPlayingCards: [],
-			flipped: false
+			shuffledPlayingCards: [],
+			shuffledPlayingCardsCopy: []
 		};
 	},
 	props: ["playingcards"],
 	mounted: function() {
         console.log("playingcards: ", this.playingcards);
-        this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
-        console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards[0].img);
-        this.$emit('currentcard', this.shuffledPlayingCards[0])
+		this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
+		this.shuffledPlayingCardsCopy = this.shuffledPlayingCards.slice().map(card => {
+			return {
+				...card, 
+				flipped: false
+			}
+		});
 	},
 	methods: {
 		shuffle: function(a) {
@@ -39,16 +45,26 @@ export default {
 			}
 			return a;
         },
-        nextCard: function() {
-			this.shuffledPlayingCards.shift();
-			if (this.shuffledPlayingCards.length === 0) {
-				console.log("made it to re-shuffle")
-				this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
-				console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards);
-			}
-			console.log('this.playingcards.length: ',this.shuffledPlayingCards.length);
-			this.flipped = true;
-			this.$emit('currentcard', this.shuffledPlayingCards[0])
+        nextCard: function(card) {
+			console.log('this.shuffledPlayingCards[this.shuffledPlayingCard.length -1]: ',this.shuffledPlayingCards[this.shuffledPlayingCards.length -1]);
+			card.flipped = true;
+			setTimeout(() => {
+				this.$emit('currentcard', this.shuffledPlayingCards[this.shuffledPlayingCards.length -1])
+				this.shuffledPlayingCards.pop();
+				console.log('this.playingcards.length: ',this.shuffledPlayingCards.length);
+				if (this.shuffledPlayingCards.length === 0) {
+					console.log("made it to re-shuffle")
+					this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
+					this.shuffledPlayingCardsCopy = this.shuffledPlayingCards.slice().map(card => {
+						return {
+							...card, 
+							flipped: false
+						}
+					});
+					console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards);
+				}
+
+			}, 1000)
         }
 	}
 };
@@ -66,51 +82,54 @@ export default {
 }
 
 
-.wrap {
-	position: relative;
-	margin: 0 auto;
-	width: 400px;
-	height: 260px;
-	cursor: pointer;
-}
-.wrap div {
-	width: 100%;
-	height: 100%;
-	border-radius: 10px;
-	background-position: 50% 50%;
-	/* background-size: 250px; */
-	background-repeat: no-repeat;
-	box-shadow: inset 0 0 45px rgba(255,255,255,.3), 0 12px 20px -10px rgba(0,0,0,.4);
-	color: #FFF;
-	text-align: center;
-	text-shadow: 0 1px rgba(0,0,0,.3);
-	font: bold 3em sans-serif;
-	line-height: 350px;
+.flipcard {
+    animation: flipcard 1s forwards;
 }
 
-body {
-	-webkit-perspective: 800px;
+.card-container {
+    cursor: pointer;
+    height: 260px;
+    perspective: 600;
+    position: relative;
+    width: 400px;
 }
 
-.wrap {
-	transition: -webkit-transform 1s ease-in;
-	-webkit-transform-style: preserve-3d;
+.card {
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: all 1s ease-in-out;
+    width: 100%;
+}
+/* .card:hover {
+    transform: rotateY(180deg);
+} */
+.card .side {
+    backface-visibility: hidden;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+}
+.card .back {
+    transform: rotateY(180deg);
 }
 
-.wrap div {
-	position: absolute;
-	-webkit-backface-visibility: hidden;
+
+@keyframes flipcard {
+    0% {
+        transform: translateX(0);
+		z-index: 100;
+    }
+    50% {
+        transform: translateX(400px);
+		z-index: 100;
+    }
+    100% {
+        transform: rotateY(180deg) translateX(-400px);
+    }
 }
 
-.side-a {
-	z-index: 100;
-}
-.side-b {
-	-webkit-transform: rotateY(-180deg);
-}
 
-.flipped {
-	-webkit-transform: rotateY(180deg) translateX(-300px);
-}
 
 </style>
