@@ -66,7 +66,6 @@ export default {
     },
 	watch: {
 		rowAndColumn: function() {
-            console.log("new row and column", this.rowAndColumn);
             this.selectedRow = this.rowAndColumn.row;
             this.selectedColumn = this.rowAndColumn.column;
 		}
@@ -86,7 +85,6 @@ export default {
 	grid-template-columns: repeat(12, 100px);
 	height: 1050px;
 	width: 1200px;
-	/* overflow: hidden; */
 }
 
 .hexagon {

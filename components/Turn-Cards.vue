@@ -25,7 +25,7 @@ export default {
 	},
 	props: ["playingcards"],
 	mounted: function() {
-		this.shuffledPlayingCards();
+		this.shuffleCards();
 	},
 	methods: {
 		shuffleCards: function() {
@@ -53,7 +53,7 @@ export default {
 				this.$emit('currentcard', this.shuffledPlayingCards[this.shuffledPlayingCards.length -1])
 				this.shuffledPlayingCards.pop();
 				if (this.shuffledPlayingCards.length === 0) {
-					this.shuffledPlayingCards();
+					this.shuffleCards();
 				}
 			}, 1000)
         }

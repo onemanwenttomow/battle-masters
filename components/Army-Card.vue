@@ -1,18 +1,18 @@
 <template>
 	<div class="army-container">
 		<div
-			v-for="{id, img} in armies"
-			:key="id"
+			v-for="unit in units"
+			:key="unit.id"
 			class="piece"
-			:class="[piecesThatCanMove.length && piecesThatCanMove.find(p => p.piece === id) && !piecesThatCanMove.find(p => p.piece === id).hasMoved && unitsToMove.includes(id) ? 'selected' : '']"
-			:id="id"
-			:draggable="checkIfDraggable(id)"
+			:class="[piecesThatCanMove.length && piecesThatCanMove.find(p => p.piece === unit.id) && !piecesThatCanMove.find(p => p.piece === unit.id).hasMoved && unitsToMove.includes(unit.id) ? 'selected' : '']"
+			:id="unit.id"
+			:draggable="checkIfDraggable(unit.id)"
 			@dragstart="dragStart"
 			@dragover.stop
-			@dragend.prevent="dragEnd($event, id)"
-			@mousedown="showPossibleMoves($event, id)"
-			@click="selected(id)"
-			:style="{ backgroundImage: `url(${img})`}"
+			@dragend.prevent="dragEnd($event, unit)"
+			@mousedown="showPossibleMoves($event, unit.id)"
+			@click="selected(unit.id)"
+			:style="{ backgroundImage: `url(${unit.img})`}"
 		></div>
 	</div>
 </template>
@@ -21,7 +21,8 @@
 export default {
 	data() {
 		return {
-			piecesThatCanMove: []
+			piecesThatCanMove: [],
+			units: []
 		};
 	},
 	props: ["armies", "boardPositions", "unitsToMove", "allPiecesOnBoard"],
@@ -55,10 +56,7 @@ export default {
 			};
 		},
 		checkIfDraggable: function(id) {
-			if (!this.allPiecesOnBoard) {
-				return true;
-			}
-			if (this.unitsToMove.includes(id)) {
+			if (!this.allPiecesOnBoard || this.unitsToMove.includes(id)) {
 				return true;
 			}
 		},
@@ -69,10 +67,18 @@ export default {
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$emit("rowAndColumn", rowAndColumn);
 		},
-		dragEnd: function(e, id) {
+		dragEnd: function(e, unit) {
 			e.target.style.opacity = 1;
-			if (this.piecesThatCanMove.length && this.piecesThatCanMove.find(p => p.piece === id)) {
-				this.piecesThatCanMove.find(piece => piece.piece == id).hasMoved = true;
+			unit.onBoard = true;
+			const numberOfUnitsOnBoard = this.units.filter(unit => unit.onBoard);
+			// check to see if all of an army are on the board
+			if (numberOfUnitsOnBoard.length === this.units.length) {
+				this.$emit("allOfOneArmyOnBoard", numberOfUnitsOnBoard[0].army);
+			}
+			console.log('numberOfUnitsOnBoard: ',numberOfUnitsOnBoard.length === this.units.length, numberOfUnitsOnBoard[0].army);
+			// set that the piece has moved..
+			if (this.piecesThatCanMove.length && this.piecesThatCanMove.find(p => p.piece === unit.id)) {
+				this.piecesThatCanMove.find(piece => piece.piece == unit.id).hasMoved = true;
 			}
 		},
 		selected: function(card) {
@@ -80,6 +86,15 @@ export default {
 		}
 	},
 	watch: {
+		armies: function() {
+			console.log('this.armies: ',this.armies);
+			this.units = this.armies.map(unit => {
+				return {
+					...unit, 
+					onBoard: false
+				}
+			});
+		},
 		unitsToMove: function() {
 			let piecesThatCanMove = this.unitsToMove.map(piece => {
 				return {

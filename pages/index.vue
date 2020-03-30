@@ -4,7 +4,7 @@
 		<div class="outer-container">
 			<div>
 				<TurnCards 
-					v-if="boardPositions.length == 25"
+					v-if="allPiecesOnBoard"
 					:playingcards="setup.mainPlayingCards" 
 					@currentcard="currentCard"
 				/>
@@ -13,7 +13,8 @@
 					:boardPositions="boardPositions"
 					:unitsToMove="unitsToMove" 
 					:allPiecesOnBoard="allPiecesOnBoard"
-					@rowAndColumn="updateRowAndCol" 
+					@rowAndColumn="updateRowAndCol"
+					@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 				/>
 				
 			</div>
@@ -30,7 +31,8 @@
 			:boardPositions="boardPositions"
 			:unitsToMove="unitsToMove" 
 			:allPiecesOnBoard="allPiecesOnBoard"
-			@rowAndColumn="updateRowAndCol" 
+			@rowAndColumn="updateRowAndCol"
+			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 		/>
 	</fragment>
 </template>
@@ -56,7 +58,9 @@ export default {
 			unitsToMove: [],
 			imperialArmy: [],
 			chaosArmy: [],
-			allPiecesOnBoard: false
+			allPiecesOnBoard: false,
+			chaosArmyAllOnBoard: false,
+			imperialArmyAllOnBoard: false
 		};
 	},
 	async asyncData({ $axios }) {
@@ -64,11 +68,8 @@ export default {
 		return { setup };
 	},
 	mounted: function() {
-		console.log("index mounted", this.setup);
 		this.imperialArmy = this.setup.armies[0];
 		this.chaosArmy = this.setup.armies[1];
-		console.log('this.imperialArmy: ',this.imperialArmy);
-
 	},
 	methods: {
 		selectCard: function() {
@@ -81,28 +82,24 @@ export default {
 		updateRowAndCol: function(rowAndColumn) {
 			this.rowAndColumn = rowAndColumn;
 		},
+		allOfOneArmyOnBoard: function(army) {
+			army === "Imperial" ? this.imperialArmyAllOnBoard = true : this.chaosArmyAllOnBoard = true
+			if (this.imperialArmyAllOnBoard && this.chaosArmyAllOnBoard) {
+ 				this.allPiecesOnBoard = true;
+			}
+		},
 		updatePositions: function(positions) {
 			this.boardPositions.push(positions[0]);
 			this.boardPositions = this.boardPositions.filter(pos => {
 				return pos.row != positions[1].row || pos.col != positions[1].col
 			});
-			console.log('boardPositions: ',this.boardPositions);
-			if(this.boardPositions.length == 25) {
- 				this.allPiecesOnBoard = true;
-			}
+		
 		}
 	}
 };
 </script>
 
 <style>
-.outer-container {
-
-}
-
-.pink {
-	background-color: hotpink;
-}
 
 .cards {
 	background-color: white;
@@ -111,7 +108,6 @@ export default {
 	min-height: 90px;
 	border: 3px solid blue;
 	padding: 15px;
-	/* margin: calc(50vh - 30px) auto 0 auto; */
 	box-shadow: 5px -5px 0 -3px white, 5px -5px green, 10px -10px 0 -3px white,
 		10px -10px yellow, 15px -15px 0 -3px white, 15px -15px orange,
 		20px -20px 0 -3px white, 20px -20px red;
@@ -122,12 +118,4 @@ export default {
 	cursor: pointer;
 }
 
-/* .card:hover {
-  top: -20px;
-  left: 20px;
-  box-shadow: 0 0 0 -3px white, 0 0 0 0 green,
-      0 0 0 -3px white, 0 0 0 0 yellow,
-      0 0 0 -3px white, 0 0 0 0 orange,
-      0 0 0 -3px  white, 0 0 0 0 red;
-} */
 </style>
