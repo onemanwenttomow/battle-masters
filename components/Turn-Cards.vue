@@ -25,16 +25,18 @@ export default {
 	},
 	props: ["playingcards"],
 	mounted: function() {
-        console.log("playingcards: ", this.playingcards);
-		this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
-		this.shuffledPlayingCardsCopy = this.shuffledPlayingCards.slice().map(card => {
-			return {
-				...card, 
-				flipped: false
-			}
-		});
+		this.shuffledPlayingCards();
 	},
 	methods: {
+		shuffleCards: function() {
+			this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
+			this.shuffledPlayingCardsCopy = this.shuffledPlayingCards.slice().map(card => {
+				return {
+					...card, 
+					flipped: false
+				}
+			});
+		},
 		shuffle: function(a) {
 			var j, x, i;
 			for (i = a.length - 1; i > 0; i--) {
@@ -46,24 +48,13 @@ export default {
 			return a;
         },
         nextCard: function(card) {
-			console.log('this.shuffledPlayingCards[this.shuffledPlayingCard.length -1]: ',this.shuffledPlayingCards[this.shuffledPlayingCards.length -1]);
 			card.flipped = true;
 			setTimeout(() => {
 				this.$emit('currentcard', this.shuffledPlayingCards[this.shuffledPlayingCards.length -1])
 				this.shuffledPlayingCards.pop();
-				console.log('this.playingcards.length: ',this.shuffledPlayingCards.length);
 				if (this.shuffledPlayingCards.length === 0) {
-					console.log("made it to re-shuffle")
-					this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
-					this.shuffledPlayingCardsCopy = this.shuffledPlayingCards.slice().map(card => {
-						return {
-							...card, 
-							flipped: false
-						}
-					});
-					console.log('this.shuffledPlayingCards: ',this.shuffledPlayingCards);
+					this.shuffledPlayingCards();
 				}
-
 			}, 1000)
         }
 	}
@@ -101,9 +92,7 @@ export default {
     transition: all 1s ease-in-out;
     width: 100%;
 }
-/* .card:hover {
-    transform: rotateY(180deg);
-} */
+
 .card .side {
     backface-visibility: hidden;
     height: 100%;
