@@ -80,9 +80,6 @@ export default {
 		this.chaosArmy = this.setup.armies[1].map(this.unitSetup);
 	},
 	methods: {
-		selectCard: function() {
-			this.setup.armies[0].shift();
-		},
 		unitSetup: function(unit) {
 			return {
 				...unit,
@@ -95,6 +92,19 @@ export default {
 		},
 		currentCard: function(card) {
 			console.log("card: ", card);
+			this.imperialArmy = this.imperialArmy.map(unit => {
+				return {
+					...unit,
+					isSelected: card.ids.includes(unit.id)
+				}
+			})
+			this.chaosArmy = this.chaosArmy.map(unit => {
+				return {
+					...unit,
+					isSelected: card.ids.includes(unit.id)
+				}
+			})
+			console.log('this.imperialArmy: ',this.imperialArmy);
 			this.unitsToMove = card.ids;
 		},
 		updateRowAndCol: function(rowAndColumn) {
