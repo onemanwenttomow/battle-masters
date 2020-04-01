@@ -11,7 +11,7 @@
 			@dragover.stop
 			@dragend.prevent="dragEnd($event, unit)"
 			@mousedown="showPossibleMoves($event, unit.id)"
-			@click="selected(unit.id)"
+			@click="selected(unit)"
 			:style="{ backgroundImage: `url(${unit.img})`}"
 		></div>
 	</div>
@@ -30,7 +30,6 @@ export default {
 		dragStart: function(e) {
 			const target = e.target;
 			e.dataTransfer.setData("id", e.target.id);
-			console.log('e.target: ',e.target);
 			setTimeout(function() {
 				target.style.opacity = 0.3;
 			}, 0);
@@ -75,19 +74,26 @@ export default {
 			if (numberOfUnitsOnBoard.length === this.units.length) {
 				this.$emit("allOfOneArmyOnBoard", numberOfUnitsOnBoard[0].army);
 			}
-			console.log('numberOfUnitsOnBoard: ',numberOfUnitsOnBoard.length === this.units.length, numberOfUnitsOnBoard[0].army);
 			// set that the piece has moved..
 			if (this.piecesThatCanMove.length && this.piecesThatCanMove.find(p => p.piece === unit.id)) {
 				this.piecesThatCanMove.find(piece => piece.piece == unit.id).hasMoved = true;
 			}
 		},
 		selected: function(card) {
-			console.log("show extra info about", card)
+			console.log("show extra info about", card, this.piecesThatCanMove);
+			let selectedCard = this.piecesThatCanMove.find(unit => unit.piece === card.id);
+			console.log('selectedCard: ',selectedCard);
+			card = {
+				card,
+				hasMoved: selectedCard.hasMoved,
+				hasAttacked: selectedCard.hasAttacked,
+				finishedMove: selectedCard.finishedMove
+			}
+			this.$emit("selectedUnit", card);
 		}
 	},
 	watch: {
 		armies: function() {
-			console.log('this.armies: ',this.armies);
 			this.units = this.armies.map(unit => {
 				return {
 					...unit, 

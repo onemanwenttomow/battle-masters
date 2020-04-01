@@ -8,6 +8,9 @@
 					:playingcards="setup.mainPlayingCards" 
 					@currentcard="currentCard"
 				/>
+				<SelectedUnit 
+					:unit="selectedUnit"
+				/>
 				<ArmyCards 
 					:armies="imperialArmy" 
 					:boardPositions="boardPositions"
@@ -15,6 +18,7 @@
 					:allPiecesOnBoard="allPiecesOnBoard"
 					@rowAndColumn="updateRowAndCol"
 					@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
+					@selectedUnit="changeSelectedUnit"
 				/>
 				
 			</div>
@@ -33,6 +37,7 @@
 			:allPiecesOnBoard="allPiecesOnBoard"
 			@rowAndColumn="updateRowAndCol"
 			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
+			@selectedUnit="changeSelectedUnit"
 		/>
 	</fragment>
 </template>
@@ -42,13 +47,15 @@ import Logo from "~/components/Logo.vue";
 import Board from "~/components/Board.vue";
 import ArmyCards from "~/components/Army-Card.vue";
 import TurnCards from "~/components/Turn-Cards.vue";
+import SelectedUnit from "~/components/Selected-Unit.vue";
 
 export default {
 	components: {
 		Logo,
 		Board,
 		ArmyCards,
-		TurnCards
+		TurnCards,
+		SelectedUnit
 	},
 	data() {
 		return {
@@ -60,7 +67,8 @@ export default {
 			chaosArmy: [],
 			allPiecesOnBoard: false,
 			chaosArmyAllOnBoard: false,
-			imperialArmyAllOnBoard: false
+			imperialArmyAllOnBoard: false,
+			selectedUnit: {}
 		};
 	},
 	async asyncData({ $axios }) {
@@ -68,12 +76,22 @@ export default {
 		return { setup };
 	},
 	mounted: function() {
-		this.imperialArmy = this.setup.armies[0];
-		this.chaosArmy = this.setup.armies[1];
+		this.imperialArmy = this.setup.armies[0].map(this.unitSetup);
+		this.chaosArmy = this.setup.armies[1].map(this.unitSetup);
 	},
 	methods: {
 		selectCard: function() {
 			this.setup.armies[0].shift();
+		},
+		unitSetup: function(unit) {
+			return {
+				...unit,
+				isSelected: false,
+				hasMoved: false,
+				hasAttacked: false,
+				finishedMove: false,
+				remainingLives: 3
+			}
 		},
 		currentCard: function(card) {
 			console.log("card: ", card);
@@ -94,6 +112,9 @@ export default {
 				return pos.row != positions[1].row || pos.col != positions[1].col
 			});
 		
+		}, 
+		changeSelectedUnit: function(unit) {
+			this.selectedUnit = unit
 		}
 	}
 };
