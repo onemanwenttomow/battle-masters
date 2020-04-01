@@ -13,7 +13,6 @@
 				/>
 				<ArmyCards 
 					:armies="imperialArmy" 
-					:boardPositions="boardPositions"
 					:allPiecesOnBoard="allPiecesOnBoard"
 					@rowAndColumn="updateRowAndCol"
 					@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
@@ -32,7 +31,6 @@
 		</div>
 		<ArmyCards 
 			:armies="chaosArmy" 
-			:boardPositions="boardPositions"
 			:allPiecesOnBoard="allPiecesOnBoard"
 			@rowAndColumn="updateRowAndCol"
 			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"

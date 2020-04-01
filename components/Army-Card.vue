@@ -24,7 +24,7 @@ export default {
 			units: []
 		};
 	},
-	props: ["armies", "boardPositions", "allPiecesOnBoard"],
+	props: ["armies", "allPiecesOnBoard"],
 	methods: {
 		dragStart: function(e) {
 			const target = e.target;
@@ -78,10 +78,6 @@ export default {
 			if (this.allPiecesOnBoard) {
 				this.$emit("unitFinishedMoving", unit);
 			}
-			// if (this.armies.length && this.armies.find(p => p.id === unit.id)) {
-			// 	console.log(this.armies.find(piece => piece.id == unit.id))
-			// 	this.armies.find(piece => piece.id == unit.id).hasMoved = true;
-			// }
 		},
 		selected: function(card) {
 			this.$emit("selectedUnit", card);
