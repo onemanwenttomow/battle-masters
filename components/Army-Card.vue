@@ -4,13 +4,13 @@
 			v-for="unit in units"
 			:key="unit.id"
 			class="piece"
-			:class="[piecesThatCanMove.length && piecesThatCanMove.find(p => p.piece === unit.id) && !piecesThatCanMove.find(p => p.piece === unit.id).hasMoved && unitsToMove.includes(unit.id) ? 'selected' : '']"
+			:class="[unit.isSelected ? 'selected' : '']"
 			:id="unit.id"
-			:draggable="checkIfDraggable(unit.id)"
+			:draggable="checkIfDraggable(unit.isSelected)"
 			@dragstart="dragStart"
 			@dragover.stop
 			@dragend.prevent="dragEnd($event, unit)"
-			@mousedown="showPossibleMoves($event, unit.id)"
+			@mousedown="showPossibleMoves($event, unit.isSelected)"
 			@click="selected(unit)"
 			:style="{ backgroundImage: `url(${unit.img})`}"
 		></div>
@@ -21,11 +21,10 @@
 export default {
 	data() {
 		return {
-			piecesThatCanMove: [],
 			units: []
 		};
 	},
-	props: ["armies", "boardPositions", "unitsToMove", "allPiecesOnBoard"],
+	props: ["armies", "boardPositions", "allPiecesOnBoard"],
 	methods: {
 		dragStart: function(e) {
 			const target = e.target;
@@ -54,13 +53,14 @@ export default {
 				column
 			};
 		},
-		checkIfDraggable: function(id) {
-			if (!this.allPiecesOnBoard || this.unitsToMove.includes(id)) {
+		checkIfDraggable: function(isSelected) {
+			if (!this.allPiecesOnBoard || isSelected) {
 				return true;
 			}
+
 		},
-		showPossibleMoves: function(e, id) {
-			if (!this.unitsToMove.includes(id)) {
+		showPossibleMoves: function(e, isSelected) {
+			if (!isSelected) {
 				return;
 			}
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
@@ -75,20 +75,15 @@ export default {
 				this.$emit("allOfOneArmyOnBoard", numberOfUnitsOnBoard[0].army);
 			}
 			// set that the piece has moved..
-			if (this.piecesThatCanMove.length && this.piecesThatCanMove.find(p => p.piece === unit.id)) {
-				this.piecesThatCanMove.find(piece => piece.piece == unit.id).hasMoved = true;
+			if (this.allPiecesOnBoard) {
+				this.$emit("unitFinishedMoving", unit);
 			}
+			// if (this.armies.length && this.armies.find(p => p.id === unit.id)) {
+			// 	console.log(this.armies.find(piece => piece.id == unit.id))
+			// 	this.armies.find(piece => piece.id == unit.id).hasMoved = true;
+			// }
 		},
 		selected: function(card) {
-			console.log("show extra info about", card, this.piecesThatCanMove);
-			let selectedCard = this.piecesThatCanMove.find(unit => unit.piece === card.id);
-			console.log('selectedCard: ',selectedCard);
-			card = {
-				card,
-				hasMoved: selectedCard.hasMoved,
-				hasAttacked: selectedCard.hasAttacked,
-				finishedMove: selectedCard.finishedMove
-			}
 			this.$emit("selectedUnit", card);
 		}
 	},
@@ -101,17 +96,6 @@ export default {
 				}
 			});
 		},
-		unitsToMove: function() {
-			let piecesThatCanMove = this.unitsToMove.map(piece => {
-				return {
-					piece: piece,
-					hasMoved: false,
-					hasAttacked: false,
-					finishedMove: false
-				}
-			})
-			this.piecesThatCanMove = piecesThatCanMove;
-		}
 	}
 };
 </script>

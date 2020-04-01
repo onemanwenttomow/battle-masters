@@ -14,11 +14,11 @@
 				<ArmyCards 
 					:armies="imperialArmy" 
 					:boardPositions="boardPositions"
-					:unitsToMove="unitsToMove" 
 					:allPiecesOnBoard="allPiecesOnBoard"
 					@rowAndColumn="updateRowAndCol"
 					@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 					@selectedUnit="changeSelectedUnit"
+					@unitFinishedMoving="unitFinishedMoving"
 				/>
 				
 			</div>
@@ -33,11 +33,11 @@
 		<ArmyCards 
 			:armies="chaosArmy" 
 			:boardPositions="boardPositions"
-			:unitsToMove="unitsToMove" 
 			:allPiecesOnBoard="allPiecesOnBoard"
 			@rowAndColumn="updateRowAndCol"
 			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 			@selectedUnit="changeSelectedUnit"
+			@unitFinishedMoving="unitFinishedMoving"
 		/>
 	</fragment>
 </template>
@@ -62,7 +62,6 @@ export default {
 			setup: {},
 			rowAndColumn: {},
 			boardPositions: [],
-			unitsToMove: [],
 			imperialArmy: [],
 			chaosArmy: [],
 			allPiecesOnBoard: false,
@@ -91,7 +90,6 @@ export default {
 			}
 		},
 		currentCard: function(card) {
-			console.log("card: ", card);
 			this.imperialArmy = this.imperialArmy.map(unit => {
 				return {
 					...unit,
@@ -104,8 +102,6 @@ export default {
 					isSelected: card.ids.includes(unit.id)
 				}
 			})
-			console.log('this.imperialArmy: ',this.imperialArmy);
-			this.unitsToMove = card.ids;
 		},
 		updateRowAndCol: function(rowAndColumn) {
 			this.rowAndColumn = rowAndColumn;
@@ -122,6 +118,24 @@ export default {
 				return pos.row != positions[1].row || pos.col != positions[1].col
 			});
 		
+		}, 
+		unitFinishedMoving: function(unitToUpdate) {
+			this.imperialArmy = this.imperialArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
+			this.chaosArmy = this.chaosArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
+
+		},
+		updateUnitHavingMoved: function(unit, unitToUpdate) {
+			if (unit.id === unitToUpdate.id) {
+				return {
+					...unit, 
+					isSelected: false,
+					hasMoved: true
+				}
+			} else {
+				return {
+					...unit
+				}
+			}
 		}, 
 		changeSelectedUnit: function(unit) {
 			this.selectedUnit = unit
