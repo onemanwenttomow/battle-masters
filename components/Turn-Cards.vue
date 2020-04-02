@@ -78,6 +78,7 @@ export default {
 }
 
 .card-container {
+	display: inline-block;
     cursor: pointer;
     height: 260px;
     perspective: 600;

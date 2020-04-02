@@ -9,6 +9,7 @@
 					@currentcard="currentCard"
 				/>
 				<SelectedUnit 
+					v-if="selectedUnit.name"
 					:unit="selectedUnit"
 				/>
 				<ArmyCards 

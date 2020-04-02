@@ -4,7 +4,9 @@
 		<img :src="unit.img" :alt="unit.name">
 		<h4>Combat Value: {{unit.combatValue}}</h4>
 		<h4>Damaged Sustained: {{3 - unit.remainingLives}}/3</h4>
-		<h4>Can Moved?: {{unit.isSelected}}</h4>
+		<div v-if="unit.isSelected">
+			Stuff about turn...
+		</div>
     </div>
 </template>
 
@@ -33,6 +35,7 @@ export default {
 	margin: 20px;
 	text-align: center;
 	color: whitesmoke;
+	transform: translateX(400px);
 }
 
 .imperial-card {
