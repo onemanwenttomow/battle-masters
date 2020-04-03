@@ -77,6 +77,7 @@ export default {
 			// set that the piece has moved..
 			if (this.allPiecesOnBoard) {
 				this.$emit("unitFinishedMoving", unit);
+				this.$emit("selectedUnit", unit);
 			}
 		},
 		selected: function(card) {

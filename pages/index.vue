@@ -119,9 +119,9 @@ export default {
 		
 		}, 
 		unitFinishedMoving: function(unitToUpdate) {
+			console.log("unitFinishedMoving!")
 			this.imperialArmy = this.imperialArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
 			this.chaosArmy = this.chaosArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
-
 		},
 		updateUnitHavingMoved: function(unit, unitToUpdate) {
 			if (unit.id === unitToUpdate.id) {
@@ -137,7 +137,7 @@ export default {
 			}
 		}, 
 		changeSelectedUnit: function(unit) {
-			this.selectedUnit = unit
+			this.selectedUnit = this.imperialArmy.find(u => u.id === unit.id) || this.chaosArmy.find(u => u.id === unit.id)
 		}
 	}
 };

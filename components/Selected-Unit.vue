@@ -5,8 +5,10 @@
 		<h4>Combat Value: {{unit.combatValue}}</h4>
 		<h4>Damaged Sustained: {{3 - unit.remainingLives}}/3</h4>
 		<div v-if="unit.isSelected">
-			Stuff about turn...
+			<div v-if="!unit.hasMoved">Skip Turn</div>
+			<div v-else>Unit can still move</div>
 		</div>
+		{{unit}}
     </div>
 </template>
 
@@ -18,9 +20,6 @@ export default {
 		};
 	},
 	props: ["unit"],
-	mounted: function() {
-		
-	},
 	methods: {
 		
 	}
