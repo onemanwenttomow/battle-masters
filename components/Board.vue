@@ -52,7 +52,7 @@ export default {
 				piece.style.left = -40 + "px";
 				piece.style.zIndex = 10;
 				e.target.appendChild(piece);
-            	!isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}]);
+            	!isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}], piece.id);
             }
             piece.style.opacity = 1;
             this.selectedRow = null;

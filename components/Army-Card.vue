@@ -10,7 +10,8 @@
 			@dragstart="dragStart"
 			@dragover.stop
 			@dragend.prevent="dragEnd($event, unit)"
-			@mousedown="showPossibleMoves($event, unit.isSelected)"
+			@mousedown="showPossibleMoves($event, unit.isSelected, unit.hasMoved)"
+			@mouseup="$emit('rowAndColumn', {row: null, column: null});"
 			@click="selected(unit)"
 			:style="{ backgroundImage: `url(${unit.img})`}"
 		></div>
@@ -59,8 +60,9 @@ export default {
 			}
 
 		},
-		showPossibleMoves: function(e, isSelected) {
-			if (!isSelected) {
+		showPossibleMoves: function(e, isSelected, hasMoved) {
+			console.log('hasMoved in showPossibleMoves: ',hasMoved);
+			if (!isSelected || hasMoved) {
 				return;
 			}
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);

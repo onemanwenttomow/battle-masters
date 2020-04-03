@@ -5,7 +5,11 @@
 		<h4>Combat Value: {{unit.combatValue}}</h4>
 		<h4>Damaged Sustained: {{3 - unit.remainingLives}}/3</h4>
 		<div v-if="unit.isSelected">
-			<div v-if="!unit.hasMoved">Skip Turn</div>
+			<div 
+				v-if="!unit.hasMoved" 
+				@click="$emit('unitFinishedMoving', unit)"
+				class="skip"
+			>Skip Move</div>
 			<div v-else>Unit can still move</div>
 		</div>
 		{{unit}}
@@ -44,5 +48,22 @@ export default {
 .chaos-card {
 	background-color: hotpink;
 }
+
+.skip {
+	display: inline-block;
+	padding: 5px;
+	background-color: whitesmoke;
+	cursor: pointer;
+}
+
+.chaos-card .skip{
+	color: hotpink;
+}
+
+
+.imperial-card .skip{
+	color: royalblue;
+}
+
 
 </style>

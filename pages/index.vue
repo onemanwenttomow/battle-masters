@@ -11,6 +11,7 @@
 				<SelectedUnit 
 					v-if="selectedUnit.name"
 					:unit="selectedUnit"
+					@unitFinishedMoving="unitFinishedMoving"
 				/>
 				<ArmyCards 
 					:armies="imperialArmy" 
@@ -85,7 +86,8 @@ export default {
 				hasMoved: false,
 				hasAttacked: false,
 				finishedMove: false,
-				remainingLives: 3
+				remainingLives: 3,
+				boardPositon: []
 			}
 		},
 		currentCard: function(card) {
@@ -103,6 +105,7 @@ export default {
 			})
 		},
 		updateRowAndCol: function(rowAndColumn) {
+			console.log('rowAndColum: ',rowAndColumn);
 			this.rowAndColumn = rowAndColumn;
 		},
 		allOfOneArmyOnBoard: function(army) {
@@ -111,18 +114,34 @@ export default {
  				this.allPiecesOnBoard = true;
 			}
 		},
-		updatePositions: function(positions) {
+		updatePositions: function(positions, id) {
 			this.boardPositions.push(positions[0]);
 			this.boardPositions = this.boardPositions.filter(pos => {
 				return pos.row != positions[1].row || pos.col != positions[1].col
 			});
-		
+			if (positions[0]) {
+				this.imperialArmy = this.imperialArmy.map(unit => this.updateUnitHavingMovedNewPosition(unit, id, positions[0]));
+				this.chaosArmy = this.chaosArmy.map(unit => this.updateUnitHavingMovedNewPosition(unit, id, positions[0]));
+			}
 		}, 
 		unitFinishedMoving: function(unitToUpdate) {
-			console.log("unitFinishedMoving!")
 			this.imperialArmy = this.imperialArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
 			this.chaosArmy = this.chaosArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
 		},
+		updateUnitHavingMovedNewPosition: function(unit, id, positions) {
+			if (unit.id === id) {
+				return {
+					...unit, 
+					isSelected: false,
+					hasMoved: true,
+					boardPositon: [positions.row, positions.col]
+				}
+			} else {
+				return {
+					...unit
+				}
+			}
+		}, 
 		updateUnitHavingMoved: function(unit, unitToUpdate) {
 			if (unit.id === unitToUpdate.id) {
 				return {
