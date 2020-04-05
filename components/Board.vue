@@ -38,7 +38,7 @@ export default {
 	props: ["board", "rowAndColumn", "boardPositions", "allPiecesOnBoard"],
 	methods: {
 		testing: function(squareType, row, index) {
-			console.log("testing squareType, row, col: ", squareType, row.slice(3), index);
+			// console.log("testing squareType, row, col: ", squareType, row.slice(3), index);
 		},
 		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));

@@ -10,7 +10,7 @@
 			@dragstart="dragStart"
 			@dragover.stop
 			@dragend.prevent="dragEnd($event, unit)"
-			@mousedown="showPossibleMoves($event, unit.isSelected, unit.hasMoved)"
+			@mousedown="showPossibleMoves($event, unit.isSelected, unit.hasMoved, unit.boardPosition)"
 			@mouseup="$emit('rowAndColumn', {row: null, column: null});"
 			@click="selected(unit)"
 			:style="{ backgroundImage: `url(${unit.img})`}"
@@ -25,7 +25,7 @@ export default {
 			units: []
 		};
 	},
-	props: ["armies", "allPiecesOnBoard"],
+	props: ["armies", "allPiecesOnBoard", "opposingArmy"],
 	methods: {
 		dragStart: function(e) {
 			const target = e.target;
@@ -60,8 +60,27 @@ export default {
 			}
 
 		},
-		showPossibleMoves: function(e, isSelected, hasMoved) {
-			console.log('hasMoved in showPossibleMoves: ',hasMoved);
+		showPossibleMoves: function(e, isSelected, hasMoved, boardPosition) {
+			console.log('boardPosition in showPossibleMoves: ',boardPosition);
+			let surroundingTiles;
+			boardPosition[0] % 2 === 0 ? 
+				surroundingTiles = [[-1, 1], [-1, 0], [0, -1], [0, 1], [1, 1], [1, 0]] :
+				surroundingTiles = [[-1,-1], [-1, 0], [0, -1], [0, 1], [1, -1], [1, 0]]
+			const calculatedSurroundingTiles = surroundingTiles.map(tile => {
+				return [tile[0] + boardPosition[0], tile[1] + boardPosition[1]]
+			});
+			console.log('calculatedSurroundingTiles: ',calculatedSurroundingTiles);
+			const enemiesInReach = this.opposingArmy.filter(unit => {
+				let matchingTiles = calculatedSurroundingTiles.filter(tile => {
+					return tile[0] === unit.boardPosition[0] && tile[1] === unit.boardPosition[1]
+				});
+				if (matchingTiles.length) {
+					return matchingTiles
+				}
+			});
+
+			console.log('enemiesInReach: ',enemiesInReach);
+
 			if (!isSelected || hasMoved) {
 				return;
 			}

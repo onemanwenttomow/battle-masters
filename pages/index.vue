@@ -15,6 +15,7 @@
 				/>
 				<ArmyCards 
 					:armies="imperialArmy" 
+					:opposingArmy="chaosArmy"
 					:allPiecesOnBoard="allPiecesOnBoard"
 					@rowAndColumn="updateRowAndCol"
 					@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
@@ -33,6 +34,7 @@
 		</div>
 		<ArmyCards 
 			:armies="chaosArmy" 
+			:opposingArmy="imperialArmy"
 			:allPiecesOnBoard="allPiecesOnBoard"
 			@rowAndColumn="updateRowAndCol"
 			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
@@ -87,7 +89,7 @@ export default {
 				hasAttacked: false,
 				finishedMove: false,
 				remainingLives: 3,
-				boardPositon: []
+				boardPosition: []
 			}
 		},
 		currentCard: function(card) {
@@ -105,7 +107,7 @@ export default {
 			})
 		},
 		updateRowAndCol: function(rowAndColumn) {
-			console.log('rowAndColum: ',rowAndColumn);
+			// console.log('rowAndColum: ',rowAndColumn);
 			this.rowAndColumn = rowAndColumn;
 		},
 		allOfOneArmyOnBoard: function(army) {
@@ -134,7 +136,7 @@ export default {
 					...unit, 
 					isSelected: false,
 					hasMoved: true,
-					boardPositon: [positions.row, positions.col]
+					boardPosition: [positions.row, positions.col]
 				}
 			} else {
 				return {
