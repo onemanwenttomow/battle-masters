@@ -21,6 +21,7 @@
 					@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 					@selectedUnit="changeSelectedUnit"
 					@unitFinishedMoving="unitFinishedMoving"
+					@enemiesInReach="enemiesInReach"
 				/>
 				
 			</div>
@@ -40,6 +41,7 @@
 			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 			@selectedUnit="changeSelectedUnit"
 			@unitFinishedMoving="unitFinishedMoving"
+			@enemiesInReach="enemiesInReach"
 		/>
 	</fragment>
 </template>
@@ -88,6 +90,7 @@ export default {
 				hasMoved: false,
 				hasAttacked: false,
 				finishedMove: false,
+				canBeAttacked: false,
 				remainingLives: 3,
 				boardPosition: []
 			}
@@ -157,6 +160,25 @@ export default {
 				}
 			}
 		}, 
+		enemiesInReach: function(inReach) {
+			console.log('enemiesInReach in index: ',inReach);
+			this.imperialArmy = this.imperialArmy.map(unit => this.canBeAttacked(unit, inReach));
+			this.chaosArmy = this.chaosArmy.map(unit => this.canBeAttacked(unit, inReach));
+			console.log('this.imperialArmy: ',this.imperialArmy);
+		},
+		canBeAttacked: function(unit, inReach) {
+			if (inReach.some(r => r.id == unit.id)) {
+				return {
+					...unit, 
+					canBeAttacked: true,
+				}
+			} else {
+				return {
+					...unit,
+					canBeAttacked: false,
+				}
+			}
+		},
 		changeSelectedUnit: function(unit) {
 			this.selectedUnit = this.imperialArmy.find(u => u.id === unit.id) || this.chaosArmy.find(u => u.id === unit.id)
 		}

@@ -4,7 +4,7 @@
 			v-for="unit in units"
 			:key="unit.id"
 			class="piece"
-			:class="[unit.isSelected ? 'selected' : '']"
+			:class="[unit.isSelected ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '']"
 			:id="unit.id"
 			:draggable="checkIfDraggable(unit.isSelected)"
 			@dragstart="dragStart"
@@ -80,12 +80,14 @@ export default {
 			});
 
 			console.log('enemiesInReach: ',enemiesInReach);
+			this.$emit("enemiesInReach", enemiesInReach);
 
 			if (!isSelected || hasMoved) {
 				return;
 			}
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$emit("rowAndColumn", rowAndColumn);
+
 		},
 		dragEnd: function(e, unit) {
 			e.target.style.opacity = 1;
@@ -172,6 +174,10 @@ export default {
 	transform: scale(1);
 	filter: brightness(1.5);
 	animation: pulse 2s infinite;
+}
+
+.can-be-attacked {
+	background-color: crimson;
 }
 
 @keyframes pulse {
