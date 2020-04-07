@@ -70,6 +70,16 @@ export default {
 				return [tile[0] + boardPosition[0], tile[1] + boardPosition[1]]
 			});
 			console.log('calculatedSurroundingTiles: ',calculatedSurroundingTiles);
+			this.calculateEnemiesInReach(calculatedSurroundingTiles);
+
+			if (!isSelected || hasMoved) {
+				return;
+			}
+			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
+			this.$emit("rowAndColumn", rowAndColumn);
+
+		},
+		calculateEnemiesInReach: function(calculatedSurroundingTiles) {
 			const enemiesInReach = this.opposingArmy.filter(unit => {
 				let matchingTiles = calculatedSurroundingTiles.filter(tile => {
 					return tile[0] === unit.boardPosition[0] && tile[1] === unit.boardPosition[1]
@@ -81,13 +91,6 @@ export default {
 
 			console.log('enemiesInReach: ',enemiesInReach);
 			this.$emit("enemiesInReach", enemiesInReach);
-
-			if (!isSelected || hasMoved) {
-				return;
-			}
-			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
-			this.$emit("rowAndColumn", rowAndColumn);
-
 		},
 		dragEnd: function(e, unit) {
 			e.target.style.opacity = 1;
