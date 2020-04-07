@@ -22,6 +22,7 @@
 					@selectedUnit="changeSelectedUnit"
 					@unitFinishedMoving="unitFinishedMoving"
 					@enemiesInReach="enemiesInReach"
+					@onboard="onboard"
 				/>
 				
 			</div>
@@ -41,7 +42,8 @@
 			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 			@selectedUnit="changeSelectedUnit"
 			@unitFinishedMoving="unitFinishedMoving"
-			@enemiesInReach="enemiesInReach"
+			@enemiesInReach="enemiesInReach"					
+			@onboard="onboard"
 		/>
 	</fragment>
 </template>
@@ -86,6 +88,7 @@ export default {
 		unitSetup: function(unit) {
 			return {
 				...unit,
+				onBoard: false,
 				isSelected: false,
 				hasMoved: false,
 				hasAttacked: false,
@@ -110,8 +113,34 @@ export default {
 			})
 		},
 		updateRowAndCol: function(rowAndColumn) {
-			// console.log('rowAndColum: ',rowAndColumn);
+			console.log('rowAndColum: ',rowAndColumn);
 			this.rowAndColumn = rowAndColumn;
+		},
+		onboard: function(unit) {
+			this.imperialArmy = this.imperialArmy.map(u => {
+				if (u.id === unit.id) {
+					return {
+						...u, 
+						onBoard: true
+					}
+				} else {
+					return {
+						...u, 
+					}
+				}
+			});
+			this.chaosArmy = this.chaosArmy.map(u => {
+				if (u.id === unit.id) {
+					return {
+						...u, 
+						onBoard: true
+					}
+				} else {
+					return {
+						...u, 
+					}
+				}
+			})
 		},
 		allOfOneArmyOnBoard: function(army) {
 			army === "Imperial" ? this.imperialArmyAllOnBoard = true : this.chaosArmyAllOnBoard = true

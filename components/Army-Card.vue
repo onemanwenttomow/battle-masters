@@ -49,6 +49,7 @@ export default {
 			if (rowClass.length) {
 				row = rowClass[0].slice(3) - 1;
 			}
+			console.log('row, column: ',row, column);
 			return {
 				row,
 				column
@@ -72,9 +73,10 @@ export default {
 			console.log('calculatedSurroundingTiles: ',calculatedSurroundingTiles);
 			this.calculateEnemiesInReach(calculatedSurroundingTiles);
 
-			if (!isSelected || hasMoved) {
+			if (!isSelected) {
 				return;
 			}
+			console.log('about to chwck row and column: ');
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$emit("rowAndColumn", rowAndColumn);
 
@@ -94,9 +96,13 @@ export default {
 		},
 		dragEnd: function(e, unit) {
 			e.target.style.opacity = 1;
+			this.$emit('onboard', unit);
 			unit.onBoard = true;
+			console.log('this.units: ',this.units);
+			
 			const numberOfUnitsOnBoard = this.units.filter(unit => unit.onBoard);
 			// check to see if all of an army are on the board
+			console.log('numberOfUnitsOnBoard: ',numberOfUnitsOnBoard);
 			if (numberOfUnitsOnBoard.length === this.units.length) {
 				this.$emit("allOfOneArmyOnBoard", numberOfUnitsOnBoard[0].army);
 			}
@@ -115,7 +121,6 @@ export default {
 			this.units = this.armies.map(unit => {
 				return {
 					...unit, 
-					onBoard: false
 				}
 			});
 		},
