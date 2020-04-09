@@ -3,6 +3,7 @@
 		<h1>TURN</h1>
 		<div class="outer-container">
 			<div>
+
 				<TurnCards 
 					v-if="allPiecesOnBoard"
 					:playingcards="setup.mainPlayingCards" 
@@ -113,7 +114,6 @@ export default {
 			})
 		},
 		updateRowAndCol: function(rowAndColumn) {
-			console.log('rowAndColum: ',rowAndColumn);
 			this.rowAndColumn = rowAndColumn;
 		},
 		onboard: function(unit) {
@@ -159,6 +159,7 @@ export default {
 			}
 		}, 
 		unitFinishedMoving: function(unitToUpdate) {
+			console.log('unitToUpdate: ',unitToUpdate);
 			this.imperialArmy = this.imperialArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
 			this.chaosArmy = this.chaosArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
 		},
@@ -188,12 +189,33 @@ export default {
 					...unit
 				}
 			}
-		}, 
-		enemiesInReach: function(inReach) {
-			console.log('enemiesInReach in index: ',inReach);
+		},
+		finishMove: function(id) {
+			if (!this.allPiecesOnBoard) {
+				return;
+			}
+			this.imperialArmy = this.imperialArmy.map(unit => {
+				if (unit.id === id) {
+					return {
+						...unit, 
+						finishedMove: true
+					}
+				} else {
+					return {
+						...unit
+					}
+				}
+			})
+		},
+		enemiesInReach: function(inReach, id) {
+			console.log('enemiesInReach in index: ',inReach, id);
+			const unitToCheck = this.imperialArmy.filter(u => u.id === id) || this.chaosArmy.filter(u => u.id === id);
+			console.log('unitToCheck: ',unitToCheck[0].hasMoved);
+			if (inReach.length === 0) {
+				this.finishMove(id);
+			}
 			this.imperialArmy = this.imperialArmy.map(unit => this.canBeAttacked(unit, inReach));
 			this.chaosArmy = this.chaosArmy.map(unit => this.canBeAttacked(unit, inReach));
-			console.log('this.imperialArmy: ',this.imperialArmy);
 		},
 		canBeAttacked: function(unit, inReach) {
 			if (inReach.some(r => r.id == unit.id)) {

@@ -6,11 +6,11 @@
 			class="piece"
 			:class="[unit.isSelected ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '']"
 			:id="unit.id"
-			:draggable="checkIfDraggable(unit.isSelected)"
+			:draggable="checkIfDraggable(unit.isSelected, unit.finishedMove)"
 			@dragstart="dragStart"
 			@dragover.stop
 			@dragend.prevent="dragEnd($event, unit)"
-			@mousedown="showPossibleMoves($event, unit.isSelected, unit.hasMoved, unit.boardPosition)"
+			@mousedown="showPossibleMoves($event, unit.isSelected, unit.hasMoved, unit.boardPosition, unit.id)"
 			@mouseup="$emit('rowAndColumn', {row: null, column: null});"
 			@click="selected(unit)"
 			:style="{ backgroundImage: `url(${unit.img})`}"
@@ -49,20 +49,22 @@ export default {
 			if (rowClass.length) {
 				row = rowClass[0].slice(3) - 1;
 			}
-			console.log('row, column: ',row, column);
 			return {
 				row,
 				column
 			};
 		},
-		checkIfDraggable: function(isSelected) {
+		checkIfDraggable: function(isSelected, finishedMove) {
+			console.log('finishedMove: ',finishedMove);
+			if (finishedMove) {
+				return false;
+			}
 			if (!this.allPiecesOnBoard || isSelected) {
 				return true;
 			}
 
 		},
-		showPossibleMoves: function(e, isSelected, hasMoved, boardPosition) {
-			console.log('boardPosition in showPossibleMoves: ',boardPosition);
+		showPossibleMoves: function(e, isSelected, hasMoved, boardPosition, id) {
 			let surroundingTiles;
 			boardPosition[0] % 2 === 0 ? 
 				surroundingTiles = [[-1, 1], [-1, 0], [0, -1], [0, 1], [1, 1], [1, 0]] :
@@ -70,18 +72,16 @@ export default {
 			const calculatedSurroundingTiles = surroundingTiles.map(tile => {
 				return [tile[0] + boardPosition[0], tile[1] + boardPosition[1]]
 			});
-			console.log('calculatedSurroundingTiles: ',calculatedSurroundingTiles);
-			this.calculateEnemiesInReach(calculatedSurroundingTiles);
+			this.calculateEnemiesInReach(calculatedSurroundingTiles, id);
 
 			if (!isSelected) {
 				return;
 			}
-			console.log('about to chwck row and column: ');
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$emit("rowAndColumn", rowAndColumn);
 
 		},
-		calculateEnemiesInReach: function(calculatedSurroundingTiles) {
+		calculateEnemiesInReach: function(calculatedSurroundingTiles, id) {
 			const enemiesInReach = this.opposingArmy.filter(unit => {
 				let matchingTiles = calculatedSurroundingTiles.filter(tile => {
 					return tile[0] === unit.boardPosition[0] && tile[1] === unit.boardPosition[1]
@@ -91,18 +91,15 @@ export default {
 				}
 			});
 
-			console.log('enemiesInReach: ',enemiesInReach);
-			this.$emit("enemiesInReach", enemiesInReach);
+			this.$emit("enemiesInReach", enemiesInReach, id);
 		},
 		dragEnd: function(e, unit) {
 			e.target.style.opacity = 1;
 			this.$emit('onboard', unit);
 			unit.onBoard = true;
-			console.log('this.units: ',this.units);
 			
 			const numberOfUnitsOnBoard = this.units.filter(unit => unit.onBoard);
 			// check to see if all of an army are on the board
-			console.log('numberOfUnitsOnBoard: ',numberOfUnitsOnBoard);
 			if (numberOfUnitsOnBoard.length === this.units.length) {
 				this.$emit("allOfOneArmyOnBoard", numberOfUnitsOnBoard[0].army);
 			}
