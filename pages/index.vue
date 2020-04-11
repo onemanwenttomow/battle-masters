@@ -82,6 +82,12 @@ export default {
 		return { setup };
 	},
 	mounted: function() {
+		this.$store.commit('setupArmies', {
+			armies: [
+				...this.setup.armies[0].map(this.unitSetup),
+				...this.setup.armies[1].map(this.unitSetup)
+			]
+		});
 		this.imperialArmy = this.setup.armies[0].map(this.unitSetup);
 		this.chaosArmy = this.setup.armies[1].map(this.unitSetup);
 	},
