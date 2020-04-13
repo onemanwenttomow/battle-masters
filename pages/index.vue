@@ -79,6 +79,7 @@ export default {
 	},
 	async asyncData({ $axios }) {
 		const setup = await $axios.$get("/api/initial-board");
+		
 		return { setup };
 	},
 	mounted: function() {

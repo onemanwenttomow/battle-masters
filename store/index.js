@@ -1,4 +1,5 @@
 import Vuex from "vuex";
+import axios from "axios";
 
 const createStore = () => {
   return new Vuex.Store({
@@ -10,7 +11,12 @@ const createStore = () => {
             state.armies = armies;
         }
     },
-    actions: {},
+    actions: {
+        // async nuxtServerInit(vuexContext, Context) {
+        //     let data = await axios.get("/api/initial-board");
+        //     console.log('data in actions: ',data);
+        // }
+    },
     getters: {}
   });
 };
