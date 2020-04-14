@@ -33,7 +33,6 @@ class Chaos extends Unit {
 }
 
 module.exports.armies = [
-    [
         new Imperial('The Mighty Canon', 2, 'canon', '/imperial-4.png', 'canon'),
         new Imperial("Crossbowmen Melgar's", 3, 'melgar', '/imperial-2.png', 'crossbow'),
         new Imperial("Imperial Archers of Bogenhaffen", 3, 'bogenhaffen' , '/imperial-3.png', 'archer'),
@@ -45,8 +44,6 @@ module.exports.armies = [
         new Imperial("Imperial Knights of Duke Blitzen's", 4, 'blitzens', '/imperial-5.png'), 
         new Imperial("Imperial Knights Prince Normand's", 4, 'normands', '/imperial-5.png'),
         new Imperial('Lord Knights of the Empire', 5, 'empire-knights', '/imperial-6.png'), 
-    ],
-    [
         new Chaos('Goblins of Grom', 2, 'grom', '/chaos-1.png'),
         new Chaos('Goblins of Uglub', 2, 'uglub', '/chaos-1.png'),
         new Chaos("Wolf Riders Black Fang's", 2, 'blackfangs', '/chaos-5.png', 'wolfrider'),
@@ -61,5 +58,5 @@ module.exports.armies = [
         new Chaos("Chaos Warriors Finmar's", 4, 'finmars', '/chaos-4.png'),
         new Chaos("Champions of Chaos Gorefist's", 5, 'gorefists', '/chaos-7.png'),
         new Chaos("Ogre Champion of Grimorg", 4, 'grimorg', '/chaos-6.png', 'ogre')
-    ]
+
 ];

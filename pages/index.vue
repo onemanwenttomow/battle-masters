@@ -15,9 +15,7 @@
 					@unitFinishedMoving="unitFinishedMoving"
 				/>
 				<ArmyCards 
-					:armies="imperialArmy" 
-					:opposingArmy="chaosArmy"
-					:allPiecesOnBoard="allPiecesOnBoard"
+					army="Imperial"
 					@rowAndColumn="updateRowAndCol"
 					@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 					@selectedUnit="changeSelectedUnit"
@@ -35,7 +33,8 @@
 				@newposition="updatePositions"
 			/>
 		</div>
-		<ArmyCards 
+		<ArmyCards
+			army="Chaos"
 			:armies="chaosArmy" 
 			:opposingArmy="imperialArmy"
 			:allPiecesOnBoard="allPiecesOnBoard"
@@ -83,14 +82,9 @@ export default {
 		return { setup };
 	},
 	mounted: function() {
-		this.$store.commit('setupArmies', {
-			armies: [
-				...this.setup.armies[0].map(this.unitSetup),
-				...this.setup.armies[1].map(this.unitSetup)
-			]
-		});
-		this.imperialArmy = this.setup.armies[0].map(this.unitSetup);
-		this.chaosArmy = this.setup.armies[1].map(this.unitSetup);
+	
+		this.imperialArmy = this.setup.armies.map(this.unitSetup);
+		this.chaosArmy = this.setup.armies.map(this.unitSetup);
 	},
 	methods: {
 		unitSetup: function(unit) {

@@ -1,7 +1,7 @@
 <template>
 	<div class="army-container">
 		<div
-			v-for="unit in units"
+			v-for="unit in getArmy(army)"
 			:key="unit.id"
 			class="piece"
 			:class="[unit.isSelected ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '']"
@@ -19,13 +19,18 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
 	data() {
 		return {
 			units: []
 		};
 	},
-	props: ["armies", "allPiecesOnBoard", "opposingArmy"],
+	props: ["army"],
+	computed: mapGetters([
+        'getArmy', 'getOpposingArmy'
+    ]),
 	methods: {
 		dragStart: function(e) {
 			const target = e.target;
@@ -82,7 +87,7 @@ export default {
 
 		},
 		calculateEnemiesInReach: function(calculatedSurroundingTiles, id) {
-			const enemiesInReach = this.opposingArmy.filter(unit => {
+			const enemiesInReach = this.getOpposingArmy(this.army).filter(unit => {
 				let matchingTiles = calculatedSurroundingTiles.filter(tile => {
 					return tile[0] === unit.boardPosition[0] && tile[1] === unit.boardPosition[1]
 				});
@@ -100,9 +105,9 @@ export default {
 			
 			const numberOfUnitsOnBoard = this.units.filter(unit => unit.onBoard);
 			// check to see if all of an army are on the board
-			if (numberOfUnitsOnBoard.length === this.units.length) {
-				this.$emit("allOfOneArmyOnBoard", numberOfUnitsOnBoard[0].army);
-			}
+			// if (numberOfUnitsOnBoard.length === this.units.length) {
+			// 	this.$emit("allOfOneArmyOnBoard", numberOfUnitsOnBoard[0].army);
+			// }
 			// set that the piece has moved..
 			if (this.allPiecesOnBoard) {
 				this.$emit("unitFinishedMoving", unit);
