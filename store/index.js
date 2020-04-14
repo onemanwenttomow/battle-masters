@@ -12,10 +12,14 @@ const createStore = () => {
         }
     },
     actions: {
-        // async nuxtServerInit(vuexContext, Context) {
-        //     let data = await axios.get("/api/initial-board");
-        //     console.log('data in actions: ',data);
-        // }
+        async nuxtServerInit({ commit, dispatch }) {
+            await dispatch('storeDispatchFunc')
+        },
+        async storeDispatchFunc({ commit }) {
+            const { data } = await this.$axios.get('/api/initial-board')
+            console.log("data", data)
+            commit('setupArmies', data)
+        },
     },
     getters: {}
   });
