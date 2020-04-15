@@ -16,28 +16,23 @@
 				<ArmyCards 
 					army="Imperial"
 					@rowAndColumn="updateRowAndCol"
-					@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 					@selectedUnit="changeSelectedUnit"
 					@unitFinishedMoving="unitFinishedMoving"
 					@enemiesInReach="enemiesInReach"
-					@onboard="onboard"
 				/>
 				
 			</div>
 			<Board 
 				:allPiecesOnBoard="allUnitsOnBoard"
 				:rowAndColumn="rowAndColumn" 
-				@newposition="updatePositions"
 			/>
 		</div>
 		<ArmyCards
 			army="Chaos"
 			@rowAndColumn="updateRowAndCol"
-			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 			@selectedUnit="changeSelectedUnit"
 			@unitFinishedMoving="unitFinishedMoving"
 			@enemiesInReach="enemiesInReach"					
-			@onboard="onboard"
 		/>
 	</fragment>
 </template>
@@ -142,41 +137,11 @@ export default {
 				}
 			})
 		},
-		allOfOneArmyOnBoard: function(army) {
-			army === "Imperial" ? this.imperialArmyAllOnBoard = true : this.chaosArmyAllOnBoard = true
-			if (this.imperialArmyAllOnBoard && this.chaosArmyAllOnBoard) {
- 				this.allPiecesOnBoard = true;
-			}
-		},
-		updatePositions: function(positions, id) {
-			this.boardPositions.push(positions[0]);
-			this.boardPositions = this.boardPositions.filter(pos => {
-				return pos.row != positions[1].row || pos.col != positions[1].col
-			});
-			if (positions[0]) {
-				this.imperialArmy = this.imperialArmy.map(unit => this.updateUnitHavingMovedNewPosition(unit, id, positions[0]));
-				this.chaosArmy = this.chaosArmy.map(unit => this.updateUnitHavingMovedNewPosition(unit, id, positions[0]));
-			}
-		}, 
 		unitFinishedMoving: function(unitToUpdate) {
 			console.log('unitToUpdate: ',unitToUpdate);
 			this.imperialArmy = this.imperialArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
 			this.chaosArmy = this.chaosArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
 		},
-		updateUnitHavingMovedNewPosition: function(unit, id, positions) {
-			if (unit.id === id) {
-				return {
-					...unit, 
-					isSelected: false,
-					hasMoved: true,
-					boardPosition: [positions.row, positions.col]
-				}
-			} else {
-				return {
-					...unit
-				}
-			}
-		}, 
 		updateUnitHavingMoved: function(unit, unitToUpdate) {
 			if (unit.id === unitToUpdate.id) {
 				return {

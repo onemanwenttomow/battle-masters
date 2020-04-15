@@ -14,9 +14,7 @@ const createStore = () => {
             state.board = board;
         },
         updateUnitPosition(state, payload) {
-            console.log("in mutations!!!!!!!!!!!!!!!!!1", payload)
             state.armies = state.armies.map(unit => {
-                console.log('unit.id === payload.id: ',unit.id === payload.id);
                 if (unit.id === payload.id) {
                     return {
                         ...unit,
@@ -27,7 +25,6 @@ const createStore = () => {
                     return unit
                 }
             })
-            console.log('state.armies: ',state.armies);
         }
     },
     actions: {
@@ -72,6 +69,9 @@ const createStore = () => {
         },
         allUnitsOnBoard: (state) => {
             return state.armies.filter(unit => unit.onBoard).length === state.armies.length;
+        },
+        selectedUnit: (state) => (id) => {
+            return state.armies.find(unit => unit.id === id);
         }
     }
   });

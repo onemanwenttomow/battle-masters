@@ -29,7 +29,7 @@ export default {
 	},
 	props: ["army"],
 	computed: mapGetters([
-        'getArmy', 'getOpposingArmy'
+        'getArmy', 'getOpposingArmy', 'allUnitsOnBoard'
     ]),
 	methods: {
 		dragStart: function(e) {
@@ -64,7 +64,7 @@ export default {
 			if (finishedMove) {
 				return false;
 			}
-			if (!this.allPiecesOnBoard || isSelected) {
+			if (!this.allUnitsOnBoard || isSelected) {
 				return true;
 			}
 
@@ -100,32 +100,10 @@ export default {
 		},
 		dragEnd: function(e, unit) {
 			e.target.style.opacity = 1;
-			this.$emit('onboard', unit);
-			unit.onBoard = true;
-			
-			const numberOfUnitsOnBoard = this.units.filter(unit => unit.onBoard);
-			// check to see if all of an army are on the board
-			// if (numberOfUnitsOnBoard.length === this.units.length) {
-			// 	this.$emit("allOfOneArmyOnBoard", numberOfUnitsOnBoard[0].army);
-			// }
-			// set that the piece has moved..
-			if (this.allPiecesOnBoard) {
-				this.$emit("unitFinishedMoving", unit);
-				this.$emit("selectedUnit", unit);
-			}
 		},
 		selected: function(card) {
 			this.$emit("selectedUnit", card);
 		}
-	},
-	watch: {
-		armies: function() {
-			this.units = this.armies.map(unit => {
-				return {
-					...unit, 
-				}
-			});
-		},
 	}
 };
 </script>

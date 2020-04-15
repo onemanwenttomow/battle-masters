@@ -60,7 +60,7 @@ export default {
 				piece.style.left = -40 + "px";
 				piece.style.zIndex = 10;
 				e.target.appendChild(piece);
-				!isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}], piece.id);
+				// !isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}], piece.id);
 				!isNaN(row) && this.$store.commit('updateUnitPosition', {
 					id: piece.id, 
 					positions: {row, col}
