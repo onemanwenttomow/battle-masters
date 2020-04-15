@@ -9,12 +9,12 @@
 					:class="[
                         hex, 
                         row.row, 
-                        hex!= 'river' && selectedRow == Number(row.row.slice(3)) -1 && selectedColumn == column -1 ? 'highlighted': '',
-                        hex!= 'river' && selectedRow == Number(row.row.slice(3)) -1 && selectedColumn == column +1 ? 'highlighted': '',
-                        hex!= 'river' && selectedRow == Number(row.row.slice(3)) && selectedColumn == column ? 'highlighted': '',
-                        hex!= 'river' && selectedRow == Number(row.row.slice(3)) && selectedColumn == column + oddRow ? 'highlighted': '',
-                        hex!= 'river' && selectedRow == Number(row.row.slice(3)) -2 && selectedColumn == column  ? 'highlighted': '',
-                        hex!= 'river' && selectedRow == Number(row.row.slice(3)) -2 && selectedColumn == column + oddRow ? 'highlighted': ''
+                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) -1 && getSelectedRowAndColumn.col == column -1 ? 'highlighted': '',
+                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) -1 && getSelectedRowAndColumn.col == column +1 ? 'highlighted': '',
+                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) && getSelectedRowAndColumn.col == column ? 'highlighted': '',
+                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) && getSelectedRowAndColumn.col == column + oddRow ? 'highlighted': '',
+                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) -2 && getSelectedRowAndColumn.col == column  ? 'highlighted': '',
+                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) -2 && getSelectedRowAndColumn.col == column + oddRow ? 'highlighted': ''
                     ]"
 					@click="testing(hex, row.row, column)"
 					@dragover.prevent
@@ -31,19 +31,14 @@
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-	data() {
-		return {
-            selectedRow: null,
-            selectedColumn: null
-        };
-	},
-	props: ["board", "rowAndColumn", "allPiecesOnBoard"],
-	computed: mapGetters([
-        'getBoard'
-	]), 
-	oddRow: function() {
+	computed: {
+		...mapGetters([
+        	'getBoard', 'allUnitsOnBoard', 'getSelectedRowAndColumn'
+		]), 
+		oddRow: function() {
             return this.selectedRow % 2 == 0 ? -1 : +1;
         },
+	},
 	methods: {
 		testing: function(squareType, row, index) {
 			// console.log("testing squareType, row, col: ", squareType, row.slice(3), index);
@@ -52,7 +47,7 @@ export default {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
             row = Number(row.slice(3) -1);
 			let moveToHighlighted = true;
-			if (this.allPiecesOnBoard) {
+			if (this.allUnitsOnBoard) {
 				moveToHighlighted = Array.from(e.target.classList).includes("highlighted")
 			}
 			if (!Array.from(e.target.classList).includes("river") && moveToHighlighted) {
@@ -67,16 +62,9 @@ export default {
 				})
             }
             piece.style.opacity = 1;
-            this.selectedRow = null;
-            this.selectedColumn = null;
+			// need to say that possible moves are over...
 		}
-    },
-	watch: {
-		rowAndColumn: function() {
-            this.selectedRow = this.rowAndColumn.row;
-            this.selectedColumn = this.rowAndColumn.column;
-		}
-	}
+    }
 };
 </script>
 

@@ -8,11 +8,36 @@ const createStore = () => {
         board: []
     },
     mutations: {
+        currentCard(state, {card}) {
+            state.armies = state.armies.map(unit => {
+                return {
+					...unit,
+                    isSelected: card.ids.includes(unit.id),
+                    finishedMove: false
+				}
+            })
+        },
+        finishMove(state, {id}) {
+            state.armies = state.armies.map(unit => {
+                return {
+					...unit,
+                    finishedMove: unit.id === id
+				}
+            })
+        },
         userSelected(state, {id}) {
             state.armies = state.armies.map(unit => {
                 return {
                     ...unit,
                     userSelected: unit.id === id
+                }  
+            })
+        },
+        showPossibleMoves(state, {id}) {
+            state.armies = state.armies.map(unit => {
+                return {
+                    ...unit,
+                    showPossibleMoves: unit.id === id
                 }  
             })
         },
@@ -49,6 +74,7 @@ const createStore = () => {
                     onBoard: false,
                     isSelected: false,
                     userSelected: false,
+                    showPossibleMoves: false,
                     hasMoved: false,
                     hasAttacked: false,
                     finishedMove: false,
@@ -81,6 +107,18 @@ const createStore = () => {
         },
         selectedUnit: (state) => {
             return state.armies.find(unit => unit.userSelected);
+        },
+        getSelectedRowAndColumn: (state) => {
+            console.log("running getSelected")
+            if (!state.armies.find(unit => unit.showPossibleMoves)) {
+                return {
+                    row: null,
+                    col: null
+                }
+            } else {
+                console.log("returning row and col", state.armies.filter(unit => unit.showPossibleMoves))
+                return state.armies.filter(unit => unit.showPossibleMoves)[0].boardPosition[0];
+            }
         }
     }
   });

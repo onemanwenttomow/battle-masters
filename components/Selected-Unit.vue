@@ -20,12 +20,6 @@
 import { mapGetters } from 'vuex';
 
 export default {
-	data() {
-		return {
-			
-		};
-	},
-	props: ["unit"],
 	computed: mapGetters([
         'selectedUnit'
     ]),

@@ -83,8 +83,7 @@ export default {
 				return;
 			}
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
-			this.$emit("rowAndColumn", rowAndColumn);
-
+			this.$store.commit('showPossibleMoves', {id});
 		},
 		calculateEnemiesInReach: function(calculatedSurroundingTiles, id) {
 			const enemiesInReach = this.getOpposingArmy(this.army).filter(unit => {

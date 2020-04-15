@@ -3,34 +3,21 @@
 		<h1>TURN</h1>
 		<div class="outer-container">
 			<div>
-
-				<TurnCards 
-					v-if="allUnitsOnBoard"
-					@currentcard="currentCard"
-				/>
+				<TurnCards v-if="allUnitsOnBoard" />
 				<SelectedUnit 
-					v-if="selectedUnit.name"
-					:unit="selectedUnit"
+					v-if="selectedUnit"
 					@unitFinishedMoving="unitFinishedMoving"
 				/>
 				<ArmyCards 
 					army="Imperial"
-					@rowAndColumn="updateRowAndCol"
-					@selectedUnit="changeSelectedUnit"
 					@unitFinishedMoving="unitFinishedMoving"
 					@enemiesInReach="enemiesInReach"
-				/>
-				
+				/>		
 			</div>
-			<Board 
-				:allPiecesOnBoard="allUnitsOnBoard"
-				:rowAndColumn="rowAndColumn" 
-			/>
+			<Board />
 		</div>
 		<ArmyCards
 			army="Chaos"
-			@rowAndColumn="updateRowAndCol"
-			@selectedUnit="changeSelectedUnit"
 			@unitFinishedMoving="unitFinishedMoving"
 			@enemiesInReach="enemiesInReach"					
 		/>
@@ -57,26 +44,22 @@ export default {
 	data() {
 		return {
 			setup: {},
-			rowAndColumn: {},
 			boardPositions: [],
 			imperialArmy: [],
 			chaosArmy: [],
 			allPiecesOnBoard: false,
 			chaosArmyAllOnBoard: false,
 			imperialArmyAllOnBoard: false,
-			selectedUnit: {}
 		};
 	},
 	computed: mapGetters([
-        'allUnitsOnBoard'
+        'allUnitsOnBoard', 'selectedUnit'
     ]),
 	async asyncData({ $axios }) {
 		const setup = await $axios.$get("/api/initial-board");
-		
 		return { setup };
 	},
 	mounted: function() {
-	
 		this.imperialArmy = this.setup.armies.map(this.unitSetup);
 		this.chaosArmy = this.setup.armies.map(this.unitSetup);
 	},
@@ -93,49 +76,6 @@ export default {
 				remainingLives: 3,
 				boardPosition: []
 			}
-		},
-		currentCard: function(card) {
-			this.imperialArmy = this.imperialArmy.map(unit => {
-				return {
-					...unit,
-					isSelected: card.ids.includes(unit.id)
-				}
-			})
-			this.chaosArmy = this.chaosArmy.map(unit => {
-				return {
-					...unit,
-					isSelected: card.ids.includes(unit.id)
-				}
-			})
-		},
-		updateRowAndCol: function(rowAndColumn) {
-			this.rowAndColumn = rowAndColumn;
-		},
-		onboard: function(unit) {
-			this.imperialArmy = this.imperialArmy.map(u => {
-				if (u.id === unit.id) {
-					return {
-						...u, 
-						onBoard: true
-					}
-				} else {
-					return {
-						...u, 
-					}
-				}
-			});
-			this.chaosArmy = this.chaosArmy.map(u => {
-				if (u.id === unit.id) {
-					return {
-						...u, 
-						onBoard: true
-					}
-				} else {
-					return {
-						...u, 
-					}
-				}
-			})
 		},
 		unitFinishedMoving: function(unitToUpdate) {
 			console.log('unitToUpdate: ',unitToUpdate);
@@ -156,21 +96,22 @@ export default {
 			}
 		},
 		finishMove: function(id) {
-			if (!this.allPiecesOnBoard) {
+			if (!this.allUnitsOnBoard) {
 				return;
 			}
-			this.imperialArmy = this.imperialArmy.map(unit => {
-				if (unit.id === id) {
-					return {
-						...unit, 
-						finishedMove: true
-					}
-				} else {
-					return {
-						...unit
-					}
-				}
-			})
+			// this.$store.commit('finishMove', {id});
+			// this.imperialArmy = this.imperialArmy.map(unit => {
+			// 	if (unit.id === id) {
+			// 		return {
+			// 			...unit, 
+			// 			finishedMove: true
+			// 		}
+			// 	} else {
+			// 		return {
+			// 			...unit
+			// 		}
+			// 	}
+			// })
 		},
 		enemiesInReach: function(inReach, id) {
 			console.log('enemiesInReach in index: ',inReach, id);
@@ -195,9 +136,6 @@ export default {
 				}
 			}
 		},
-		changeSelectedUnit: function(unit) {
-			this.selectedUnit = this.imperialArmy.find(u => u.id === unit.id) || this.chaosArmy.find(u => u.id === unit.id)
-		}
 	}
 };
 </script>
