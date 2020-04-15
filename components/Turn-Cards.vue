@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
 	data() {
 		return {
@@ -23,13 +25,15 @@ export default {
 			shuffledPlayingCardsCopy: []
 		};
 	},
-	props: ["playingcards"],
+	computed: mapGetters([
+        'getPlayingCards'
+    ]),
 	mounted: function() {
 		this.shuffleCards();
 	},
 	methods: {
 		shuffleCards: function() {
-			this.shuffledPlayingCards = this.shuffle(this.playingcards.slice());
+			this.shuffledPlayingCards = this.shuffle(this.getPlayingCards.slice());
 			this.shuffledPlayingCardsCopy = this.shuffledPlayingCards.slice().map(card => {
 				return {
 					...card, 

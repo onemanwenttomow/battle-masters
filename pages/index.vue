@@ -5,8 +5,7 @@
 			<div>
 
 				<TurnCards 
-					v-if="allPiecesOnBoard"
-					:playingcards="setup.mainPlayingCards" 
+					v-if="allUnitsOnBoard"
 					@currentcard="currentCard"
 				/>
 				<SelectedUnit 
@@ -26,18 +25,13 @@
 				
 			</div>
 			<Board 
-				:board="setup.board" 
-				:allPiecesOnBoard="allPiecesOnBoard"
+				:allPiecesOnBoard="allUnitsOnBoard"
 				:rowAndColumn="rowAndColumn" 
-				:boardPositions="boardPositions" 
 				@newposition="updatePositions"
 			/>
 		</div>
 		<ArmyCards
 			army="Chaos"
-			:armies="chaosArmy" 
-			:opposingArmy="imperialArmy"
-			:allPiecesOnBoard="allPiecesOnBoard"
 			@rowAndColumn="updateRowAndCol"
 			@allOfOneArmyOnBoard="allOfOneArmyOnBoard"
 			@selectedUnit="changeSelectedUnit"
@@ -54,6 +48,8 @@ import Board from "~/components/Board.vue";
 import ArmyCards from "~/components/Army-Card.vue";
 import TurnCards from "~/components/Turn-Cards.vue";
 import SelectedUnit from "~/components/Selected-Unit.vue";
+import { mapGetters } from 'vuex';
+
 
 export default {
 	components: {
@@ -76,6 +72,9 @@ export default {
 			selectedUnit: {}
 		};
 	},
+	computed: mapGetters([
+        'allUnitsOnBoard'
+    ]),
 	async asyncData({ $axios }) {
 		const setup = await $axios.$get("/api/initial-board");
 		

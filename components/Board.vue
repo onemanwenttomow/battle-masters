@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<div class="board">
-			<fragment v-for="row in board" v-bind:key="row.row">
+			<fragment v-for="row in getBoard" v-bind:key="row.row">
 				<div
 					v-for="(hex, column) in row.type"
 					class="hexagon"
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+
 export default {
 	data() {
 		return {
@@ -35,7 +37,13 @@ export default {
             selectedColumn: null
         };
 	},
-	props: ["board", "rowAndColumn", "boardPositions", "allPiecesOnBoard"],
+	props: ["board", "rowAndColumn", "allPiecesOnBoard"],
+	computed: mapGetters([
+        'getBoard'
+	]), 
+	oddRow: function() {
+            return this.selectedRow % 2 == 0 ? -1 : +1;
+        },
 	methods: {
 		testing: function(squareType, row, index) {
 			// console.log("testing squareType, row, col: ", squareType, row.slice(3), index);
@@ -52,17 +60,16 @@ export default {
 				piece.style.left = -40 + "px";
 				piece.style.zIndex = 10;
 				e.target.appendChild(piece);
-            	!isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}], piece.id);
+				!isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}], piece.id);
+				!isNaN(row) && this.$store.commit('updateUnitPosition', {
+					id: piece.id, 
+					positions: {row, col}
+				})
             }
             piece.style.opacity = 1;
             this.selectedRow = null;
             this.selectedColumn = null;
 		}
-    },
-    computed: {
-        oddRow: function() {
-            return this.selectedRow % 2 == 0 ? -1 : +1;
-        }
     },
 	watch: {
 		rowAndColumn: function() {
