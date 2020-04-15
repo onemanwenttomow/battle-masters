@@ -102,6 +102,7 @@ export default {
 			e.target.style.opacity = 1;
 		},
 		selected: function(card) {
+			this.$store.commit('userSelected', {id: card.id})
 			this.$emit("selectedUnit", card);
 		}
 	}

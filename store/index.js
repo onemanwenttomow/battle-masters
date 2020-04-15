@@ -8,6 +8,14 @@ const createStore = () => {
         board: []
     },
     mutations: {
+        userSelected(state, {id}) {
+            state.armies = state.armies.map(unit => {
+                return {
+                    ...unit,
+                    userSelected: unit.id === id
+                }  
+            })
+        },
         setupAllPieces(state, { armies, mainPlayingCards, board}) {
             state.armies = armies;
             state.mainPlayingCards = mainPlayingCards;
@@ -40,6 +48,7 @@ const createStore = () => {
                     ...unit,
                     onBoard: false,
                     isSelected: false,
+                    userSelected: false,
                     hasMoved: false,
                     hasAttacked: false,
                     finishedMove: false,
@@ -70,8 +79,8 @@ const createStore = () => {
         allUnitsOnBoard: (state) => {
             return state.armies.filter(unit => unit.onBoard).length === state.armies.length;
         },
-        selectedUnit: (state) => (id) => {
-            return state.armies.find(unit => unit.id === id);
+        selectedUnit: (state) => {
+            return state.armies.find(unit => unit.userSelected);
         }
     }
   });

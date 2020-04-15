@@ -1,22 +1,24 @@
 <template>
-	<div class="selected-unit" :class="[unit.army === 'Imperial' ? 'imperial-card' : 'chaos-card']">
-        <h3>{{unit.name}}</h3>
-		<img :src="unit.img" :alt="unit.name">
-		<h4>Combat Value: {{unit.combatValue}}</h4>
-		<h4>Damaged Sustained: {{3 - unit.remainingLives}}/3</h4>
-		<div v-if="unit.isSelected">
+	<div class="selected-unit" :class="[selectedUnit.army === 'Imperial' ? 'imperial-card' : 'chaos-card']">
+        <h3>{{selectedUnit.name}}</h3>
+		<img :src="selectedUnit.img" :alt="selectedUnit.name">
+		<h4>Combat Value: {{selectedUnit.combatValue}}</h4>
+		<h4>Damaged Sustained: {{3 - selectedUnit.remainingLives}}/3</h4>
+		<div v-if="selectedUnit.isSelected">
 			<div 
-				v-if="!unit.hasMoved" 
-				@click="$emit('unitFinishedMoving', unit)"
+				v-if="!selectedUnit.hasMoved" 
+				@click="$emit('unitFinishedMoving', selectedUnit)"
 				class="skip"
 			>Skip Move</div>
 			<div v-else>Unit can still move</div>
 		</div>
-		{{unit}}
+		{{selectedUnit}}
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
 	data() {
 		return {
@@ -24,9 +26,9 @@ export default {
 		};
 	},
 	props: ["unit"],
-	methods: {
-		
-	}
+	computed: mapGetters([
+        'selectedUnit'
+    ]),
 };
 </script>
 
