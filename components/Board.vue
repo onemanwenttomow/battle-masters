@@ -11,7 +11,6 @@
                         row.row, 
                         hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
                     ]"
-					@click="testing(hex, row.row, column)"
 					@dragover.prevent
 					@drop.prevent="drop($event, row.row, column)"
 				>
@@ -23,21 +22,15 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
 	computed: {
 		...mapGetters([
-        	'getBoard', 'allUnitsOnBoard', 'getPossibleMoves'
+        	'getBoard', 'allUnitsOnBoard', 'getPossibleMoves', 'checkIfUnitsInReach'
 		]), 
-		oddRow: function() {
-            return this.selectedRow % 2 == 0 ? -1 : +1;
-        },
 	},
 	methods: {
-		testing: function(squareType, row, index) {
-			// console.log("testing squareType, row, col: ", squareType, row.slice(3), index);
-		},
 		checkIfSelected: function(row, col) {
 			row = Number(row.slice(3));
 			return this.getPossibleMoves.find(move => move[0] === (row -1) && move[1] === col);
@@ -54,7 +47,6 @@ export default {
 				piece.style.left = -40 + "px";
 				piece.style.zIndex = 10;
 				e.target.appendChild(piece);
-				// !isNaN(row) && this.$emit("newposition", [{row, col}, {row: this.selectedRow, col: this.selectedColumn}], piece.id);
 				!isNaN(row) && this.$store.commit('updateUnitPosition', {
 					id: piece.id, 
 					positions: {row, col}
@@ -62,8 +54,12 @@ export default {
             }
 			piece.style.opacity = 1;
 			this.$store.commit('showPossibleMoves', {id: "none", moves: "none"});
+			if (!this.allUnitsOnBoard) {
+				return;
+			}
+			const unitsInReach = this.checkIfUnitsInReach(piece.id);
+			this.$store.commit('canBeAttacked', {id: piece.id, unitsInReach})
 			this.$store.commit('finishMove', {id: piece.id})
-			// need to say that possible moves are over...
 		}
     }
 };

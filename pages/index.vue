@@ -11,7 +11,6 @@
 				<ArmyCards 
 					army="Imperial"
 					@unitFinishedMoving="unitFinishedMoving"
-					@enemiesInReach="enemiesInReach"
 				/>		
 			</div>
 			<Board />
@@ -19,7 +18,6 @@
 		<ArmyCards
 			army="Chaos"
 			@unitFinishedMoving="unitFinishedMoving"
-			@enemiesInReach="enemiesInReach"					
 		/>
 	</fragment>
 </template>
@@ -112,31 +110,7 @@ export default {
 			// 		}
 			// 	}
 			// })
-		},
-		enemiesInReach: function(inReach, id) {
-			this.checkIfUnitsInReach(id)
-			console.log('enemiesInReach in index: ',inReach, id);
-			const unitToCheck = this.imperialArmy.filter(u => u.id === id) || this.chaosArmy.filter(u => u.id === id);
-			console.log('unitToCheck: ',unitToCheck[0].hasMoved);
-			if (inReach.length === 0) {
-				this.finishMove(id);
-			}
-			this.imperialArmy = this.imperialArmy.map(unit => this.canBeAttacked(unit, inReach));
-			this.chaosArmy = this.chaosArmy.map(unit => this.canBeAttacked(unit, inReach));
-		},
-		canBeAttacked: function(unit, inReach) {
-			if (inReach.some(r => r.id == unit.id)) {
-				return {
-					...unit, 
-					canBeAttacked: true,
-				}
-			} else {
-				return {
-					...unit,
-					canBeAttacked: false,
-				}
-			}
-		},
+		}
 	}
 };
 </script>

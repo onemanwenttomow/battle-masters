@@ -64,6 +64,17 @@ const createStore = () => {
                 }
             })
         },
+        canBeAttacked(state, {id, unitsInReach}) {
+            state.armies = state.armies.map(unit => {
+                console.log('unitsInReach: ',unitsInReach);
+                console.log('id: ',id);
+                console.log('unitsInReach.some(unit => unit.id == id): ',unitsInReach.some(unit => unit.id == id));
+				return {
+					...unit, 
+					canBeAttacked: unitsInReach.some(u => u.id == unit.id),
+                }
+            })
+        },
         setupAllPieces(state, { armies, mainPlayingCards, board}) {
             state.armies = armies;
             state.mainPlayingCards = mainPlayingCards;
@@ -138,26 +149,30 @@ const createStore = () => {
                 return state.armies.filter(unit => unit.showPossibleMoves.length)[0].showPossibleMoves;
             }
         },
-        checkIfUnitsInReach: (state, {getPieceById, getOpposingArmy}) => (id) => {
-            console.log('id: ',id, getPieceById);
-            console.log('getters: ', getPieceById(id).army);
+        getSurroundingTiles: (state, {getPieceById}) => (id) => {
+            const unitToCheck = getPieceById(id)[0].boardPosition[0];
+            let surroundingTiles;
+			unitToCheck.row % 2 === 0 ? 
+				surroundingTiles = [[-1, 1], [-1, 0], [0, -1], [0, 1], [1, 1], [1, 0]] :
+				surroundingTiles = [[-1,-1], [-1, 0], [0, -1], [0, 1], [1, -1], [1, 0]]
+			const calculatedSurroundingTiles = surroundingTiles.map(tile => {
+				return [tile[0] + unitToCheck.row, tile[1] + unitToCheck.col]
+            });
+            return calculatedSurroundingTiles;
+        },
+        checkIfUnitsInReach: (state, {getPieceById, getOpposingArmy, getSurroundingTiles}) => (id) => {
             const unitToCheck = getPieceById(id);
             const army = unitToCheck[0].army;
-            console.log('army: ',army);
             const opposingArmy = getOpposingArmy(army);
-            console.log('opposingArmy: ',opposingArmy);
-            console.log('unitToCheck: ',unitToCheck);
-            console.log('unitToCheck.showPossibleMoves: ',unitToCheck[0].showPossibleMoves);
-
+            const surroundingTiles = getSurroundingTiles(id);
             const enemiesInReach = opposingArmy.filter(unit => {
-				let matchingTiles = unitToCheck[0].showPossibleMoves.filter(tile => {
-					return tile[0].row === unit.boardPosition[0].row && tile[0].col === unit.boardPosition[0].col
+				let matchingTiles = surroundingTiles.filter(tile => {
+					return tile[0] === unit.boardPosition[0].row && tile[1] === unit.boardPosition[0].col
 				});
 				if (matchingTiles.length) {
 					return matchingTiles
 				}
             });
-            console.log('enemiesInReach: ',enemiesInReach);
             return enemiesInReach;
         }
     }

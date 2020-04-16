@@ -22,14 +22,9 @@
 import { mapGetters } from 'vuex';
 
 export default {
-	data() {
-		return {
-			units: []
-		};
-	},
 	props: ["army"],
 	computed: mapGetters([
-        'getArmy', 'getOpposingArmy', 'allUnitsOnBoard'
+        'getArmy', 'getOpposingArmy', 'allUnitsOnBoard', 'getSurroundingTiles'
     ]),
 	methods: {
 		dragStart: function(e) {
@@ -73,40 +68,19 @@ export default {
 			if (!this.allUnitsOnBoard) {
 				return;
 			}
-			let surroundingTiles;
-			boardPosition[0].row % 2 === 0 ? 
-				surroundingTiles = [[-1, 1], [-1, 0], [0, -1], [0, 1], [1, 1], [1, 0]] :
-				surroundingTiles = [[-1,-1], [-1, 0], [0, -1], [0, 1], [1, -1], [1, 0]]
-			const calculatedSurroundingTiles = surroundingTiles.map(tile => {
-				return [tile[0] + boardPosition[0].row, tile[1] + boardPosition[0].col]
-			});
-			console.log('calculatedSurroundingTiles: ',calculatedSurroundingTiles);
-
+			
+			let calculatedSurroundingTiles = this.getSurroundingTiles(id);
 			if (!isSelected) {
 				return;
 			}
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$store.commit('showPossibleMoves', {id, moves: calculatedSurroundingTiles});
-			this.calculateEnemiesInReach(calculatedSurroundingTiles, id);
-		},
-		calculateEnemiesInReach: function(calculatedSurroundingTiles, id) {
-			const enemiesInReach = this.getOpposingArmy(this.army).filter(unit => {
-				let matchingTiles = calculatedSurroundingTiles.filter(tile => {
-					return tile[0] === unit.boardPosition[0].row && tile[1] === unit.boardPosition[0].col
-				});
-				if (matchingTiles.length) {
-					return matchingTiles
-				}
-			});
-
-			this.$emit("enemiesInReach", enemiesInReach, id);
 		},
 		dragEnd: function(e, unit) {
 			e.target.style.opacity = 1;
 		},
 		selected: function(card) {
 			this.$store.commit('userSelected', {id: card.id})
-			this.$emit("selectedUnit", card);
 		}
 	}
 };
