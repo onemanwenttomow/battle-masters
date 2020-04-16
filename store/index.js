@@ -13,15 +13,31 @@ const createStore = () => {
                 return {
 					...unit,
                     isSelected: card.ids.includes(unit.id),
-                    finishedMove: false
+                    finishedTurn: false,
+                    hasMoved: false
 				}
             })
         },
         finishMove(state, {id}) {
             state.armies = state.armies.map(unit => {
+                if (unit.id === id) {
+                    return {
+                        ...unit,
+                        hasMoved: true
+                    }
+                } else {
+                    return {
+                        ...unit
+                    }
+                }
+                
+            })
+        },
+        finishTurn(state, {id}) {
+            state.armies = state.armies.map(unit => {
                 return {
 					...unit,
-                    finishedMove: unit.id === id
+                    finishedTurn: unit.id === id
 				}
             })
         },
@@ -84,7 +100,7 @@ const createStore = () => {
                     showPossibleMoves: [],
                     hasMoved: false,
                     hasAttacked: false,
-                    finishedMove: false,
+                    finishedTurn: false,
                     canBeAttacked: false,
                     remainingLives: 3,
                     boardPosition: []
@@ -121,6 +137,28 @@ const createStore = () => {
             } else {
                 return state.armies.filter(unit => unit.showPossibleMoves.length)[0].showPossibleMoves;
             }
+        },
+        checkIfUnitsInReach: (state, {getPieceById, getOpposingArmy}) => (id) => {
+            console.log('id: ',id, getPieceById);
+            console.log('getters: ', getPieceById(id).army);
+            const unitToCheck = getPieceById(id);
+            const army = unitToCheck[0].army;
+            console.log('army: ',army);
+            const opposingArmy = getOpposingArmy(army);
+            console.log('opposingArmy: ',opposingArmy);
+            console.log('unitToCheck: ',unitToCheck);
+            console.log('unitToCheck.showPossibleMoves: ',unitToCheck[0].showPossibleMoves);
+
+            const enemiesInReach = opposingArmy.filter(unit => {
+				let matchingTiles = unitToCheck[0].showPossibleMoves.filter(tile => {
+					return tile[0].row === unit.boardPosition[0].row && tile[0].col === unit.boardPosition[0].col
+				});
+				if (matchingTiles.length) {
+					return matchingTiles
+				}
+            });
+            console.log('enemiesInReach: ',enemiesInReach);
+            return enemiesInReach;
         }
     }
   });

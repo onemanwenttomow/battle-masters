@@ -60,7 +60,9 @@ export default {
 					positions: {row, col}
 				})
             }
-            piece.style.opacity = 1;
+			piece.style.opacity = 1;
+			this.$store.commit('showPossibleMoves', {id: "none", moves: "none"});
+			this.$store.commit('finishMove', {id: piece.id})
 			// need to say that possible moves are over...
 		}
     }

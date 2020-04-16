@@ -53,7 +53,7 @@ export default {
 		};
 	},
 	computed: mapGetters([
-        'allUnitsOnBoard', 'selectedUnit'
+        'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach'
     ]),
 	async asyncData({ $axios }) {
 		const setup = await $axios.$get("/api/initial-board");
@@ -114,6 +114,7 @@ export default {
 			// })
 		},
 		enemiesInReach: function(inReach, id) {
+			this.checkIfUnitsInReach(id)
 			console.log('enemiesInReach in index: ',inReach, id);
 			const unitToCheck = this.imperialArmy.filter(u => u.id === id) || this.chaosArmy.filter(u => u.id === id);
 			console.log('unitToCheck: ',unitToCheck[0].hasMoved);

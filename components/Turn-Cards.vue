@@ -55,7 +55,6 @@ export default {
 			card.flipped = true;
 			setTimeout(() => {
 				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1]
-				// this.$emit('currentcard', this.shuffledPlayingCards[this.shuffledPlayingCards.length -1])
 				this.$store.commit('currentCard', { card });
 				this.shuffledPlayingCards.pop();
 				if (this.shuffledPlayingCards.length === 0) {

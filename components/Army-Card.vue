@@ -4,9 +4,9 @@
 			v-for="unit in getArmy(army)"
 			:key="unit.id"
 			class="piece"
-			:class="[unit.isSelected ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '']"
+			:class="[unit.isSelected && !unit.hasMoved ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '']"
 			:id="unit.id"
-			:draggable="checkIfDraggable(unit.isSelected, unit.finishedMove)"
+			:draggable="checkIfDraggable(unit.isSelected, unit.finishedTurn)"
 			@dragstart="dragStart"
 			@dragover.stop
 			@dragend.prevent="dragEnd($event, unit)"
@@ -70,18 +70,16 @@ export default {
 
 		},
 		showPossibleMoves: function(e, isSelected, hasMoved, boardPosition, id) {
-			console.log('boardPosition: ',boardPosition);
 			if (!this.allUnitsOnBoard) {
 				return;
 			}
 			let surroundingTiles;
-			boardPosition[0] % 2 === 0 ? 
+			boardPosition[0].row % 2 === 0 ? 
 				surroundingTiles = [[-1, 1], [-1, 0], [0, -1], [0, 1], [1, 1], [1, 0]] :
 				surroundingTiles = [[-1,-1], [-1, 0], [0, -1], [0, 1], [1, -1], [1, 0]]
 			const calculatedSurroundingTiles = surroundingTiles.map(tile => {
 				return [tile[0] + boardPosition[0].row, tile[1] + boardPosition[0].col]
 			});
-			this.calculateEnemiesInReach(calculatedSurroundingTiles, id);
 			console.log('calculatedSurroundingTiles: ',calculatedSurroundingTiles);
 
 			if (!isSelected) {
@@ -89,11 +87,12 @@ export default {
 			}
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$store.commit('showPossibleMoves', {id, moves: calculatedSurroundingTiles});
+			this.calculateEnemiesInReach(calculatedSurroundingTiles, id);
 		},
 		calculateEnemiesInReach: function(calculatedSurroundingTiles, id) {
 			const enemiesInReach = this.getOpposingArmy(this.army).filter(unit => {
 				let matchingTiles = calculatedSurroundingTiles.filter(tile => {
-					return tile[0] === unit.boardPosition[0] && tile[1] === unit.boardPosition[1]
+					return tile[0] === unit.boardPosition[0].row && tile[1] === unit.boardPosition[0].col
 				});
 				if (matchingTiles.length) {
 					return matchingTiles
