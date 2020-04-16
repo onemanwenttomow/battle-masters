@@ -70,20 +70,25 @@ export default {
 
 		},
 		showPossibleMoves: function(e, isSelected, hasMoved, boardPosition, id) {
+			console.log('boardPosition: ',boardPosition);
+			if (!this.allUnitsOnBoard) {
+				return;
+			}
 			let surroundingTiles;
 			boardPosition[0] % 2 === 0 ? 
 				surroundingTiles = [[-1, 1], [-1, 0], [0, -1], [0, 1], [1, 1], [1, 0]] :
 				surroundingTiles = [[-1,-1], [-1, 0], [0, -1], [0, 1], [1, -1], [1, 0]]
 			const calculatedSurroundingTiles = surroundingTiles.map(tile => {
-				return [tile[0] + boardPosition[0], tile[1] + boardPosition[1]]
+				return [tile[0] + boardPosition[0].row, tile[1] + boardPosition[0].col]
 			});
 			this.calculateEnemiesInReach(calculatedSurroundingTiles, id);
+			console.log('calculatedSurroundingTiles: ',calculatedSurroundingTiles);
 
 			if (!isSelected) {
 				return;
 			}
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
-			this.$store.commit('showPossibleMoves', {id});
+			this.$store.commit('showPossibleMoves', {id, moves: calculatedSurroundingTiles});
 		},
 		calculateEnemiesInReach: function(calculatedSurroundingTiles, id) {
 			const enemiesInReach = this.getOpposingArmy(this.army).filter(unit => {

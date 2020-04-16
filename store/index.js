@@ -33,12 +33,19 @@ const createStore = () => {
                 }  
             })
         },
-        showPossibleMoves(state, {id}) {
+        showPossibleMoves(state, {id, moves}) {
             state.armies = state.armies.map(unit => {
-                return {
-                    ...unit,
-                    showPossibleMoves: unit.id === id
-                }  
+                if (unit.id === id) {
+                    return {
+                        ...unit,
+                        showPossibleMoves: moves
+                    }  
+                } else {
+                    return {
+                        ...unit,
+                        showPossibleMoves: []
+                    }
+                }
             })
         },
         setupAllPieces(state, { armies, mainPlayingCards, board}) {
@@ -74,7 +81,7 @@ const createStore = () => {
                     onBoard: false,
                     isSelected: false,
                     userSelected: false,
-                    showPossibleMoves: false,
+                    showPossibleMoves: [],
                     hasMoved: false,
                     hasAttacked: false,
                     finishedMove: false,
@@ -108,16 +115,11 @@ const createStore = () => {
         selectedUnit: (state) => {
             return state.armies.find(unit => unit.userSelected);
         },
-        getSelectedRowAndColumn: (state) => {
-            console.log("running getSelected")
-            if (!state.armies.find(unit => unit.showPossibleMoves)) {
-                return {
-                    row: null,
-                    col: null
-                }
+        getPossibleMoves: (state) => {
+            if (!state.armies.find(unit => unit.showPossibleMoves.length)) {
+                return []
             } else {
-                console.log("returning row and col", state.armies.filter(unit => unit.showPossibleMoves))
-                return state.armies.filter(unit => unit.showPossibleMoves)[0].boardPosition[0];
+                return state.armies.filter(unit => unit.showPossibleMoves.length)[0].showPossibleMoves;
             }
         }
     }

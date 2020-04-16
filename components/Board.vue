@@ -9,12 +9,7 @@
 					:class="[
                         hex, 
                         row.row, 
-                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) -1 && getSelectedRowAndColumn.col == column -1 ? 'highlighted': '',
-                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) -1 && getSelectedRowAndColumn.col == column +1 ? 'highlighted': '',
-                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) && getSelectedRowAndColumn.col == column ? 'highlighted': '',
-                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) && getSelectedRowAndColumn.col == column + oddRow ? 'highlighted': '',
-                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) -2 && getSelectedRowAndColumn.col == column  ? 'highlighted': '',
-                        hex!= 'river' && getSelectedRowAndColumn.row == Number(row.row.slice(3)) -2 && getSelectedRowAndColumn.col == column + oddRow ? 'highlighted': ''
+                        hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
                     ]"
 					@click="testing(hex, row.row, column)"
 					@dragover.prevent
@@ -33,7 +28,7 @@ import { mapGetters, mapMutations } from 'vuex';
 export default {
 	computed: {
 		...mapGetters([
-        	'getBoard', 'allUnitsOnBoard', 'getSelectedRowAndColumn'
+        	'getBoard', 'allUnitsOnBoard', 'getPossibleMoves'
 		]), 
 		oddRow: function() {
             return this.selectedRow % 2 == 0 ? -1 : +1;
@@ -42,6 +37,10 @@ export default {
 	methods: {
 		testing: function(squareType, row, index) {
 			// console.log("testing squareType, row, col: ", squareType, row.slice(3), index);
+		},
+		checkIfSelected: function(row, col) {
+			row = Number(row.slice(3));
+			return this.getPossibleMoves.find(move => move[0] === (row -1) && move[1] === col);
 		},
 		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
