@@ -1,6 +1,6 @@
 <template>
 	<fragment>
-		<h1>TURN</h1>
+		<h1 v-if="getAttackModeStatus">ATTACK MODE!!</h1>
 		<div class="outer-container">
 			<div>
 				<TurnCards v-if="allUnitsOnBoard" />
@@ -31,7 +31,7 @@ export default {
 		SelectedUnit
 	},
 	computed: mapGetters([
-        'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach'
+        'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach', 'getAttackModeStatus'
     ])
 };
 </script>

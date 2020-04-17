@@ -6,7 +6,8 @@ const createStore = () => {
         armies: [], 
         mainPlayingCards: [],
         board: [], 
-        unitThatCanAttack: {}
+        unitThatCanAttack: {},
+        attackModeOpen: false
     },
     mutations: {
         currentCard(state, {card}) {
@@ -74,6 +75,9 @@ const createStore = () => {
             });
             state.unitThatCanAttack = unit;
         },
+        startAttack(state) {
+            state.attackModeOpen = true;
+        },
         setupAllPieces(state, { armies, mainPlayingCards, board}) {
             state.armies = armies;
             state.mainPlayingCards = mainPlayingCards;
@@ -131,6 +135,9 @@ const createStore = () => {
         },
         getOpposingArmy: (state) => (army) => {
             return state.armies.filter(unit => unit.army !== army);
+        },
+        getAttackModeStatus: (state) => {
+            return state.attackModeOpen;
         },
         getPieceById: (state) => (id) => {
             return state.armies.filter(unit => unit.id === id);

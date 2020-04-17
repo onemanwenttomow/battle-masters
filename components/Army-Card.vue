@@ -82,7 +82,8 @@ export default {
 			if (e.target.classList.contains('can-be-attacked')) {
 				console.log("about to attack!")
 				console.log('card.id: ',card.id);
-				console.log('this.getUnitThatCanAttack: ',this.getUnitThatCanAttack);
+				console.log('this.getUnitThatCanAttack: ',this.getUnitThatCanAttack[0].name);
+				this.$store.commit('startAttack');
 				return;
 			} 
 			this.$store.commit('userSelected', {id: card.id})

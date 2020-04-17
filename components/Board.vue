@@ -59,7 +59,7 @@ export default {
 			}
 			const unitsInReach = this.checkIfUnitsInReach(piece.id);
 			const unit = this.getPieceById(piece.id);
-			this.$store.commit('canBeAttacked', {unit, unitsInReach})
+			unitsInReach.length && this.$store.commit('canBeAttacked', {unit, unitsInReach})
 			this.$store.commit('finishMove', {id: piece.id})
 		}
     }
