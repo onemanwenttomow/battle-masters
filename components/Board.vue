@@ -27,7 +27,7 @@ import { mapGetters } from 'vuex';
 export default {
 	computed: {
 		...mapGetters([
-        	'getBoard', 'allUnitsOnBoard', 'getPossibleMoves', 'checkIfUnitsInReach'
+        	'getBoard', 'allUnitsOnBoard', 'getPossibleMoves', 'checkIfUnitsInReach', 'getPieceById'
 		]), 
 	},
 	methods: {
@@ -58,7 +58,8 @@ export default {
 				return;
 			}
 			const unitsInReach = this.checkIfUnitsInReach(piece.id);
-			this.$store.commit('canBeAttacked', {id: piece.id, unitsInReach})
+			const unit = this.getPieceById(piece.id);
+			this.$store.commit('canBeAttacked', {unit, unitsInReach})
 			this.$store.commit('finishMove', {id: piece.id})
 		}
     }

@@ -5,7 +5,8 @@ const createStore = () => {
     state: {
         armies: [], 
         mainPlayingCards: [],
-        board: []
+        board: [], 
+        unitThatCanAttack: {}
     },
     mutations: {
         currentCard(state, {card}) {
@@ -64,16 +65,14 @@ const createStore = () => {
                 }
             })
         },
-        canBeAttacked(state, {id, unitsInReach}) {
+        canBeAttacked(state, {unit, unitsInReach}) {
             state.armies = state.armies.map(unit => {
-                console.log('unitsInReach: ',unitsInReach);
-                console.log('id: ',id);
-                console.log('unitsInReach.some(unit => unit.id == id): ',unitsInReach.some(unit => unit.id == id));
 				return {
 					...unit, 
 					canBeAttacked: unitsInReach.some(u => u.id == unit.id),
                 }
-            })
+            });
+            state.unitThatCanAttack = unit;
         },
         setupAllPieces(state, { armies, mainPlayingCards, board}) {
             state.armies = armies;
@@ -135,6 +134,9 @@ const createStore = () => {
         },
         getPieceById: (state) => (id) => {
             return state.armies.filter(unit => unit.id === id);
+        },
+        getUnitThatCanAttack: (state) => {
+            return state.unitThatCanAttack;
         },
         allUnitsOnBoard: (state) => {
             return state.armies.filter(unit => unit.onBoard).length === state.armies.length;

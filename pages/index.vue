@@ -4,21 +4,12 @@
 		<div class="outer-container">
 			<div>
 				<TurnCards v-if="allUnitsOnBoard" />
-				<SelectedUnit 
-					v-if="selectedUnit"
-					@unitFinishedMoving="unitFinishedMoving"
-				/>
-				<ArmyCards 
-					army="Imperial"
-					@unitFinishedMoving="unitFinishedMoving"
-				/>		
+				<SelectedUnit v-if="selectedUnit" />
+				<ArmyCards army="Imperial" />		
 			</div>
 			<Board />
 		</div>
-		<ArmyCards
-			army="Chaos"
-			@unitFinishedMoving="unitFinishedMoving"
-		/>
+		<ArmyCards army="Chaos" />
 	</fragment>
 </template>
 
@@ -39,79 +30,9 @@ export default {
 		TurnCards,
 		SelectedUnit
 	},
-	data() {
-		return {
-			setup: {},
-			boardPositions: [],
-			imperialArmy: [],
-			chaosArmy: [],
-			allPiecesOnBoard: false,
-			chaosArmyAllOnBoard: false,
-			imperialArmyAllOnBoard: false,
-		};
-	},
 	computed: mapGetters([
         'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach'
-    ]),
-	async asyncData({ $axios }) {
-		const setup = await $axios.$get("/api/initial-board");
-		return { setup };
-	},
-	mounted: function() {
-		this.imperialArmy = this.setup.armies.map(this.unitSetup);
-		this.chaosArmy = this.setup.armies.map(this.unitSetup);
-	},
-	methods: {
-		unitSetup: function(unit) {
-			return {
-				...unit,
-				onBoard: false,
-				isSelected: false,
-				hasMoved: false,
-				hasAttacked: false,
-				finishedMove: false,
-				canBeAttacked: false,
-				remainingLives: 3,
-				boardPosition: []
-			}
-		},
-		unitFinishedMoving: function(unitToUpdate) {
-			console.log('unitToUpdate: ',unitToUpdate);
-			this.imperialArmy = this.imperialArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
-			this.chaosArmy = this.chaosArmy.map(unit => this.updateUnitHavingMoved(unit, unitToUpdate));
-		},
-		updateUnitHavingMoved: function(unit, unitToUpdate) {
-			if (unit.id === unitToUpdate.id) {
-				return {
-					...unit, 
-					isSelected: false,
-					hasMoved: true
-				}
-			} else {
-				return {
-					...unit
-				}
-			}
-		},
-		finishMove: function(id) {
-			if (!this.allUnitsOnBoard) {
-				return;
-			}
-			// this.$store.commit('finishMove', {id});
-			// this.imperialArmy = this.imperialArmy.map(unit => {
-			// 	if (unit.id === id) {
-			// 		return {
-			// 			...unit, 
-			// 			finishedMove: true
-			// 		}
-			// 	} else {
-			// 		return {
-			// 			...unit
-			// 		}
-			// 	}
-			// })
-		}
-	}
+    ])
 };
 </script>
 

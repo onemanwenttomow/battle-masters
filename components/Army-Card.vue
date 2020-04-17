@@ -12,7 +12,7 @@
 			@dragend.prevent="dragEnd($event, unit)"
 			@mousedown="showPossibleMoves($event, unit.isSelected, unit.hasMoved, unit.boardPosition, unit.id)"
 			@mouseup="$emit('rowAndColumn', {row: null, column: null});"
-			@click="selected(unit)"
+			@click="selected($event,unit)"
 			:style="{ backgroundImage: `url(${unit.img})`}"
 		></div>
 	</div>
@@ -24,7 +24,7 @@ import { mapGetters } from 'vuex';
 export default {
 	props: ["army"],
 	computed: mapGetters([
-        'getArmy', 'getOpposingArmy', 'allUnitsOnBoard', 'getSurroundingTiles'
+        'getArmy', 'getOpposingArmy', 'allUnitsOnBoard', 'getSurroundingTiles', 'getUnitThatCanAttack'
     ]),
 	methods: {
 		dragStart: function(e) {
@@ -55,7 +55,6 @@ export default {
 			};
 		},
 		checkIfDraggable: function(isSelected, finishedMove) {
-			console.log('finishedMove: ',finishedMove);
 			if (finishedMove) {
 				return false;
 			}
@@ -79,7 +78,13 @@ export default {
 		dragEnd: function(e, unit) {
 			e.target.style.opacity = 1;
 		},
-		selected: function(card) {
+		selected: function(e, card) {
+			if (e.target.classList.contains('can-be-attacked')) {
+				console.log("about to attack!")
+				console.log('card.id: ',card.id);
+				console.log('this.getUnitThatCanAttack: ',this.getUnitThatCanAttack);
+				return;
+			} 
 			this.$store.commit('userSelected', {id: card.id})
 		}
 	}
@@ -144,6 +149,7 @@ export default {
 
 .can-be-attacked {
 	background-color: crimson;
+	cursor: url('/crossed-swords.png'), auto;
 }
 
 @keyframes pulse {
