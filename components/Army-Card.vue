@@ -24,7 +24,7 @@ import { mapGetters } from 'vuex';
 export default {
 	props: ["army"],
 	computed: mapGetters([
-        'getArmy', 'getOpposingArmy', 'allUnitsOnBoard', 'getSurroundingTiles', 'getUnitThatCanAttack'
+        'getArmy', 'getOpposingArmy', 'allUnitsOnBoard', 'getSurroundingTiles', 'getUnitThatCanAttack', 'getPieceById'
     ]),
 	methods: {
 		dragStart: function(e) {
@@ -83,7 +83,9 @@ export default {
 				console.log("about to attack!")
 				console.log('card.id: ',card.id);
 				console.log('this.getUnitThatCanAttack: ',this.getUnitThatCanAttack[0].name);
-				this.$store.commit('startAttack');
+				this.$store.commit('startAttack', {
+					unitUnderAttack: this.getPieceById(card.id)
+				});
 				return;
 			} 
 			this.$store.commit('userSelected', {id: card.id})

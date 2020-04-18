@@ -1,6 +1,6 @@
 <template>
 	<fragment>
-		<h1 v-if="getAttackModeStatus">ATTACK MODE!!</h1>
+		<AttackArea v-if="getAttackModeStatus"/>
 		<div class="outer-container">
 			<div>
 				<TurnCards v-if="allUnitsOnBoard" />
@@ -19,6 +19,8 @@ import Board from "~/components/Board.vue";
 import ArmyCards from "~/components/Army-Card.vue";
 import TurnCards from "~/components/Turn-Cards.vue";
 import SelectedUnit from "~/components/Selected-Unit.vue";
+import AttackArea from "~/components/Attack-Area.vue";
+
 import { mapGetters } from 'vuex';
 
 
@@ -28,7 +30,8 @@ export default {
 		Board,
 		ArmyCards,
 		TurnCards,
-		SelectedUnit
+		SelectedUnit, 
+		AttackArea
 	},
 	computed: mapGetters([
         'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach', 'getAttackModeStatus'
