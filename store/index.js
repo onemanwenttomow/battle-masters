@@ -8,10 +8,12 @@ const createStore = () => {
         board: [], 
         unitThatCanAttack: {},
         unitUnderAttack: {},
-        attackModeOpen: false
+        attackModeOpen: false, 
+        currentCard: {}
     },
     mutations: {
         currentCard(state, {card}) {
+            state.currentCard = card;
             state.armies = state.armies.map(unit => {
                 return {
 					...unit,
@@ -45,9 +47,11 @@ const createStore = () => {
             })
         },
         battleOver(state, {damageDealt}) {
+
             state.attackModeOpen = false;
             state.armies = state.armies.map(unit => {
                 if (unit.id === state.unitUnderAttack[0].id) {
+                    console.log('unit.name, unit.reamainingLives, unit.remainingLives - damagaDealt: ',unit.name, unit.remainingLives, unit.remainingLives - damageDealt);
                     return {
                         ...unit, 
                         remainingLives:unit.remainingLives - damageDealt,
@@ -171,6 +175,9 @@ const createStore = () => {
         },
         getPieceById: (state) => (id) => {
             return state.armies.filter(unit => unit.id === id);
+        },
+        getCurrentCard: (state) => {
+            return state.currentCard;
         },
         getUnitThatCanAttack: (state) => {
             return state.unitThatCanAttack;

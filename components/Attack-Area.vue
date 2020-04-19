@@ -15,12 +15,12 @@
                     <img class="dice-face" src="/shield.png" alt="" :class="[dieRolled(die.rolled, 3, die.value) ? 'user-rolled' : 'not-rolled']">
                     <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 4, die.value) ? 'user-rolled' : 'not-rolled']">
                     <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 5, die.value) ? 'user-rolled' : 'not-rolled']">
-                    <div class="roll-button" @click="rollDie('attackingDie', i)">ROLL!</div>
+                    <div class="roll-button" :class="[die.rolled ? 'not-rolled' : '']" @click="rollDie('attackingDie', i)">ROLL!</div>
                 </div>
             </div>
 
             <div class="defender">
-                <h2>{{getUnitUnderAttack[0].name}}</h2>
+                <h2>{{getUnitUnderAttack[0].name}} Remaining Lives (before battle): {{getUnitUnderAttack[0].remainingLives}}</h2>
                 <div v-for="(die, i) in defendingDie" :key="i" class="die-container">
                     <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 0, die.value) ? 'user-rolled' : 'not-rolled']" >
                     <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 1, die.value) ? 'user-rolled' : 'not-rolled']" >
@@ -28,7 +28,7 @@
                     <img class="dice-face" src="/shield.png" alt="" :class="[dieRolled(die.rolled, 3, die.value) ? 'user-rolled' : 'not-rolled']" >
                     <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 4, die.value) ? 'user-rolled' : 'not-rolled']" >
                     <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 5, die.value) ? 'user-rolled' : 'not-rolled']" >
-                    <div class="roll-button" @click="rollDie('defendingDie', i)">ROLL!</div>
+                    <div class="roll-button" :class="[die.rolled ? 'not-rolled' : '']" @click="rollDie('defendingDie', i)">ROLL!</div>
                 </div>
             </div>
         </div>
@@ -53,7 +53,11 @@ export default {
         };
     },
     mounted: function() {
-        for (let i = 0; i < this.getUnitThatCanAttack[0].combatValue; i++) {
+        console.log('getCurrentCard: ',this.getCurrentCard.ids.includes('plus1'));
+        const plusOneIncluded = this.getCurrentCard.ids.includes('plus1');
+        let extraRoll = 0;
+        plusOneIncluded && extraRoll++;
+        for (let i = 0; i < this.getUnitThatCanAttack[0].combatValue + extraRoll; i++) {
             this.attackingDie.push({
                 rolled: false,
                 value: Math.floor(Math.random() * 5)
@@ -120,7 +124,7 @@ export default {
     },
     computed: {
 		...mapGetters([
-        	'getUnitThatCanAttack', 'getUnitUnderAttack'
+        	'getUnitThatCanAttack', 'getUnitUnderAttack', 'getCurrentCard'
         ])
 	},
 	

@@ -12,7 +12,7 @@
 			>Skip Move</div>
 			<div v-else>Unit can still move</div>
 		</div>
-		{{selectedUnit}}
+	{{getCurrentCard}}
     </div>
 </template>
 
@@ -21,7 +21,7 @@ import { mapGetters } from 'vuex';
 
 export default {
 	computed: mapGetters([
-        'selectedUnit'
+        'selectedUnit', 'getCurrentCard'
     ]),
 };
 </script>
