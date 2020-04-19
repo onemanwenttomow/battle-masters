@@ -10,6 +10,7 @@
 			<Board />
 		</div>
 		<ArmyCards army="Chaos" />
+		<DefeatedUnits />
 	</fragment>
 </template>
 
@@ -20,6 +21,7 @@ import ArmyCards from "~/components/Army-Card.vue";
 import TurnCards from "~/components/Turn-Cards.vue";
 import SelectedUnit from "~/components/Selected-Unit.vue";
 import AttackArea from "~/components/Attack-Area.vue";
+import DefeatedUnits from "~/components/Defeated-Armies.vue";
 
 import { mapGetters } from 'vuex';
 
@@ -31,11 +33,12 @@ export default {
 		ArmyCards,
 		TurnCards,
 		SelectedUnit, 
-		AttackArea
+		AttackArea, 
+		DefeatedUnits
 	},
 	computed: mapGetters([
         'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach', 'getAttackModeStatus'
-    ])
+	])
 };
 </script>
 

@@ -50,7 +50,16 @@ const createStore = () => {
                 if (unit.id === state.unitUnderAttack[0].id) {
                     return {
                         ...unit, 
-                        remainingLives:unit.remainingLives - damageDealt
+                        remainingLives:unit.remainingLives - damageDealt,
+                        canBeAttacked: false
+                    }
+                } else if (unit.id === state.unitThatCanAttack[0].id) {
+                    return {
+                        ...unit, 
+                        hasMoved: true,
+                        hasAttacked: true,
+                        finishedTurn: true,
+                        showPossibleMoves: []
                     }
                 } else {
                     return {
@@ -70,7 +79,7 @@ const createStore = () => {
         },
         showPossibleMoves(state, {id, moves}) {
             state.armies = state.armies.map(unit => {
-                if (unit.id === id) {
+                if (unit.id === id && !unit.finishedTurn) {
                     return {
                         ...unit,
                         showPossibleMoves: moves
@@ -143,7 +152,10 @@ const createStore = () => {
     },
     getters: {
         getArmy: (state) => (army) => {
-            return state.armies.filter(unit => unit.army === army);
+            return state.armies.filter(unit => unit.army === army && unit.remainingLives > 0);
+        },
+        getDefeatedUnits: (state) => {
+            return state.armies.filter(unit => unit.remainingLives <= 0);
         }, 
         getPlayingCards: (state) => {
             return state.mainPlayingCards;
