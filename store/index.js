@@ -40,18 +40,22 @@ const createStore = () => {
         },
         finishTurn(state, {id}) {
             state.armies = state.armies.map(unit => {
-                return {
-					...unit,
-                    finishedTurn: unit.id === id
-				}
+                if (unit.id === id) {
+                    return {
+                        ...unit,
+                        finishedTurn: true
+                    }
+                } else {
+                    return {
+                        ...unit
+                    }
+                }
             })
         },
         battleOver(state, {damageDealt}) {
-
             state.attackModeOpen = false;
             state.armies = state.armies.map(unit => {
                 if (unit.id === state.unitUnderAttack[0].id) {
-                    console.log('unit.name, unit.reamainingLives, unit.remainingLives - damagaDealt: ',unit.name, unit.remainingLives, unit.remainingLives - damageDealt);
                     return {
                         ...unit, 
                         remainingLives:unit.remainingLives - damageDealt,

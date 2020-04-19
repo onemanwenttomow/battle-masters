@@ -4,7 +4,6 @@
             <img :src="getUnitThatCanAttack[0].img" alt=""> v <img :src="getUnitUnderAttack[0].img" alt="">
         </h1>
        
-        
         <div class="dice-container">
             <div class="attacker">
                 <h2>{{getUnitThatCanAttack[0].name}}</h2>
@@ -53,7 +52,6 @@ export default {
         };
     },
     mounted: function() {
-        console.log('getCurrentCard: ',this.getCurrentCard.ids.includes('plus1'));
         const plusOneIncluded = this.getCurrentCard.ids.includes('plus1');
         let extraRoll = 0;
         plusOneIncluded && extraRoll++;

@@ -12,7 +12,7 @@
 			>Skip Move</div>
 			<div v-else>Unit can still move</div>
 		</div>
-	{{getCurrentCard}}
+	{{selectedUnit}}
     </div>
 </template>
 
