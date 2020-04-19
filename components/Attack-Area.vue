@@ -1,6 +1,9 @@
 <template>
 	<div class="battle-area">
-        <h1>{{getUnitThatCanAttack[0].name}} v {{getUnitUnderAttack[0].name}}</h1>
+        <h1>
+            <img :src="getUnitThatCanAttack[0].img" alt=""> v <img :src="getUnitUnderAttack[0].img" alt="">
+        </h1>
+       
         
         <div class="dice-container">
             <div class="attacker">
@@ -30,10 +33,9 @@
             </div>
         </div>
        
-
-        <h2>Total Damage Dealt!: {{damageDealt}}</h2>
-
-        <div class="roll-button" v-if="allDieRolled">Turn finished! Click to continue</div>
+        <h2 v-if="damageDealt >= 0">Total Damage Dealt!: {{damageDealt}}</h2>
+        <h2 v-else>Total Damage Dealt!: 0</h2>
+        <div class="roll-button" v-if="allDieRolled" @click="endBattle">Turn finished! Click to continue</div>
         
     </div>
 </template>
@@ -80,6 +82,9 @@ export default {
             const totalDamage = this.attackingDie.filter(die => die.rolled && die.value <= 2).length;
             const totalDefense = this.defendingDie.filter(die => die.rolled && die.value === 3).length;
             this.damageDealt = totalDamage - totalDefense;
+        },
+        endBattle: function() {
+            this.$store.commit('battleOver', {damageDealt: this.damageDealt});
         },
         rollDie: function(die, i) {
             if (die === "defendingDie") {
@@ -131,11 +136,20 @@ export default {
     bottom: 0;
     background-color: brown;
     z-index: 500;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.defender, .attacker {
+    margin: 20px;
 }
 
 .dice-container {
     display: flex;
     justify-content: space-around;
+    margin: 20px;
 }
 
 .dice-face {

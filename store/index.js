@@ -44,6 +44,22 @@ const createStore = () => {
 				}
             })
         },
+        battleOver(state, {damageDealt}) {
+            state.attackModeOpen = false;
+            state.armies = state.armies.map(unit => {
+                if (unit.id === state.unitUnderAttack[0].id) {
+                    return {
+                        ...unit, 
+                        remainingLives:unit.remainingLives - damageDealt
+                    }
+                } else {
+                    return {
+                        ...unit
+                    }
+                }
+            })
+
+        },
         userSelected(state, {id}) {
             state.armies = state.armies.map(unit => {
                 return {
