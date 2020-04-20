@@ -202,13 +202,16 @@ const createStore = () => {
                 return state.armies.filter(unit => unit.showPossibleMoves.length)[0].showPossibleMoves;
             }
         },
-        getSurroundingTiles: (state, {getPieceById}) => (id, attacking) => {
+        getSurroundingTiles: (state, {getPieceById, getCurrentCard}) => (id, checkingFor) => {
             const unitToCheck = getPieceById(id)[0];
             const unitRow = unitToCheck.boardPosition[0].row;
             const unitCol = unitToCheck.boardPosition[0].col;
+            console.log('getCurrentCard: ',getCurrentCard);
+            const currentCard = getCurrentCard.ids || [];
+            console.log('currentCard: ',currentCard);
             const unitIsArcher = unitToCheck.special === 'archer' || unitToCheck.special === 'crossbow';
-            const checkDoubleTiles = unitIsArcher && attacking;
-            if (checkDoubleTiles) {
+            const checkDoubleTiles = unitIsArcher && checkingFor === "attacking";
+            if (checkDoubleTiles || currentCard.includes('movetwice')) {
                 unitRow % 2 === 0 ? 
                     surroundingTiles = [
                         [-2, -1], [-2, 0], [-2, 1],
