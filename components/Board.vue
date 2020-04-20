@@ -57,9 +57,8 @@ export default {
 			if (!this.allUnitsOnBoard) {
 				return;
 			}
-			const unitsInReach = this.checkIfUnitsInReach(piece.id);
 			const unit = this.getPieceById(piece.id);
-			console.log('unit: ',unit);
+			const unitsInReach = this.checkIfUnitsInReach(piece.id);
 			unitsInReach.length ? 
 				this.$store.commit('canBeAttacked', {unit, unitsInReach}) :
 				this.$store.commit('finishTurn', {id: piece.id})

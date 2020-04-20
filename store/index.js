@@ -202,14 +202,44 @@ const createStore = () => {
                 return state.armies.filter(unit => unit.showPossibleMoves.length)[0].showPossibleMoves;
             }
         },
-        getSurroundingTiles: (state, {getPieceById}) => (id) => {
-            const unitToCheck = getPieceById(id)[0].boardPosition[0];
+        getSurroundingTiles: (state, {getPieceById}) => (id, attacking) => {
+            const unitToCheck = getPieceById(id)[0];
+            const unitRow = unitToCheck.boardPosition[0].row;
+            const unitCol = unitToCheck.boardPosition[0].col;
+            const unitIsArcher = unitToCheck.special === 'archer' || unitToCheck.special === 'crossbow';
+            const checkDoubleTiles = unitIsArcher && attacking;
+            if (checkDoubleTiles) {
+                unitRow % 2 === 0 ? 
+                    surroundingTiles = [
+                        [-2, -1], [-2, 0], [-2, 1],
+                        [-1,-1], [-1, 0], [-1, 1], [-1, 2], 
+                        [0, -2], [0, -1], [0, 1], [0, 2], 
+                        [1,-1], [1, 0], [1, 1], [1, 2], 
+                        [2, -1], [2, 0], [2, 1]
+                    ] :
+                    surroundingTiles = [
+                        [-2, -1], [-2, 0], [-2, 1],
+                        [-1,-2], [-1,-1], [-1, 0], [-1, 1], 
+                        [0,-2], [0, -1], [0, 1], [0, 2], 
+                        [1, -2], [1, -1], [1, 0], [1, 1],
+                        [2, -1], [2, 0], [2, 1]
+                    ]
+            } else {
+                unitRow % 2 === 0 ? 
+                    surroundingTiles = [
+                        [-1, 1], [-1, 0], 
+                        [0, -1], [0, 1], 
+                        [1, 1], [1, 0]
+                    ] :
+                    surroundingTiles = [
+                        [-1,-1], [-1, 0], 
+                        [0, -1], [0, 1], 
+                        [1, -1], [1, 0]
+                    ]
+            }
             let surroundingTiles;
-			unitToCheck.row % 2 === 0 ? 
-				surroundingTiles = [[-1, 1], [-1, 0], [0, -1], [0, 1], [1, 1], [1, 0]] :
-				surroundingTiles = [[-1,-1], [-1, 0], [0, -1], [0, 1], [1, -1], [1, 0]]
 			const calculatedSurroundingTiles = surroundingTiles.map(tile => {
-				return [tile[0] + unitToCheck.row, tile[1] + unitToCheck.col]
+				return [tile[0] + unitRow, tile[1] + unitCol]
             });
             return calculatedSurroundingTiles;
         },
@@ -217,7 +247,7 @@ const createStore = () => {
             const unitToCheck = getPieceById(id);
             const army = unitToCheck[0].army;
             const opposingArmy = getOpposingArmy(army);
-            const surroundingTiles = getSurroundingTiles(id);
+            const surroundingTiles = getSurroundingTiles(id, 'attacking');
             const enemiesInReach = opposingArmy.filter(unit => {
 				let matchingTiles = surroundingTiles.filter(tile => {
 					return tile[0] === unit.boardPosition[0].row && tile[1] === unit.boardPosition[0].col
