@@ -1,19 +1,20 @@
 <template>
-    <a href="/">
-        <div class="welcome-container">
+    <nuxt-link to="/" >
+        <div class="welcome-container" @click="startGame">
             <img src="/bm-logo.PNG" alt="battle masters logo">
             <img src="/main-image.PNG" alt="battle masters cover"> 
         </div>
-    </a>
+    </nuxt-link>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 
 export default {
-	computed: mapGetters([
-        
-    ]),
+	methods: {
+        startGame: function() {
+            this.$store.commit('startGame');
+        }
+    }
 };
 </script>
 

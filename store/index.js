@@ -3,6 +3,7 @@ import Vuex from "vuex";
 const createStore = () => {
   return new Vuex.Store({
     state: {
+        gameStarted: false,
         armies: [], 
         mainPlayingCards: [],
         board: [], 
@@ -12,6 +13,9 @@ const createStore = () => {
         currentCard: {}
     },
     mutations: {
+        startGame(state) {
+            state.gameStarted = true;
+        },
         currentCard(state, {card}) {
             state.currentCard = card;
             state.armies = state.armies.map(unit => {
@@ -159,6 +163,9 @@ const createStore = () => {
         },
     },
     getters: {
+        gameHasStarted: (state) => {
+            return state.gameStarted;
+        },
         getArmy: (state) => (army) => {
             return state.armies.filter(unit => unit.army === army && unit.remainingLives > 0);
         },

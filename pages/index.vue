@@ -1,5 +1,5 @@
 <template>
-	<fragment>
+	<fragment v-if="gameHasStarted">
 		<AttackArea v-if="getAttackModeStatus"/>
 		<div class="outer-container">
 			<div>
@@ -36,8 +36,12 @@ export default {
 		AttackArea, 
 		DefeatedUnits
 	},
+	mounted: function() {
+		console.log('gameHasStarted: ',this.gameHasStarted);
+		!this.gameHasStarted && this.$router.push('/welcome');
+	},
 	computed: mapGetters([
-        'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach', 'getAttackModeStatus'
+        'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach', 'getAttackModeStatus', 'gameHasStarted'
 	])
 };
 </script>
