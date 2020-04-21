@@ -8,7 +8,7 @@
 				:class="card.flipped ? 'flipcard' : ''"
 				:style="card.flipped ? [{ zIndex: `-${i}`}] : ''"
 			>
-				<div class="side pack-of-playing-cards" @click="nextCard(card)"></div>
+				<div class="side" :style="{ backgroundImage: `url(${cardBack})`}" @click="nextCard(card)"></div>
 				<div class="side back" :style="{ backgroundImage: `url(${card.img})`}"></div>
 			</div>
 		</div>
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 
 export default {
 	data() {
@@ -25,9 +24,7 @@ export default {
 			shuffledPlayingCardsCopy: []
 		};
 	},
-	computed: mapGetters([
-        'getPlayingCards'
-    ]),
+	props: ['getPlayingCards', 'cardBack', 'currentCard'],
 	mounted: function() {
 		this.shuffleCards();
 	},
@@ -55,7 +52,7 @@ export default {
 			card.flipped = true;
 			setTimeout(() => {
 				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1]
-				this.$store.commit('currentCard', { card });
+				this.$store.commit(this.currentCard, { card });
 				this.shuffledPlayingCards.pop();
 				if (this.shuffledPlayingCards.length === 0) {
 					this.shuffleCards();

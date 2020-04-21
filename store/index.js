@@ -51,7 +51,8 @@ const createStore = () => {
                     }
                 } else {
                     return {
-                        ...unit
+                        ...unit,
+                        canBeAttacked: false
                     }
                 }
             })
@@ -75,7 +76,8 @@ const createStore = () => {
                     }
                 } else {
                     return {
-                        ...unit
+                        ...unit, 
+                        canBeAttacked: false
                     }
                 }
             })

@@ -3,7 +3,12 @@
 		<AttackArea v-if="getAttackModeStatus"/>
 		<div class="outer-container">
 			<div>
-				<TurnCards v-if="allUnitsOnBoard" />
+				<TurnCards 
+					v-if="allUnitsOnBoard" 
+					:getPlayingCards="getPlayingCards" 
+					cardBack="/card-back.png"
+					currentCard="currentCard"
+				/>
 				<SelectedUnit v-if="selectedUnit" />
 				<ArmyCards army="Imperial" />		
 			</div>
@@ -41,7 +46,7 @@ export default {
 		!this.gameHasStarted && this.$router.push('/welcome');
 	},
 	computed: mapGetters([
-        'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach', 'getAttackModeStatus', 'gameHasStarted'
+        'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach', 'getAttackModeStatus', 'gameHasStarted', 'getPlayingCards'
 	])
 };
 </script>
