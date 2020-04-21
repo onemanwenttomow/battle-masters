@@ -211,7 +211,7 @@ const createStore = () => {
             console.log('currentCard: ',currentCard);
             const unitIsArcher = unitToCheck.special === 'archer' || unitToCheck.special === 'crossbow';
             const checkDoubleTiles = unitIsArcher && checkingFor === "attacking";
-            if (checkDoubleTiles || currentCard.includes('movetwice')) {
+            if (checkDoubleTiles || currentCard.includes('movetwice') && checkingFor !== "attacking") {
                 unitRow % 2 === 0 ? 
                     surroundingTiles = [
                         [-2, -1], [-2, 0], [-2, 1],
