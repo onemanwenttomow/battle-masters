@@ -1,6 +1,12 @@
 <template>
 	<fragment v-if="gameHasStarted">
 		<AttackArea v-if="getAttackModeStatus"/>
+		<TurnCards 
+			v-if="ogreTurn" 
+			:getPlayingCards="getOgreCards" 
+			cardBack="/ogre-back.png"
+			currentCard="currentOgreCard"
+		/>
 		<div class="outer-container">
 			<div>
 				<TurnCards 
@@ -42,12 +48,22 @@ export default {
 		DefeatedUnits
 	},
 	mounted: function() {
-		console.log('gameHasStarted: ',this.gameHasStarted);
 		!this.gameHasStarted && this.$router.push('/welcome');
 	},
-	computed: mapGetters([
-        'allUnitsOnBoard', 'selectedUnit', 'checkIfUnitsInReach', 'getAttackModeStatus', 'gameHasStarted', 'getPlayingCards'
-	])
+	computed: {
+		...mapGetters([
+			'allUnitsOnBoard', 
+			'selectedUnit', 
+			'getAttackModeStatus', 
+			'gameHasStarted', 
+			'getPlayingCards',
+			'getOgreCards',
+			'getCurrentCard'
+		]),
+		ogreTurn: function() {
+			return this.allUnitsOnBoard && this.getCurrentCard.ids && this.getCurrentCard.ids.includes('grimorg');
+		}
+	}
 };
 </script>
 

@@ -1,0 +1,26 @@
+module.exports.ogrePlayingCards = [
+    {
+        type: 'move',
+        img: '/ogre-move-card.png'
+    },
+    {
+        type: 'attack',
+        img: '/ogre-attack-card.png'
+    },
+    {
+        type: 'move',
+        img: '/ogre-move-card.png'
+    },
+    {
+        type: 'attack',
+        img: '/ogre-attack-card.png'
+    },
+    {
+        type: 'move',
+        img: '/ogre-move-card.png'
+    },
+    {
+        type: 'attack',
+        img: '/ogre-attack-card.png'
+    }
+]

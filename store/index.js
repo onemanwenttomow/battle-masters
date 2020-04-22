@@ -6,11 +6,13 @@ const createStore = () => {
         gameStarted: false,
         armies: [], 
         mainPlayingCards: [],
+        ogrePlayingCards: [],
         board: [], 
         unitThatCanAttack: {},
         unitUnderAttack: {},
         attackModeOpen: false, 
-        currentCard: {}
+        currentCard: {},
+        currentOgreCard: {}
     },
     mutations: {
         startGame(state) {
@@ -26,6 +28,10 @@ const createStore = () => {
                     hasMoved: false
 				}
             })
+        },
+        currentOgreCard(state, {card}) {
+            console.log('card: ',card);
+            state.currentOgreCard = card;
         },
         finishMove(state, {id}) {
             state.armies = state.armies.map(unit => {
@@ -119,10 +125,11 @@ const createStore = () => {
             state.unitUnderAttack = unitUnderAttack;
             state.attackModeOpen = true;
         },
-        setupAllPieces(state, { armies, mainPlayingCards, board}) {
+        setupAllPieces(state, { armies, mainPlayingCards, board, ogrePlayingCards}) {
             state.armies = armies;
             state.mainPlayingCards = mainPlayingCards;
             state.board = board;
+            state.ogrePlayingCards = ogrePlayingCards;
         },
         updateUnitPosition(state, payload) {
             state.armies = state.armies.map(unit => {
@@ -145,6 +152,7 @@ const createStore = () => {
         async storeDispatchFunc({ commit }) {
             const { data } = await this.$axios.get('/api/initial-board');
             const mainPlayingCards = data.mainPlayingCards;
+            const ogrePlayingCards= data.ogrePlayingCards;
             const board = data.board;
             const armies = data.armies.map(unit => {
                 return {
@@ -161,7 +169,7 @@ const createStore = () => {
                     boardPosition: []
                 }
             })
-            commit('setupAllPieces', {armies, mainPlayingCards, board});
+            commit('setupAllPieces', {armies, mainPlayingCards, board, ogrePlayingCards});
         },
     },
     getters: {
@@ -176,6 +184,9 @@ const createStore = () => {
         }, 
         getPlayingCards: (state) => {
             return state.mainPlayingCards;
+        },
+        getOgreCards: (state) =>  {
+            return state.ogrePlayingCards;
         },
         getBoard: (state) => {
             return state.board;
