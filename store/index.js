@@ -12,7 +12,11 @@ const createStore = () => {
         unitUnderAttack: {},
         attackModeOpen: false, 
         currentCard: {},
-        currentOgreCard: {}
+        currentOgreCard: {
+            type: 'none',
+            img: 'none',
+            cardUsed: false
+        }
     },
     mutations: {
         startGame(state) {
@@ -30,23 +34,27 @@ const createStore = () => {
             })
         },
         currentOgreCard(state, {card}) {
-            console.log('card: ',card);
             state.currentOgreCard = card;
         },
         finishMove(state, {id}) {
-            state.armies = state.armies.map(unit => {
-                if (unit.id === id) {
-                    return {
-                        ...unit,
-                        hasMoved: true
+            if (id === 'grimorg') {
+                state.currentOgreCard.cardUsed = true;
+            } else {
+                state.armies = state.armies.map(unit => {
+                    if (unit.id === id) {
+                        return {
+                            ...unit,
+                            hasMoved: true
+                        }
+                    } else {
+                        return {
+                            ...unit
+                        }
                     }
-                } else {
-                    return {
-                        ...unit
-                    }
-                }
-                
-            })
+                    
+                })
+            }
+            
         },
         finishTurn(state, {id}) {
             state.armies = state.armies.map(unit => {
@@ -165,7 +173,7 @@ const createStore = () => {
                     hasAttacked: false,
                     finishedTurn: false,
                     canBeAttacked: false,
-                    remainingLives: 3,
+                    remainingLives: unit.special === 'ogre' ? ogrePlayingCards.length : 3,
                     boardPosition: []
                 }
             })
@@ -202,6 +210,9 @@ const createStore = () => {
         },
         getCurrentCard: (state) => {
             return state.currentCard;
+        },
+        getCurrentOgreCard: (state) => {
+            return state.currentOgreCard;
         },
         getUnitThatCanAttack: (state) => {
             return state.unitThatCanAttack;

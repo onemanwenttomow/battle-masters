@@ -4,7 +4,7 @@
 			v-for="unit in getArmy(army)"
 			:key="unit.id"
 			class="piece"
-			:class="[unit.isSelected && !unit.finishedTurn ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '']"
+			:class="[checkIfSelected(unit) ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '']"
 			:id="unit.id"
 			:draggable="checkIfDraggable(unit.isSelected, unit.finishedTurn)"
 			@dragstart="dragStart"
@@ -24,7 +24,13 @@ import { mapGetters } from 'vuex';
 export default {
 	props: ["army"],
 	computed: mapGetters([
-        'getArmy', 'getOpposingArmy', 'allUnitsOnBoard', 'getSurroundingTiles', 'getUnitThatCanAttack', 'getPieceById'
+		'getArmy', 
+		'getOpposingArmy', 
+		'allUnitsOnBoard', 
+		'getSurroundingTiles', 
+		'getUnitThatCanAttack', 
+		'getPieceById',
+		'getCurrentOgreCard'
     ]),
 	methods: {
 		dragStart: function(e) {
@@ -33,6 +39,13 @@ export default {
 			setTimeout(function() {
 				target.style.opacity = 0.3;
 			}, 0);
+		},
+		checkIfSelected: function(unit) {
+			const ogreCheck = true;
+			if (unit.id === 'gromorg' && this.getCurrentOgreCard.type === 'none') {
+				ogreCheck = false;
+			}
+			return unit.isSelected && !unit.finishedTurn && ogreCheck && !this.getCurrentOgreCard.cardUsed;
 		},
 		getRowandColumn: function(elem) {
 			let column, row;
@@ -67,6 +80,14 @@ export default {
 			if (!this.allUnitsOnBoard) {
 				return;
 			}
+			if (id === 'grimorg' && this.getCurrentOgreCard.type === 'none') {
+				console.log('NO OGRE CARD');
+				return;
+            }
+            if (id === 'grimorg' && this.getCurrentOgreCard.type === 'attack') {
+				console.log('OGRE ATTACK!');
+                return;
+            }
 			
 			let calculatedSurroundingTiles = this.getSurroundingTiles(id);
 			if (!isSelected) {

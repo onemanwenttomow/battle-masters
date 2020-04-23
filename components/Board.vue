@@ -53,8 +53,13 @@ export default {
 				})
             }
 			piece.style.opacity = 1;
+			
 			this.$store.commit('showPossibleMoves', {id: "none", moves: "none"});
 			if (!this.allUnitsOnBoard) {
+				return;
+			}
+			if (piece.id === 'grimorg') {
+				this.$store.commit('finishTurn', {id: piece.id});
 				return;
 			}
 			const unit = this.getPieceById(piece.id);
@@ -64,6 +69,7 @@ export default {
 				this.$store.commit('finishTurn', {id: piece.id})
 
 			this.$store.commit('finishMove', {id: piece.id})
+			
 		}
     }
 };
