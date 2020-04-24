@@ -6,6 +6,7 @@
 			:getPlayingCards="getOgreCards" 
 			cardBack="/ogre-back.png"
 			currentCard="currentOgreCard"
+			cards="ogre"
 		/>
 		<div class="outer-container">
 			<div>
@@ -14,6 +15,7 @@
 					:getPlayingCards="getPlayingCards" 
 					cardBack="/card-back.png"
 					currentCard="currentCard"
+					cards="playing"
 				/>
 				<SelectedUnit v-if="selectedUnit" />
 				<ArmyCards army="Imperial" />		

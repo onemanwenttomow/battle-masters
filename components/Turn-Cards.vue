@@ -24,7 +24,7 @@ export default {
 			shuffledPlayingCardsCopy: []
 		};
 	},
-	props: ['getPlayingCards', 'cardBack', 'currentCard'],
+	props: ['getPlayingCards', 'cardBack', 'currentCard', 'cards'],
 	mounted: function() {
 		this.shuffleCards();
 	},
@@ -54,7 +54,7 @@ export default {
 				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1]
 				this.shuffledPlayingCards.pop();
 				this.$store.commit(this.currentCard, { card, numberOfOgreCardsLeft: this.shuffledPlayingCards.length });
-				if (this.shuffledPlayingCards.length === 0) {
+				if (this.shuffledPlayingCards.length === 0 && this.cards !== "ogre") {
 					console.log('ALL CARDS USED!');
 					this.shuffleCards();
 				}
