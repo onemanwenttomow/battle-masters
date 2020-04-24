@@ -52,9 +52,10 @@ export default {
 			card.flipped = true;
 			setTimeout(() => {
 				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1]
-				this.$store.commit(this.currentCard, { card });
 				this.shuffledPlayingCards.pop();
+				this.$store.commit(this.currentCard, { card, numberOfOgreCardsLeft: this.shuffledPlayingCards.length });
 				if (this.shuffledPlayingCards.length === 0) {
+					console.log('ALL CARDS USED!');
 					this.shuffleCards();
 				}
 			}, 1000)

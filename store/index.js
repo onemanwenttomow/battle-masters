@@ -16,7 +16,8 @@ const createStore = () => {
             type: 'none',
             img: 'none',
             cardUsed: false
-        }
+        },
+        numberOfOgreCardsLeft: 6
     },
     mutations: {
         startGame(state) {
@@ -33,7 +34,21 @@ const createStore = () => {
 				}
             })
         },
-        currentOgreCard(state, {card}) {
+        currentOgreCard(state, {card, numberOfOgreCardsLeft}) {
+            console.log('numberOfOgreCardsLeft: ',numberOfOgreCardsLeft, card);
+            state.armies = state.armies.map(unit => {
+                if (unit.id === 'grimorg') {
+                    return {
+                        ...unit,
+                        hasMoved: false
+                    }
+                } else {
+                    return {
+                        ...unit
+                    }
+                }  
+            })
+            state.numberOfOgreCardsLeft = numberOfOgreCardsLeft;
             state.currentOgreCard = card;
         },
         finishMove(state, {id}) {
@@ -50,13 +65,13 @@ const createStore = () => {
                         return {
                             ...unit
                         }
-                    }
-                    
+                    }  
                 })
             }
             
         },
-        finishTurn(state, {id}) {
+        finishTurn(state, {id, canOgreStillMove}) {
+            console.log('canOgreStillMove: ',canOgreStillMove);
             state.armies = state.armies.map(unit => {
                 if (unit.id === id) {
                     return {
@@ -70,6 +85,15 @@ const createStore = () => {
                     }
                 }
             })
+            if (canOgreStillMove) {
+                state.armies = state.armies.map(unit => {
+                    return {
+                        ...unit,
+                        hasMoved: true, 
+                        finishedTurn: false
+                    }
+                })
+            }
         },
         battleOver(state, {damageDealt}) {
             state.attackModeOpen = false;
@@ -213,6 +237,9 @@ const createStore = () => {
         },
         getCurrentOgreCard: (state) => {
             return state.currentOgreCard;
+        },
+        getNumOfRemainingOgreCards: (state) => {
+            return state.numberOfOgreCardsLeft;
         },
         getUnitThatCanAttack: (state) => {
             return state.unitThatCanAttack;

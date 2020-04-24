@@ -27,7 +27,12 @@ import { mapGetters } from 'vuex';
 export default {
 	computed: {
 		...mapGetters([
-        	'getBoard', 'allUnitsOnBoard', 'getPossibleMoves', 'checkIfUnitsInReach', 'getPieceById'
+			'getBoard', 
+			'allUnitsOnBoard', 
+			'getPossibleMoves', 
+			'checkIfUnitsInReach', 
+			'getPieceById',
+			'getNumOfRemainingOgreCards'
 		]), 
 	},
 	methods: {
@@ -59,7 +64,8 @@ export default {
 				return;
 			}
 			if (piece.id === 'grimorg') {
-				this.$store.commit('finishTurn', {id: piece.id});
+				const canOgreStillMove = this.getNumOfRemainingOgreCards;
+				this.$store.commit('finishTurn', {id: piece.id, canOgreStillMove});
 				return;
 			}
 			const unit = this.getPieceById(piece.id);

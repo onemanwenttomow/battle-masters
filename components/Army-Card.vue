@@ -77,6 +77,8 @@ export default {
 
 		},
 		showPossibleMoves: function(e, isSelected, hasMoved, boardPosition, id) {
+			const piece = this.getPieceById(id)[0];
+			console.log('piece.hasMoved: ',piece);
 			if (!this.allUnitsOnBoard) {
 				return;
 			}
@@ -86,6 +88,10 @@ export default {
             }
             if (id === 'grimorg' && this.getCurrentOgreCard.type === 'attack') {
 				console.log('OGRE ATTACK!');
+                return;
+			}
+			if (id === 'grimorg' && this.getCurrentOgreCard.type === 'move' && piece.hasMoved) {
+				console.log('OGRE ALREADY MOVED!');
                 return;
             }
 			
