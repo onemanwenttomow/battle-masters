@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 
 export default {
 	data() {
@@ -24,6 +26,10 @@ export default {
 			shuffledPlayingCardsCopy: []
 		};
 	},
+	computed: mapGetters([
+		'checkIfUnitsInReach',
+		'getPieceById'
+    ]),
 	props: ['getPlayingCards', 'cardBack', 'currentCard', 'cards'],
 	mounted: function() {
 		this.shuffleCards();
@@ -51,7 +57,15 @@ export default {
         nextCard: function(card) {
 			card.flipped = true;
 			setTimeout(() => {
-				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1]
+				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1];
+				console.log('card in Turn cards: ',card);
+				if (card.type && card.type === 'attack') {
+					console.log("check for possible ogre attack options!");
+					const unitsInReach = this.checkIfUnitsInReach('grimorg');
+					const unit = this.getPieceById('grimorg');
+					console.log('unit!!!: ',unit);
+					unitsInReach.length && this.$store.commit('canBeAttacked', {unit, unitsInReach}); 
+				}
 				this.shuffledPlayingCards.pop();
 				this.$store.commit(this.currentCard, { card, numberOfOgreCardsLeft: this.shuffledPlayingCards.length });
 				if (this.shuffledPlayingCards.length === 0 && this.cards !== "ogre") {

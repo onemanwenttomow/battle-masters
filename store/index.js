@@ -109,7 +109,7 @@ const createStore = () => {
                         ...unit, 
                         hasMoved: true,
                         hasAttacked: true,
-                        finishedTurn: true,
+                        finishedTurn: unit.id === 'grimorg'? true: false,
                         showPossibleMoves: []
                     }
                 } else {
@@ -145,6 +145,7 @@ const createStore = () => {
             })
         },
         canBeAttacked(state, {unit, unitsInReach}) {
+            console.log('unit, unitsInReach in CAN BE ATTACKED!: ',unit, unitsInReach);
             state.armies = state.armies.map(unit => {
 				return {
 					...unit, 

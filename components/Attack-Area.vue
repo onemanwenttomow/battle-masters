@@ -1,5 +1,5 @@
 <template>
-	<div class="battle-area">
+	<div class="battle-area" v-if="getUnitThatCanAttack[0] && getUnitUnderAttack[0]">
         <h1>
             <img :src="getUnitThatCanAttack[0].img" alt=""> v <img :src="getUnitUnderAttack[0].img" alt="">
         </h1>
@@ -55,6 +55,8 @@ export default {
         const plusOneIncluded = this.getCurrentCard.ids.includes('plus1');
         let extraRoll = 0;
         plusOneIncluded && extraRoll++;
+        console.log('this.getUnitThatCanAttack: ',this.getUnitThatCanAttack);
+        console.log('this.getUnitUnderAttack: ',this.getUnitUnderAttack);
         for (let i = 0; i < this.getUnitThatCanAttack[0].combatValue + extraRoll; i++) {
             this.attackingDie.push({
                 rolled: false,
