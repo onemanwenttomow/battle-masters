@@ -55,8 +55,6 @@ export default {
         const plusOneIncluded = this.getCurrentCard.ids.includes('plus1');
         let extraRoll = 0;
         plusOneIncluded && extraRoll++;
-        console.log('this.getUnitThatCanAttack: ',this.getUnitThatCanAttack);
-        console.log('this.getUnitUnderAttack: ',this.getUnitUnderAttack);
         for (let i = 0; i < this.getUnitThatCanAttack[0].combatValue + extraRoll; i++) {
             this.attackingDie.push({
                 rolled: false,
@@ -91,33 +89,9 @@ export default {
             this.$store.commit('battleOver', {damageDealt: this.damageDealt});
         },
         rollDie: function(die, i) {
-            if (die === "defendingDie") {
-                this.defendingDie = this.defendingDie.map((die, idx) => {
-                    if (i === idx) {
-                        return {
-                            ...die, 
-                            rolled: true
-                        }
-                    } else {
-                        return {
-                            ...die
-                        }
-                    }
-                })
-            } else {
-                this.attackingDie = this.attackingDie.map((die, idx) => {
-                    if (i === idx) {
-                        return {
-                            ...die, 
-                            rolled: true
-                        }
-                    } else {
-                        return {
-                            ...die
-                        }
-                    }
-                })
-            }
+            die === "defendingDie" ? 
+                this.defendingDie[i].rolled = true:
+                this.attackingDie[i].rolled = true;
             this.checkIfAllDieRolled();
             this.damageUpdate();
         }

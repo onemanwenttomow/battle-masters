@@ -35,7 +35,6 @@ const createStore = () => {
             })
         },
         currentOgreCard(state, {card, numberOfOgreCardsLeft}) {
-            console.log('numberOfOgreCardsLeft: ',numberOfOgreCardsLeft, card);
             state.armies = state.armies.map(unit => {
                 if (unit.id === 'grimorg') {
                     return {
@@ -71,7 +70,6 @@ const createStore = () => {
             
         },
         finishTurn(state, {id, canOgreStillMove}) {
-            console.log('canOgreStillMove: ',canOgreStillMove);
             state.armies = state.armies.map(unit => {
                 if (unit.id === id) {
                     return {
@@ -96,6 +94,12 @@ const createStore = () => {
             }
         },
         battleOver(state, {damageDealt}) {
+            if (state.unitUnderAttack[0].id === 'grimorg') {
+                for (let i = 0; i < damageDealt; i++) {
+                    const randomCard = Math.floor(Math.random() * state.ogrePlayingCards.length);
+                    state.ogrePlayingCards.splice(randomCard, 1);
+                }
+            }
             state.attackModeOpen = false;
             state.armies = state.armies.map(unit => {
                 if (unit.id === state.unitUnderAttack[0].id) {
@@ -109,7 +113,7 @@ const createStore = () => {
                         ...unit, 
                         hasMoved: true,
                         hasAttacked: true,
-                        finishedTurn: unit.id === 'grimorg'? true: false,
+                        finishedTurn: unit.id === 'grimorg'? false: true,
                         showPossibleMoves: []
                     }
                 } else {
@@ -145,7 +149,6 @@ const createStore = () => {
             })
         },
         canBeAttacked(state, {unit, unitsInReach}) {
-            console.log('unit, unitsInReach in CAN BE ATTACKED!: ',unit, unitsInReach);
             state.armies = state.armies.map(unit => {
 				return {
 					...unit, 
@@ -265,9 +268,7 @@ const createStore = () => {
             const unitToCheck = getPieceById(id)[0];
             const unitRow = unitToCheck.boardPosition[0].row;
             const unitCol = unitToCheck.boardPosition[0].col;
-            console.log('getCurrentCard: ',getCurrentCard);
             const currentCard = getCurrentCard.ids || [];
-            console.log('currentCard: ',currentCard);
             const unitIsArcher = unitToCheck.special === 'archer' || unitToCheck.special === 'crossbow';
             const checkDoubleTiles = unitIsArcher && checkingFor === "attacking";
             if (checkDoubleTiles || currentCard.includes('movetwice') && checkingFor !== "attacking") {
