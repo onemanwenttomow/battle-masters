@@ -82,7 +82,7 @@ export default {
 			if (!this.allUnitsOnBoard) {
 				return;
 			}
-			if (id === 'grimorg' && this.ogreCheck(id,piece)) {
+			if (id === 'grimorg' && this.ogreMoveAttackCheck(id,piece)) {
 				return;
 			}
 			
@@ -93,16 +93,12 @@ export default {
 			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$store.commit('showPossibleMoves', {id, moves: calculatedSurroundingTiles});
 		},
-		ogreCheck: function(id, piece) {
-			if (id === 'grimorg' && this.getCurrentOgreCard.type === 'none') {
-				console.log('NO OGRE CARD');
+		ogreMoveAttackCheck: function(id, piece) {
+			if (this.getCurrentOgreCard.type === 'none' || this.getCurrentOgreCard.type === 'attack') {
+				console.log('NO OGRE CARD OR ATTACK CARD!');
 				return true;
             }
-            if (id === 'grimorg' && this.getCurrentOgreCard.type === 'attack') {
-				console.log('OGRE ATTACK!');
-                return true;
-			}
-			if (id === 'grimorg' && this.getCurrentOgreCard.type === 'move' && piece.hasMoved) {
+			if (this.getCurrentOgreCard.type === 'move' && piece.hasMoved) {
 				console.log('OGRE ALREADY MOVED!');
                 return true;
             }
@@ -112,9 +108,7 @@ export default {
 		},
 		selected: function(e, card) {
 			if (e.target.classList.contains('can-be-attacked')) {
-				console.log("about to attack!")
-				console.log('card.id: ',card.id);
-				// console.log('this.getUnitThatCanAttack: ',this.getUnitThatCanAttack[0]);
+
 				this.$store.commit('startAttack', {
 					unitUnderAttack: this.getPieceById(card.id)
 				});
