@@ -58,18 +58,14 @@ export default {
 			card.flipped = true;
 			setTimeout(() => {
 				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1];
-				console.log('card in Turn cards: ',card);
 				if (card.type && card.type === 'attack') {
-					console.log("check for possible ogre attack options!");
 					const unitsInReach = this.checkIfUnitsInReach('grimorg');
 					const unit = this.getPieceById('grimorg');
-					console.log('unit!!!: ',unit);
 					unitsInReach.length && this.$store.commit('canBeAttacked', {unit, unitsInReach}); 
 				}
 				this.shuffledPlayingCards.pop();
 				this.$store.commit(this.currentCard, { card, numberOfOgreCardsLeft: this.shuffledPlayingCards.length });
 				if (this.shuffledPlayingCards.length === 0 && this.cards !== "ogre") {
-					console.log('ALL CARDS USED!');
 					this.shuffleCards();
 				}
 			}, 1000)

@@ -9,9 +9,9 @@
         <div 
             v-for="(card, i) in canonCards" 
             :key="i"
-            class="canon-tile"
-            :class="card"
         >
+            <div class="canon-tile" :style="{ backgroundImage: `url(/${card}.png)`}" ></div>
+			<div class="canon-tile back"></div>
         </div>
     </div>
 </template>
@@ -64,6 +64,8 @@ export default {
     width: 80px;
     border-radius: 50%;
     background-size: contain;
+    transform-style: preserve-3d;
+    transition: all 1s ease-in-out;
 }
 
 .canon-target {
@@ -80,6 +82,38 @@ export default {
 
 .canon-explosion {
     background-image: url('/canon-explosion.png');
+}
+
+
+.flipcard {
+    animation: flipcard 1s forwards;
+}
+
+/* 
+.card .side {
+    backface-visibility: hidden;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+}
+.card .back {
+    transform: rotateY(180deg);
+} */
+
+
+@keyframes flipcard {
+    0% {
+        transform: translateX(0);
+		z-index: 100;
+    }
+    50% {
+        transform: translateX(400px);
+		z-index: 100;
+    }
+    100% {
+        transform: rotateY(180deg) translateX(-400px);
+    }
 }
 
 </style>
