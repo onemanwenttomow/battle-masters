@@ -9,9 +9,12 @@
         <div 
             v-for="(card, i) in canonCards" 
             :key="i"
+            class="flip-card"
         >
-            <div class="canon-tile" :style="{ backgroundImage: `url(/${card}.png)`}" ></div>
-			<div class="canon-tile back"></div>
+            <div class="flip-card-inner">
+                <div class="flip-card-front canon-tile"  ></div>
+			    <div class="flip-card-back canon-tile" :style="{ backgroundImage: `url(/${card}.png)`}"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -38,7 +41,23 @@ export default {
 	computed: mapGetters([
         'selectedUnit'
     ]),
+    mounted: function() {
+        this.shuffleCards();
+    },
     methods: {
+        shuffleCards: function() {
+			this.canonCards = this.shuffle(this.canonCards.slice());
+		},
+        shuffle: function(a) {
+			var j, x, i;
+			for (i = a.length - 1; i > 0; i--) {
+				j = Math.floor(Math.random() * (i + 1));
+				x = a[i];
+				a[i] = a[j];
+				a[j] = x;
+			}
+			return a;
+        },
         dragStart: function(e) {
 			const target = e.target;
 			e.dataTransfer.setData("id", e.target.id);
@@ -85,21 +104,46 @@ export default {
 }
 
 
-.flipcard {
-    animation: flipcard 1s forwards;
+.flip-card {
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+     height: 80px;
+    width: 80px;
 }
 
-/* 
-.card .side {
-    backface-visibility: hidden;
-    height: 100%;
-    position: absolute;
-    overflow: hidden;
+/* This container is needed to position the front and back side */
+.flip-card-inner {
+  position: relative;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
     width: 100%;
+  height: 100%;
 }
-.card .back {
-    transform: rotateY(180deg);
-} */
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+  
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+/* Style the back side */
+.flip-card-back {
+  transform: rotateY(180deg);
+}
 
 
 @keyframes flipcard {
