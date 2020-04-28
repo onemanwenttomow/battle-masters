@@ -8,8 +8,7 @@
 			:id="unit.id"
 			:draggable="checkIfDraggable(unit.isSelected, unit.finishedTurn)"
 			@dragstart="dragStart"
-			@dragover.stop
-			@dragend.prevent="dragEnd($event, unit)"
+			@drop.prevent="drop($event)"
 			@mousedown="showPossibleMoves($event, unit.isSelected, unit.hasMoved, unit.boardPosition, unit.id)"
 			@mouseup="$emit('rowAndColumn', {row: null, column: null});"
 			@click="selected($event,unit)"
@@ -33,6 +32,21 @@ export default {
 		'getCurrentOgreCard'
     ]),
 	methods: {
+		drop: function(e, row, col) {
+			const piece = document.getElementById(e.dataTransfer.getData("id"));
+			if (piece.id.indexOf('canon-') === -1) {
+				console.log('made it here!');
+				return;
+			}
+			console.log("on piece!")
+			console.log('piece: ',piece.id);
+			console.log("canon target!!!!")
+			piece.style.position = "absolute";
+			piece.style.top = -15 + "px";
+			piece.style.zIndex = 10;
+			piece.style.opacity = 0.5;
+			e.target.appendChild(piece);
+		},
 		dragStart: function(e) {
 			const target = e.target;
 			e.dataTransfer.setData("id", e.target.id);
@@ -46,26 +60,6 @@ export default {
 				ogreCheck = false;
 			}
 			return unit.isSelected && !unit.finishedTurn && ogreCheck && !this.getCurrentOgreCard.cardUsed;
-		},
-		getRowandColumn: function(elem) {
-			let column, row;
-			const rowClass = Array.from(elem.classList).filter(str =>
-				str.startsWith("row")
-			);
-			const fullRow = document.getElementsByClassName(rowClass);
-			for (let i = 0; i < fullRow.length; i++) {
-				if (fullRow[i] === elem) {
-					column = i;
-					break;
-				}
-			}
-			if (rowClass.length) {
-				row = rowClass[0].slice(3) - 1;
-			}
-			return {
-				row,
-				column
-			};
 		},
 		checkIfDraggable: function(isSelected, finishedMove) {
 			if (finishedMove) {
@@ -90,7 +84,6 @@ export default {
 			if (!isSelected) {
 				return;
 			}
-			const rowAndColumn = this.getRowandColumn(e.target.parentNode);
 			this.$store.commit('showPossibleMoves', {id, moves: calculatedSurroundingTiles});
 		},
 		ogreMoveAttackCheck: function(id, piece) {
@@ -102,9 +95,6 @@ export default {
 				console.log('OGRE ALREADY MOVED!');
                 return true;
             }
-		},
-		dragEnd: function(e, unit) {
-			e.target.style.opacity = 1;
 		},
 		selected: function(e, card) {
 			if (e.target.classList.contains('can-be-attacked')) {

@@ -42,6 +42,9 @@ export default {
 		},
 		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
+			if (piece.id.indexOf('canon-') > -1) {
+				return;
+			}
             row = Number(row.slice(3) -1);
 			let moveToHighlighted = true;
 			if (this.allUnitsOnBoard) {

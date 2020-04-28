@@ -1,10 +1,13 @@
 <template>
-    <nuxt-link to="/" >
-        <div class="welcome-container" @click="startGame">
-            <img src="/bm-logo.PNG" alt="battle masters logo">
-            <img src="/main-image.PNG" alt="battle masters cover"> 
-        </div>
-    </nuxt-link>
+    <div>
+        <nuxt-link to="/" >
+            <div class="welcome-container" @click="startGame">
+                <img src="/bm-logo.PNG" alt="battle masters logo">
+                <img src="/main-image.PNG" alt="battle masters cover"> 
+            </div>
+        </nuxt-link>
+        
+    </div>
 </template>
 
 <script>
