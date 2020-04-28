@@ -34,7 +34,9 @@ export default {
 	methods: {
 		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
-			if (piece.id.indexOf('canon-') === -1) {
+			const unit = this.getPieceById(e.target.id)[0];
+			console.log('unit: ',unit);
+			if (piece.id.indexOf('canon-') === -1 || unit.army === "Imperial") {
 				console.log('made it here!');
 				return;
 			}
