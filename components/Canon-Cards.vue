@@ -12,7 +12,11 @@
             class="flip-card"
         >
             <div class="flip-card-inner">
-                <div class="flip-card-front canon-tile"  ></div>
+                <div 
+                    class="flip-card-front canon-tile" 
+                    :class='[card.flipped ? "canon-card-flipped" : ""]'
+                    @click="card.flipped = true"
+                ></div>
 			    <div class="flip-card-back canon-tile" :style="{ backgroundImage: `url(/${card}.png)`}"></div>
             </div>
         </div>
@@ -46,7 +50,12 @@ export default {
     },
     methods: {
         shuffleCards: function() {
-			this.canonCards = this.shuffle(this.canonCards.slice());
+			this.canonCards = this.shuffle(this.canonCards.map(card => {
+                return {
+                    ...card, 
+                    flipped: false
+                }
+            }));
 		},
         shuffle: function(a) {
 			var j, x, i;
@@ -105,44 +114,38 @@ export default {
 
 
 .flip-card {
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
-     height: 80px;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    height: 80px;
     width: 80px;
+    margin: 0 10px;
 }
 
-/* This container is needed to position the front and back side */
 .flip-card-inner {
-  position: relative;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
+    position: relative;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
     width: 100%;
-  height: 100%;
+    height: 100%;
 }
 
-/* Do an horizontal flip when you move the mouse over the flip box container */
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
-  
+.canon-card-flipped .flip-card-inner {
+    transform: rotateY(180deg);  
 }
 
-/* Position the front and back side */
 .flip-card-front, .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden; /* Safari */
-  backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
 }
 
-/* Style the front side (fallback if image is missing) */
 .flip-card-front {
-  background-color: #bbb;
-  color: black;
+    background-color: #64c7cc;
 }
 
-/* Style the back side */
 .flip-card-back {
-  transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
 
 
