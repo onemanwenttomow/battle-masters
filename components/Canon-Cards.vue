@@ -1,20 +1,25 @@
 <template>
-	<div class="canon-cards-container">
-        <div 
-            class="canon-tile canon-target" 
-            id="canon-target" 
-            @dragstart="dragStart"
-            draggable
-        ></div>
-        <div 
-            v-for="card in canonCards" 
-            :key="card.id"
-            class="flip-card"
-            :class='[card.flipped ? "canon-card-flipped" : ""]'
-        >
-            <div class="flip-card-inner">
-                <div class="flip-card-front canon-tile" @click="card.flipped = true"></div>
-			    <div class="flip-card-back canon-tile" :style="{ backgroundImage: `url(/${card.card}.png)`}"></div>
+    <div>
+        <div class="canon-decision" v-if="showDecision" @click="showDecision = false">
+            <div>Move</div> or <div @click="$store.commit('finishMove', {id: 'canon'})">Attack</div>
+        </div>
+        <div class="canon-cards-container" v-if="canonAttack">
+            <div 
+                class="canon-tile canon-target" 
+                id="canon-target" 
+                draggable
+                @dragstart="dragStart"
+            ></div>
+            <div 
+                v-for="card in canonCards" 
+                :key="card.id"
+                class="flip-card"
+                :class='[card.flipped ? "canon-card-flipped" : ""]'
+            >
+                <div class="flip-card-inner">
+                    <div class="flip-card-front canon-tile" @click="card.flipped = true"></div>
+                    <div class="flip-card-back canon-tile" :style="{ backgroundImage: `url(/${card.card}.png)`}"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -26,6 +31,7 @@ import { mapGetters } from 'vuex';
 export default {
     data: function() {
         return {
+            showDecision: true,
             canonCards: [
                 'canon-fly', 
                 'canon-fly', 
@@ -39,9 +45,13 @@ export default {
             ]
         }
     },
-	computed: mapGetters([
-        'selectedUnit'
-    ]),
+	computed: {
+        ...mapGetters(['getPieceById']), 
+        canonAttack: function() {
+            console.log('selectedUnit: ',this.selectedUnit);
+            return this.getPieceById('canon')[0].hasMoved
+        }
+    },
     mounted: function() {
         this.shuffleCards();
     },
@@ -81,6 +91,24 @@ export default {
 </script>
 
 <style>
+
+.canon-decision {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 500;
+    background-color: cadetblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.canon-decision div {
+    font-size: 100px;
+    cursor: pointer;
+}
 
 .canon-cards-container {
     display: flex;

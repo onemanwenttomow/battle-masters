@@ -58,7 +58,8 @@ const createStore = () => {
                     if (unit.id === id) {
                         return {
                             ...unit,
-                            hasMoved: true
+                            hasMoved: true, 
+                            showPossibleMoves: []
                         }
                     } else {
                         return {
@@ -82,7 +83,7 @@ const createStore = () => {
                         canBeAttacked: false
                     }
                 }
-            })
+            });
             if (canOgreStillMove) {
                 state.armies = state.armies.map(unit => {
                     return {

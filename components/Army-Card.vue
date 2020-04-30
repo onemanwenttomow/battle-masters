@@ -75,7 +75,7 @@ export default {
 		showPossibleMoves: function(e, isSelected, hasMoved, boardPosition, id) {
 			const piece = this.getPieceById(id)[0];
 			console.log('piece.hasMoved: ',piece);
-			if (!this.allUnitsOnBoard) {
+			if (!this.allUnitsOnBoard || hasMoved) {
 				return;
 			}
 			if (id === 'grimorg' && this.ogreMoveAttackCheck(id,piece)) {

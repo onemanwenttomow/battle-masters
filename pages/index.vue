@@ -1,7 +1,7 @@
 <template>
 	<div v-if="gameHasStarted">
-		<CanonCards />
-		<AttackArea v-if="getAttackModeStatus"/>
+		<CanonCards v-if="canonTurn" />
+		<AttackArea v-if="getAttackModeStatus" />
 		<TurnCards 
 			v-if="ogreTurn" 
 			:getPlayingCards="getOgreCards" 
@@ -67,6 +67,9 @@ export default {
 		]),
 		ogreTurn: function() {
 			return this.allUnitsOnBoard && this.getCurrentCard.ids && this.getCurrentCard.ids.includes('grimorg');
+		}, 
+		canonTurn: function() {
+			return this.allUnitsOnBoard && this.getCurrentCard.ids && this.getCurrentCard.ids.includes('canon');
 		}
 	}
 };
