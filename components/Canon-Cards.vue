@@ -7,17 +7,14 @@
             draggable
         ></div>
         <div 
-            v-for="(card, i) in canonCards" 
-            :key="i"
+            v-for="card in canonCards" 
+            :key="card.id"
             class="flip-card"
+            :class='[card.flipped ? "canon-card-flipped" : ""]'
         >
             <div class="flip-card-inner">
-                <div 
-                    class="flip-card-front canon-tile" 
-                    :class='[card.flipped ? "canon-card-flipped" : ""]'
-                    @click="card.flipped = true"
-                ></div>
-			    <div class="flip-card-back canon-tile" :style="{ backgroundImage: `url(/${card}.png)`}"></div>
+                <div class="flip-card-front canon-tile" @click="card.flipped = true"></div>
+			    <div class="flip-card-back canon-tile" :style="{ backgroundImage: `url(/${card.card}.png)`}"></div>
             </div>
         </div>
     </div>
@@ -50,12 +47,14 @@ export default {
     },
     methods: {
         shuffleCards: function() {
-			this.canonCards = this.shuffle(this.canonCards.map(card => {
+            const shuffledCards = this.shuffle(this.canonCards.slice())
+            this.canonCards = shuffledCards.map((card, i) => {
                 return {
-                    ...card, 
-                    flipped: false
+                    card, 
+                    flipped: false,
+                    id: i
                 }
-            }));
+            });
 		},
         shuffle: function(a) {
 			var j, x, i;
@@ -64,7 +63,7 @@ export default {
 				x = a[i];
 				a[i] = a[j];
 				a[j] = x;
-			}
+            }
 			return a;
         },
         dragStart: function(e) {
