@@ -1,9 +1,11 @@
 <template>
     <div>
-        <div class="canon-decision" v-if="showDecision" @click="showDecision = false">
+        <!-- <div class="canon-decision" v-if="showDecision" @click="showDecision = false">
             <div>Move</div> or <div @click="$store.commit('finishMove', {id: 'canon'})">Attack</div>
-        </div>
-        <div class="canon-cards-container" v-if="canonAttack">
+        </div> -->
+
+         <!-- v-if="canonAttack" -->
+        <div class="canon-cards-container">
             <div 
                 class="canon-tile canon-target" 
                 id="canon-target" 
@@ -15,10 +17,12 @@
                 :key="card.id"
                 class="flip-card"
                 :class='[card.flipped ? "canon-card-flipped" : ""]'
+                draggable
+                @dragstart="dragStart"
             >
                 <div class="flip-card-inner">
                     <div class="flip-card-front canon-tile" @click="card.flipped = true"></div>
-                    <div class="flip-card-back canon-tile" :style="{ backgroundImage: `url(/${card.card}.png)`}"></div>
+                    <div class="flip-card-back canon-tile" :style="card.cardOnBoard && {backgroundImage: `url(/${card.card}.png)`}"></div>
                 </div>
             </div>
         </div>
@@ -48,7 +52,6 @@ export default {
 	computed: {
         ...mapGetters(['getPieceById']), 
         canonAttack: function() {
-            console.log('selectedUnit: ',this.selectedUnit);
             return this.getPieceById('canon')[0].hasMoved
         }
     },
@@ -62,7 +65,8 @@ export default {
                 return {
                     card, 
                     flipped: false,
-                    id: i
+                    id: i,
+                    cardOnBoard: false
                 }
             });
 		},
