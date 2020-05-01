@@ -22,8 +22,8 @@
                 @dragstart="dragStart"
             >
                 <div class="flip-card-inner">
-                    <div class="flip-card-front canon-tile" @click="card.flipped = true"></div>
-                    <div class="flip-card-back canon-tile" :style=" {backgroundImage: `url(${card.img})`}"></div>
+                    <div class="flip-card-front canon-tile" @click="flip(card.id)"></div>
+                    <div class="flip-card-back canon-tile" :style="getCanonCardsOnBoard.includes(card.id) && {backgroundImage: `url(${card.img})`}"></div>
                 </div>
             </div>
         </div>
@@ -37,29 +37,43 @@ export default {
     data: function() {
         return {
             showDecision: true,
+            canonCards: []
         }
     },
 	computed: {
-        ...mapGetters(['getPieceById', 'getCanonCards']), 
+        ...mapGetters(['getPieceById', 'getCanonCards', 'getCanonCardsOnBoard']), 
         canonAttack: function() {
             return this.getPieceById('canon')[0].hasMoved
-        },
-        canonCards: function() {
-            this.$store.commit('shuffle', {cards: this.getCanonCards})
-            return this.getCanonCards;
         }
     },
+    mounted: function() {
+        this.$store.commit('shuffle', {cards: this.getCanonCards});
+        this.canonCards = this.getCanonCards;
+    },
     methods: {
+        flip: function(id) {
+            if (this.getCanonCardsOnBoard.includes(id)) {
+                this.canonCards = this.canonCards.map(card => {
+                    if (card.id === id) {
+                        return {
+                            ...card, 
+                            flipped: true
+                        }
+                    } else {
+                        return {
+                            ...card
+                        }
+                    }
+                })
+            }
+        },
         dragStart: function(e) {
 			const target = e.target;
 			e.dataTransfer.setData("id", e.target.id);
 			setTimeout(function() {
 				target.style.opacity = 0.3;
 			}, 0);
-		},
-		dragEnd: function(e, unit) {
-			e.target.style.opacity = 1;
-		},
+		}
     }
 };
 </script>
@@ -142,7 +156,7 @@ export default {
 }
 
 .flip-card-front {
-    background-color: #64c7cc;
+    background-color: goldenrod;
 }
 
 .flip-card-back {

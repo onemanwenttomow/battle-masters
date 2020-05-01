@@ -7,6 +7,8 @@ const createStore = () => {
         armies: [], 
         mainPlayingCards: [],
         ogrePlayingCards: [],
+        canonPlayingCards: [],
+        canonCardsOnBoard: [],
         board: [], 
         unitThatCanAttack: {},
         unitUnderAttack: {},
@@ -33,6 +35,9 @@ const createStore = () => {
                     hasMoved: false
 				}
             })
+        },
+        droppedCanonCardOnBoard(state, {id}) {
+            state.canonCardsOnBoard.push(id);
         },
         currentOgreCard(state, {card, numberOfOgreCardsLeft}) {
             state.armies = state.armies.map(unit => {
@@ -257,6 +262,9 @@ const createStore = () => {
         },
         getCurrentOgreCard: (state) => {
             return state.currentOgreCard;
+        },
+        getCanonCardsOnBoard: (state) => {
+            return state.canonCardsOnBoard;
         },
         getNumOfRemainingOgreCards: (state) => {
             return state.numberOfOgreCardsLeft;
