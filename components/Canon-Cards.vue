@@ -15,6 +15,7 @@
             <div 
                 v-for="card in canonCards" 
                 :key="card.id"
+                :id="card.id"
                 class="flip-card"
                 :class='[card.flipped ? "canon-card-flipped" : ""]'
                 draggable
@@ -22,7 +23,7 @@
             >
                 <div class="flip-card-inner">
                     <div class="flip-card-front canon-tile" @click="card.flipped = true"></div>
-                    <div class="flip-card-back canon-tile" :style="card.cardOnBoard && {backgroundImage: `url(/${card.card}.png)`}"></div>
+                    <div class="flip-card-back canon-tile" :style=" {backgroundImage: `url(${card.img})`}"></div>
                 </div>
             </div>
         </div>
@@ -36,50 +37,19 @@ export default {
     data: function() {
         return {
             showDecision: true,
-            canonCards: [
-                'canon-fly', 
-                'canon-fly', 
-                'canon-fly', 
-                'canon-fly', 
-                'canon-explosion', 
-                'canon-explosion', 
-                'canon-bounce', 
-                'canon-bounce', 
-                'canon-bounce'
-            ]
         }
     },
 	computed: {
-        ...mapGetters(['getPieceById']), 
+        ...mapGetters(['getPieceById', 'getCanonCards']), 
         canonAttack: function() {
             return this.getPieceById('canon')[0].hasMoved
+        },
+        canonCards: function() {
+            this.$store.commit('shuffle', {cards: this.getCanonCards})
+            return this.getCanonCards;
         }
     },
-    mounted: function() {
-        this.shuffleCards();
-    },
     methods: {
-        shuffleCards: function() {
-            const shuffledCards = this.shuffle(this.canonCards.slice())
-            this.canonCards = shuffledCards.map((card, i) => {
-                return {
-                    card, 
-                    flipped: false,
-                    id: i,
-                    cardOnBoard: false
-                }
-            });
-		},
-        shuffle: function(a) {
-			var j, x, i;
-			for (i = a.length - 1; i > 0; i--) {
-				j = Math.floor(Math.random() * (i + 1));
-				x = a[i];
-				a[i] = a[j];
-				a[j] = x;
-            }
-			return a;
-        },
         dragStart: function(e) {
 			const target = e.target;
 			e.dataTransfer.setData("id", e.target.id);

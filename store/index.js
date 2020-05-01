@@ -162,11 +162,22 @@ const createStore = () => {
             state.unitUnderAttack = unitUnderAttack;
             state.attackModeOpen = true;
         },
-        setupAllPieces(state, { armies, mainPlayingCards, board, ogrePlayingCards}) {
+        setupAllPieces(state, { armies, mainPlayingCards, board, ogrePlayingCards, canonPlayingCards}) {
             state.armies = armies;
             state.mainPlayingCards = mainPlayingCards;
             state.board = board;
             state.ogrePlayingCards = ogrePlayingCards;
+            state.canonPlayingCards = canonPlayingCards;
+        },
+        shuffle(state, {cards}) {
+            var j, x, i;
+			for (i = cards.length - 1; i > 0; i--) {
+				j = Math.floor(Math.random() * (i + 1));
+				x = cards[i];
+				cards[i] = cards[j];
+				cards[j] = x;
+            }
+            state.canonPlayingCards = cards;
         },
         updateUnitPosition(state, payload) {
             state.armies = state.armies.map(unit => {
@@ -190,6 +201,7 @@ const createStore = () => {
             const { data } = await this.$axios.get('/api/initial-board');
             const mainPlayingCards = data.mainPlayingCards;
             const ogrePlayingCards= data.ogrePlayingCards;
+            const canonPlayingCards= data.canonPlayingCards;
             const board = data.board;
             const armies = data.armies.map(unit => {
                 return {
@@ -206,7 +218,7 @@ const createStore = () => {
                     boardPosition: []
                 }
             })
-            commit('setupAllPieces', {armies, mainPlayingCards, board, ogrePlayingCards});
+            commit('setupAllPieces', {armies, mainPlayingCards, board, ogrePlayingCards, canonPlayingCards});
         },
     },
     getters: {
@@ -224,6 +236,9 @@ const createStore = () => {
         },
         getOgreCards: (state) =>  {
             return state.ogrePlayingCards;
+        },
+        getCanonCards: (state) =>  {
+            return state.canonPlayingCards;
         },
         getBoard: (state) => {
             return state.board;
