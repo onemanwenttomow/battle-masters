@@ -42,10 +42,12 @@ export default {
 		},
 		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
-
+			if (!piece) {
+				return;
+			}
 
 			if (piece.id.indexOf('canon-') > -1 || Array.from(e.target.classList).includes("piece") && piece.id.indexOf('canon-') === -1) {
-				piece.style.opacity = 1;
+				piece.style.opacity = 0.8;
 				return;
 			}
 	

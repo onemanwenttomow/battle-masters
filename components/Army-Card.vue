@@ -36,25 +36,27 @@ export default {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
 			const unit = this.getPieceById(e.target.id)[0];
 			console.log('unit: ',unit);
+
+			if (!piece) {
+				return;
+			}
 			if (piece.id.indexOf('canon-') === -1) {
 				return;
 			}
+			
 
+			piece.style.position = "absolute";
+			piece.style.top = -15 + "px";
+			piece.style.zIndex = 10;
+			piece.style.opacity = 0.5;
 			if (piece.id.indexOf('canon-fly') > -1 || piece.id.indexOf('canon-bounce') > -1 || piece.id.indexOf('canon-explosion') > -1) {
-				piece.style.position = "absolute";
-				piece.style.top = -15 + "px";
-				piece.style.zIndex = 10;
-				piece.style.opacity = 0.5;
+				piece.style.left = -10 + 'px';
 				this.$store.commit('droppedCanonCardOnBoard', {id: piece.id})
 				e.target.appendChild(piece);
 				return;
 			}
 
 			if (piece.id.indexOf('canon-target') > -1 && unit.army === "Chaos") {
-				piece.style.position = "absolute";
-				piece.style.top = -15 + "px";
-				piece.style.zIndex = 10;
-				piece.style.opacity = 0.5;
 				e.target.appendChild(piece);
 				return;
 			}
