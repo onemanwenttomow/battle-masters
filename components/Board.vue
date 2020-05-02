@@ -46,7 +46,7 @@ export default {
 				return;
 			}
 
-			if (piece.id.indexOf('canon-') > -1 || Array.from(e.target.classList).includes("piece") && piece.id.indexOf('canon-') === -1) {
+			if (piece.id.indexOf('canon-target') > -1 || Array.from(e.target.classList).includes("piece") && piece.id.indexOf('canon-target') === -1) {
 				piece.style.opacity = 0.8;
 				return;
 			}
@@ -56,7 +56,16 @@ export default {
 			if (this.allUnitsOnBoard) {
 				moveToHighlighted = Array.from(e.target.classList).includes("highlighted")
 			}
-			if (!Array.from(e.target.classList).includes("river") && moveToHighlighted) {
+
+			if (piece.id.indexOf('canon-fly') > -1 || piece.id.indexOf('canon-bounce') > -1 || piece.id.indexOf('canon-explosion') > -1) {
+				piece.style.position = "absolute";
+				piece.style.top = -10 + "px";
+				piece.style.zIndex = 10;
+				piece.style.opacity = 1;
+				this.$store.commit('droppedCanonCardOnBoard', {id: piece.id})
+				e.target.appendChild(piece);
+				return;
+			} else if (!Array.from(e.target.classList).includes("river") && moveToHighlighted) {
 				piece.style.top = -45 + "px";
 				piece.style.left = -40 + "px";
 				piece.style.zIndex = 10;
@@ -65,7 +74,8 @@ export default {
 					id: piece.id, 
 					positions: {row, col}
 				})
-            }
+			}
+
 			piece.style.opacity = 1;
 			
 			this.$store.commit('showPossibleMoves', {id: "none", moves: "none"});

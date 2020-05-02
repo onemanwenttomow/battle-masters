@@ -20,6 +20,7 @@
                 :class='[card.flipped ? "canon-card-flipped" : ""]'
                 :draggable="!getCanonCardsOnBoard.includes(card.id)"
                 @dragstart.stop="dragStart"
+                @click="test"
             >
                 <div class="flip-card-inner">
                     <div class="flip-card-front canon-tile" @click.stop="flip(card.id)"></div>
@@ -51,6 +52,9 @@ export default {
         this.canonCards = this.getCanonCards;
     },
     methods: {
+        test: function() {
+            console.log("hello?")
+        },
         flip: function(id) {
             if (this.getCanonCardsOnBoard.includes(id)) {
                 this.canonCards = this.canonCards.map(card => {
@@ -133,6 +137,8 @@ export default {
     height: 80px;
     width: 80px;
     margin: 0 10px;
+    position: relative;
+
 }
 
 .flip-card-inner {
