@@ -202,6 +202,27 @@ const createStore = () => {
             state.canonPlayingCards = cards;
         },
         updateUnitPosition(state, payload) {
+            console.log("payload.postitions: ", payload.positions);
+            function Hex(q, r, s) {
+                if (Math.round(q + r + s) !== 0) throw "q + r + s must be 0";
+                return {q: q, r: r, s: s};
+            }
+            let oddOrEven;
+            payload.positions.row % 2 === 0 ? oddOrEven = 1 : oddOrEven = -1;
+            var EVEN = 1;
+            var ODD = -1;
+            function roffset_to_cube(offset, h) {
+                var q = h.col - (h.row + offset * (h.row & 1)) / 2;
+                var r = h.row;
+                var s = -q - r;
+                if (offset !== EVEN && offset !== ODD)
+                {
+                    throw "offset must be EVEN (+1) or ODD (-1)";
+                }
+                return Hex(q, r, s);
+            }
+            var cube  = roffset_to_cube(oddOrEven, payload.positions);
+            console.log('cube: ',cube);
             state.armies = state.armies.map(unit => {
                 if (unit.id === payload.id) {
                     return {

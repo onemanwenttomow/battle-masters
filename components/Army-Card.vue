@@ -4,7 +4,7 @@
 			v-for="unit in getArmy(army)"
 			:key="unit.id"
 			class="piece"
-			:class="[checkIfSelected(unit) ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '', canonTurn ? '': ''] "
+			:class="[checkIfSelected(unit) ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : ''] "
 			:id="unit.id"
 			:draggable="checkIfDraggable(unit.isSelected, unit.finishedTurn)"
 			@dragstart="dragStart"
