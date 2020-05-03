@@ -18,15 +18,17 @@
                 :id="card.id"
                 class="flip-card"
                 :class='[card.flipped ? "canon-card-flipped" : ""]'
-                :draggable="!getCanonCardsOnBoard.includes(card.id)"
+                :draggable="!getCanonCardsOnBoard.find(onBoard => onBoard.id === card.id)"
                 @dragstart.stop="dragStart"
                 @click="test"
             >
                 <div class="flip-card-inner">
                     <div class="flip-card-front canon-tile" @click.stop="flip(card.id)"></div>
-                    <div class="flip-card-back canon-tile" :style="getCanonCardsOnBoard.includes(card.id) && {backgroundImage: `url(${card.img})`}"></div>
+                    <div class="flip-card-back canon-tile" :style="getCanonCardsOnBoard.find(onBoard => onBoard.id === card.id) && {backgroundImage: `url(${card.img})`}"></div>
                 </div>
             </div>
+
+            {{getCanonCardsOnBoard}}
         </div>
     </div>
 </template>

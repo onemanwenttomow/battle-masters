@@ -51,7 +51,7 @@ export default {
 			piece.style.opacity = 0.5;
 			if (piece.id.indexOf('canon-fly') > -1 || piece.id.indexOf('canon-bounce') > -1 || piece.id.indexOf('canon-explosion') > -1) {
 				piece.style.left = -10 + 'px';
-				this.$store.commit('droppedCanonCardOnBoard', {id: piece.id})
+				this.$store.commit('droppedCanonCardOnBoard', {id: piece.id, unitUnder: unit.id})
 				e.target.appendChild(piece);
 				return;
 			}

@@ -36,8 +36,8 @@ const createStore = () => {
 				}
             })
         },
-        droppedCanonCardOnBoard(state, {id}) {
-            state.canonCardsOnBoard.push(id);
+        droppedCanonCardOnBoard(state, payload) {
+            state.canonCardsOnBoard.push(payload);
         },
         currentOgreCard(state, {card, numberOfOgreCardsLeft}) {
             state.armies = state.armies.map(unit => {
