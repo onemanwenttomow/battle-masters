@@ -99,6 +99,20 @@ const createStore = () => {
                 })
             }
         },
+        dealDamage(state, {id, damageDealt}) {
+            console.log('id, damageDealt: ',id, damageDealt);
+            state.armies = state.armies.map(unit => {
+                if (unit.id === id) {
+                    return {
+                        ...unit,
+                        remainingLives:unit.remainingLives - damageDealt,
+                    }
+                } else {
+                    return unit
+                }
+            });
+            
+        },
         battleOver(state, {damageDealt}) {
             if (state.unitUnderAttack[0].id === 'grimorg') {
                 for (let i = 0; i < damageDealt; i++) {

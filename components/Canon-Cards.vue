@@ -81,6 +81,11 @@ export default {
             if (!unitUnder || fly) {
                 return;
             }
+            let damageDealt;
+            bounce ? damageDealt = 1 : damageDealt = 6;
+            setTimeout(() => {
+                this.$store.commit('dealDamage', {id: canonCardIsOnBoard.unitUnder, damageDealt})
+            },2000)
             console.log('canonCardIsOnBoard.unitUnder: ',canonCardIsOnBoard.unitUnder);
         },
         dragStart: function(e) {
