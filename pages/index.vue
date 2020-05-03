@@ -1,7 +1,6 @@
 <template>
 	<div v-if="gameHasStarted">
-		<!-- v-if="canonTurn" -->
-		<CanonCards  />
+		<CanonCards v-if="canonTurn" />
 		<AttackArea v-if="getAttackModeStatus" />
 		<TurnCards 
 			v-if="ogreTurn" 
@@ -70,6 +69,12 @@ export default {
 			return this.allUnitsOnBoard && this.getCurrentCard.ids && this.getCurrentCard.ids.includes('grimorg');
 		}, 
 		canonTurn: function() {
+			const keepCanonCards = this.allUnitsOnBoard && this.getCurrentCard.ids && this.getCurrentCard.ids.includes('canon');
+			if (!keepCanonCards) {
+				let canonCardsOnPage = Array.from(document.querySelectorAll('.flip-card'));
+				canonCardsOnPage.forEach(card => card.remove());
+				this.$store.commit('resetCanon');
+			}
 			return this.allUnitsOnBoard && this.getCurrentCard.ids && this.getCurrentCard.ids.includes('canon');
 		}
 	}

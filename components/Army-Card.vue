@@ -4,7 +4,7 @@
 			v-for="unit in getArmy(army)"
 			:key="unit.id"
 			class="piece"
-			:class="[checkIfSelected(unit) ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '']"
+			:class="[checkIfSelected(unit) ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : '', canonTurn ? '': ''] "
 			:id="unit.id"
 			:draggable="checkIfDraggable(unit.isSelected, unit.finishedTurn)"
 			@dragstart="dragStart"
@@ -22,15 +22,18 @@ import { mapGetters } from 'vuex';
 
 export default {
 	props: ["army"],
-	computed: mapGetters([
-		'getArmy', 
-		'getOpposingArmy', 
-		'allUnitsOnBoard', 
-		'getSurroundingTiles', 
-		'getUnitThatCanAttack', 
-		'getPieceById',
-		'getCurrentOgreCard'
-    ]),
+	computed: {
+		...mapGetters([
+			'getArmy', 
+			'getOpposingArmy', 
+			'allUnitsOnBoard', 
+			'getSurroundingTiles', 
+			'getUnitThatCanAttack', 
+			'getPieceById',
+			'getCurrentOgreCard',
+			'getCurrentCard'
+		])
+	},
 	methods: {
 		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
@@ -49,14 +52,15 @@ export default {
 			piece.style.top = -15 + "px";
 			piece.style.zIndex = 10;
 			piece.style.opacity = 0.5;
+			piece.style.left = -10 + 'px';
 			if (piece.id.indexOf('canon-fly') > -1 || piece.id.indexOf('canon-bounce') > -1 || piece.id.indexOf('canon-explosion') > -1) {
-				piece.style.left = -10 + 'px';
 				this.$store.commit('droppedCanonCardOnBoard', {id: piece.id, unitUnder: unit.id})
 				e.target.appendChild(piece);
 				return;
 			}
 
 			if (piece.id.indexOf('canon-target') > -1 && unit.army === "Chaos") {
+				this.$store.commit('droppedCanonCardOnBoard', {id: 'canon-target', unitUnder: unit.id})
 				e.target.appendChild(piece);
 				return;
 			}

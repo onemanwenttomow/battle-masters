@@ -39,6 +39,9 @@ const createStore = () => {
         droppedCanonCardOnBoard(state, payload) {
             state.canonCardsOnBoard.push(payload);
         },
+        resetCanon(state) {
+            state.canonCardsOnBoard = [];
+        },
         currentOgreCard(state, {card, numberOfOgreCardsLeft}) {
             state.armies = state.armies.map(unit => {
                 if (unit.id === 'grimorg') {

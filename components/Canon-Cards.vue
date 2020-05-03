@@ -1,17 +1,23 @@
 <template>
     <div>
-        <!-- <div class="canon-decision" v-if="showDecision" @click="showDecision = false">
+        <div class="canon-decision" v-if="showDecision" @click="showDecision = false">
             <div>Move</div> or <div @click="$store.commit('finishMove', {id: 'canon'})">Attack</div>
-        </div> -->
+        </div>
 
-         <!-- v-if="canonAttack" -->
-        <div class="canon-cards-container">
+         
+        <div class="canon-cards-container" v-if="canonAttack">
             <div 
-                class="canon-tile canon-target" 
+                class="flip-card" 
+                :class='[targetFlipped ? "canon-card-flipped" : ""]'
                 id="canon-target" 
                 draggable
                 @dragstart="dragStart"
-            ></div>
+            >
+                <div class="flip-card-inner">
+                    <div class="flip-card-front canon-tile canon-target" @click.stop="flipTarget"></div>
+                    <div class="flip-card-back canon-tile" :style="targetFlipped && {backgroundImage: `url(/canon-explosion.png)`}"></div>
+                </div>
+            </div>
             <div 
                 v-for="card in canonCards" 
                 :key="card.id"
@@ -20,7 +26,6 @@
                 :class='[card.flipped ? "canon-card-flipped" : ""]'
                 :draggable="!getCanonCardsOnBoard.find(onBoard => onBoard.id === card.id)"
                 @dragstart.stop="dragStart"
-                @click="test"
             >
                 <div class="flip-card-inner">
                     <div class="flip-card-front canon-tile" @click.stop="flip(card.id)"></div>
@@ -40,7 +45,8 @@ export default {
     data: function() {
         return {
             showDecision: true,
-            canonCards: []
+            canonCards: [],
+            targetFlipped: false
         }
     },
 	computed: {
@@ -54,8 +60,12 @@ export default {
         this.canonCards = this.getCanonCards;
     },
     methods: {
-        test: function() {
-            console.log("hello?")
+        flipTarget() {
+            this.targetFlipped = true;
+            const canonCardIsOnBoard = this.getCanonCardsOnBoard.find(onBoard => onBoard.id === 'canon-target');
+            setTimeout(() => {
+                this.$store.commit('dealDamage', {id: canonCardIsOnBoard.unitUnder, damageDealt: 6})
+            },2000)
         },
         flip: function(id) {
             const canonCardIsOnBoard = this.getCanonCardsOnBoard.find(onBoard => onBoard.id === id);
