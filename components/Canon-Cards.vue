@@ -58,20 +58,30 @@ export default {
             console.log("hello?")
         },
         flip: function(id) {
-            if (this.getCanonCardsOnBoard.includes(id)) {
-                this.canonCards = this.canonCards.map(card => {
-                    if (card.id === id) {
-                        return {
-                            ...card, 
-                            flipped: true
-                        }
-                    } else {
-                        return {
-                            ...card
-                        }
-                    }
-                })
+            const canonCardIsOnBoard = this.getCanonCardsOnBoard.find(onBoard => onBoard.id === id);
+            if (!canonCardIsOnBoard) {
+                return;
             }
+            this.canonCards = this.canonCards.map(card => {
+                if (card.id === id) {
+                    return {
+                        ...card, 
+                        flipped: true
+                    }
+                } else {
+                    return {
+                        ...card
+                    }
+                }
+            });
+            const fly = canonCardIsOnBoard.id.includes('fly');
+            const bounce = canonCardIsOnBoard.id.includes('bounce');
+            const explosion = canonCardIsOnBoard.id.includes('explosion');
+            const unitUnder = canonCardIsOnBoard.unitUnder;
+            if (!unitUnder || fly) {
+                return;
+            }
+            console.log('canonCardIsOnBoard.unitUnder: ',canonCardIsOnBoard.unitUnder);
         },
         dragStart: function(e) {
 			const target = e.target;
