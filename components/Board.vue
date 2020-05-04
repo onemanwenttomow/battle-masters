@@ -10,6 +10,7 @@
                         hex, 
                         row.row, 
                         hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
+						checkIfOnCanonPath(row.row, column) ? 'highlighted': ''
                     ]"
 					@dragover.prevent
 					@drop.prevent="drop($event, row.row, column)"
@@ -32,10 +33,15 @@ export default {
 			'getPossibleMoves', 
 			'checkIfUnitsInReach', 
 			'getPieceById',
-			'getNumOfRemainingOgreCards'
+			'getNumOfRemainingOgreCards',
+			'getCanonPath'
 		]), 
 	},
 	methods: {
+		checkIfOnCanonPath: function(row, col) {
+			row = Number(row.slice(3)) -1;
+			return this.getCanonPath.find(location => location.row === row && location.col === col) 
+		},
 		checkIfSelected: function(row, col) {
 			row = Number(row.slice(3));
 			return this.getPossibleMoves.find(move => move[0] === (row -1) && move[1] === col);

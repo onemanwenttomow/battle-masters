@@ -4,7 +4,7 @@
             <div>Move</div> or <div @click="$store.commit('finishMove', {id: 'canon'})">Attack</div>
         </div>
 
-         
+          
         <div class="canon-cards-container" v-if="canonAttack">
             <div 
                 class="flip-card" 

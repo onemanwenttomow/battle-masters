@@ -9,6 +9,7 @@ const createStore = () => {
         ogrePlayingCards: [],
         canonPlayingCards: [],
         canonCardsOnBoard: [],
+        canonPath: [],
         board: [], 
         unitThatCanAttack: {},
         unitUnderAttack: {},
@@ -37,10 +38,26 @@ const createStore = () => {
             })
         },
         droppedCanonCardOnBoard(state, payload) {
+            if (payload.id === "canon-target") {
+                const canon = state.armies.filter(unit => unit.id === "canon")[0].boardPosition[0];
+                const unitUnderTarget = state.armies.filter(unit => unit.id === payload.unitUnder)[0].boardPosition[0];
+                let oddOrEven;
+                canon.row % 2 === 0 ? oddOrEven = -1 : oddOrEven = 1;
+                let unitUnderOddOrEven;
+                unitUnderTarget.row % 2 === 0 ? unitUnderOddOrEven = -1 : unitUnderOddOrEven = 1;
+                const canonCube =  new OffsetCoord.roffsetToCube(oddOrEven, {col: canon.col, row: canon.row});
+                const unitUnderTargetCube =  new OffsetCoord.roffsetToCube(unitUnderOddOrEven, {col: unitUnderTarget.col, row: unitUnderTarget.row});
+                const cubePath = canonCube.linedraw(unitUnderTargetCube);
+                const offSetPath = cubePath.map(c => new OffsetCoord.roffsetFromCube(1, c));
+                offSetPath.pop();
+                offSetPath.shift();
+                state.canonPath = offSetPath;
+            }
             state.canonCardsOnBoard.push(payload);
         },
         resetCanon(state) {
             state.canonCardsOnBoard = [];
+            state.canonPath = [];
         },
         currentOgreCard(state, {card, numberOfOgreCardsLeft}) {
             state.armies = state.armies.map(unit => {
@@ -203,26 +220,18 @@ const createStore = () => {
         },
         updateUnitPosition(state, payload) {
             console.log("payload.postitions: ", payload.positions);
-            function Hex(q, r, s) {
-                if (Math.round(q + r + s) !== 0) throw "q + r + s must be 0";
-                return {q: q, r: r, s: s};
-            }
             let oddOrEven;
-            payload.positions.row % 2 === 0 ? oddOrEven = 1 : oddOrEven = -1;
-            var EVEN = 1;
-            var ODD = -1;
-            function roffset_to_cube(offset, h) {
-                var q = h.col - (h.row + offset * (h.row & 1)) / 2;
-                var r = h.row;
-                var s = -q - r;
-                if (offset !== EVEN && offset !== ODD)
-                {
-                    throw "offset must be EVEN (+1) or ODD (-1)";
-                }
-                return Hex(q, r, s);
-            }
-            var cube  = roffset_to_cube(oddOrEven, payload.positions);
-            console.log('cube: ',cube);
+            payload.positions.row % 2 === 0 ? oddOrEven = -1 : oddOrEven = 1;
+            const cube = new OffsetCoord.roffsetToCube(oddOrEven, {col: payload.positions.col, row: payload.positions.row});
+            const cube2 = new OffsetCoord.roffsetToCube(oddOrEven, {col: 2, row: 2});
+            // console.log('cube2: ',cube2);
+            console.log('cube: ',cube.linedraw(cube2));
+            const cubePath = cube.linedraw(cube2);
+            const offSetPath = cubePath.map(c => new OffsetCoord.roffsetFromCube(oddOrEven, c));
+            offSetPath.pop();
+            offSetPath.shift();
+            console.log('path: ',cubePath);
+            console.log('offSetPath: ',offSetPath);
             state.armies = state.armies.map(unit => {
                 if (unit.id === payload.id) {
                     return {
@@ -303,6 +312,9 @@ const createStore = () => {
         },
         getCanonCardsOnBoard: (state) => {
             return state.canonCardsOnBoard;
+        },
+        getCanonPath: (state) => {
+            return state.canonPath;
         },
         getNumOfRemainingOgreCards: (state) => {
             return state.numberOfOgreCardsLeft;
@@ -388,3 +400,126 @@ const createStore = () => {
 };
 
 export default createStore;
+
+// Generated code -- CC0 -- No Rights Reserved -- http://www.redblobgames.com/grids/hexagons/
+export class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+export class Hex {
+    constructor(q, r, s) {
+        this.q = q;
+        this.r = r;
+        this.s = s;
+        if (Math.round(q + r + s) !== 0)
+            throw `q + r + s must be 0, was ${q + r + s}`;
+    }
+    add(b) {
+        return new Hex(this.q + b.q, this.r + b.r, this.s + b.s);
+    }
+    subtract(b) {
+        return new Hex(this.q - b.q, this.r - b.r, this.s - b.s);
+    }
+    scale(k) {
+        return new Hex(this.q * k, this.r * k, this.s * k);
+    }
+    rotateLeft() {
+        return new Hex(-this.s, -this.q, -this.r);
+    }
+    rotateRight() {
+        return new Hex(-this.r, -this.s, -this.q);
+    }
+    static direction(direction) {
+        return Hex.directions[direction];
+    }
+    neighbor(direction) {
+        return this.add(Hex.direction(direction));
+    }
+    diagonalNeighbor(direction) {
+        return this.add(Hex.diagonals[direction]);
+    }
+    len() {
+        return (Math.abs(this.q) + Math.abs(this.r) + Math.abs(this.s)) / 2;
+    }
+    distance(b) {
+        return this.subtract(b).len();
+    }
+    round() {
+        var qi = Math.round(this.q);
+        var ri = Math.round(this.r);
+        var si = Math.round(this.s);
+        var q_diff = Math.abs(qi - this.q);
+        var r_diff = Math.abs(ri - this.r);
+        var s_diff = Math.abs(si - this.s);
+        if (q_diff > r_diff && q_diff > s_diff) {
+            qi = -ri - si;
+        }
+        else if (r_diff > s_diff) {
+            ri = -qi - si;
+        }
+        else {
+            si = -qi - ri;
+        }
+        return new Hex(qi, ri, si);
+    }
+    lerp(b, t) {
+        return new Hex(this.q * (1.0 - t) + b.q * t, this.r * (1.0 - t) + b.r * t, this.s * (1.0 - t) + b.s * t);
+    }
+    linedraw(b) {
+        var N = this.distance(b);
+        var a_nudge = new Hex(this.q + 1e-06, this.r + 1e-06, this.s - 2e-06);
+        var b_nudge = new Hex(b.q + 1e-06, b.r + 1e-06, b.s - 2e-06);
+        var results = [];
+        var step = 1.0 / Math.max(N, 1);
+        for (var i = 0; i <= N; i++) {
+            results.push(a_nudge.lerp(b_nudge, step * i).round());
+        }
+        return results;
+    }
+}
+Hex.directions = [new Hex(1, 0, -1), new Hex(1, -1, 0), new Hex(0, -1, 1), new Hex(-1, 0, 1), new Hex(-1, 1, 0), new Hex(0, 1, -1)];
+Hex.diagonals = [new Hex(2, -1, -1), new Hex(1, -2, 1), new Hex(-1, -1, 2), new Hex(-2, 1, 1), new Hex(-1, 2, -1), new Hex(1, 1, -2)];
+export class OffsetCoord {
+    constructor(col, row) {
+        this.col = col;
+        this.row = row;
+    }
+    static qoffsetFromCube(offset, h) {
+        var col = h.q;
+        var row = h.r + (h.q + offset * (h.q & 1)) / 2;
+        if (offset !== OffsetCoord.EVEN && offset !== OffsetCoord.ODD) {
+            throw "offset must be EVEN (+1) or ODD (-1)";
+        }
+        return new OffsetCoord(col, row);
+    }
+    static qoffsetToCube(offset, h) {
+        var q = h.col;
+        var r = h.row - (h.col + offset * (h.col & 1)) / 2;
+        var s = -q - r;
+        if (offset !== OffsetCoord.EVEN && offset !== OffsetCoord.ODD) {
+            throw "offset must be EVEN (+1) or ODD (-1)";
+        }
+        return new Hex(q, r, s);
+    }
+    static roffsetFromCube(offset, h) {
+        var col = h.q + (h.r + offset * (h.r & 1)) / 2;
+        var row = h.r;
+        if (offset !== OffsetCoord.EVEN && offset !== OffsetCoord.ODD) {
+            throw "offset must be EVEN (+1) or ODD (-1)";
+        }
+        return new OffsetCoord(col, row);
+    }
+    static roffsetToCube(offset, h) {
+        var q = h.col - (h.row + offset * (h.row & 1)) / 2;
+        var r = h.row;
+        var s = -q - r;
+        if (offset !== OffsetCoord.EVEN && offset !== OffsetCoord.ODD) {
+            throw "offset must be EVEN (+1) or ODD (-1)";
+        }
+        return new Hex(q, r, s);
+    }
+}
+OffsetCoord.EVEN = 1;
+OffsetCoord.ODD = -1;
