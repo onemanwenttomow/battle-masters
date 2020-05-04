@@ -10,7 +10,7 @@
                         hex, 
                         row.row, 
                         hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
-						checkIfOnCanonPath(row.row, column) ? 'highlighted': ''
+						checkIfOnCanonPath(row.row, column) ? 'canon-path': ''
                     ]"
 					@dragover.prevent
 					@drop.prevent="drop($event, row.row, column)"
@@ -216,6 +216,10 @@ export default {
 
 .field {
 	background-color: #76a828;
+}
+
+.canon-path {
+	background-color: rebeccapurple;
 }
 
 /* .field:nth-child(4n) {

@@ -52,8 +52,12 @@ const createStore = () => {
                 offSetPath.pop();
                 offSetPath.shift();
                 state.canonPath = offSetPath;
+                const filteredCards = state.canonCardsOnBoard.filter(card => card.id != "canon-target");
+                console.log('filterdCards: ',filteredCards);
+                state.canonCardsOnBoard = filteredCards;
             }
             state.canonCardsOnBoard.push(payload);
+            
         },
         resetCanon(state) {
             state.canonCardsOnBoard = [];
