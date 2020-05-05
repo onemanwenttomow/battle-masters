@@ -69,6 +69,7 @@ export default {
 			setTimeout(function() {
 				target.style.opacity = 0.3;
 			}, 0);
+			this.$store.commit('pieceUserDragging', {id: e.target.id});
 		},
 		checkIfSelected: function(unit) {
 			const ogreCheck = true;

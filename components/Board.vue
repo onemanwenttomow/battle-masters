@@ -9,8 +9,9 @@
 					:class="[
                         hex, 
                         row.row, 
+						checkIfOnCanonPath(row.row, column) ? 'canon-path': '',
                         hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
-						checkIfOnCanonPath(row.row, column) ? 'canon-path': ''
+						hex!= 'river' && preGamePossibleMoves(row.row) ? 'highlighted': '',
                     ]"
 					@dragover.prevent
 					@drop.prevent="drop($event, row.row, column)"
@@ -34,7 +35,8 @@ export default {
 			'checkIfUnitsInReach', 
 			'getPieceById',
 			'getNumOfRemainingOgreCards',
-			'getCanonPath'
+			'getCanonPath',
+			'getPieceUserDragging'
 		])
 	},
 	methods: {
@@ -45,6 +47,19 @@ export default {
 		checkIfSelected: function(row, col) {
 			row = Number(row.slice(3));
 			return this.getPossibleMoves.find(move => move[0] === (row -1) && move[1] === col);
+		},
+		preGamePossibleMoves: function(row) {
+			if (this.allUnitsOnBoard) {
+				return false;
+			}
+			row = Number(row.slice(3)) - 1;
+			let army = this.getPieceUserDragging.army;
+			if (army === 'Imperial' && row <= 1) {
+				return true;
+			}
+			if (army === 'Chaos' && row >= 10) {
+				return true;
+			}
 		},
 		isCanonTargetOrUnit: function(piece, e) {
 			if (piece.id.indexOf('canon-target') > -1 || e.target.classList.contains("piece") && piece.id.indexOf('canon-target') === -1) {
@@ -87,16 +102,15 @@ export default {
 				this.$store.commit('finishTurn', {id: piece.id})
 		},
 		drop: function(e, row, col) {
+			this.$store.commit('pieceUserDragging', {id: null});
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
 			if (!piece || this.isCanonTargetOrUnit(piece, e)) {
 				return;
 			}
 	
             row = Number(row.slice(3) -1);
-			let moveToHighlighted = true;
-			if (this.allUnitsOnBoard) {
-				moveToHighlighted = e.target.classList.contains("highlighted");
-			}
+			const moveToHighlighted = e.target.classList.contains("highlighted");
+		
 
 			if (this.isCanonPiece(piece)) {
 				return this.addCanonPieceToBoard(piece, e)

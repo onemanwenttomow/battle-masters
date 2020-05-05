@@ -21,6 +21,7 @@ const createStore = () => {
             img: 'none',
             cardUsed: false
         },
+        pieceUserDragging: {},
         numberOfOgreCardsLeft: 6
     },
     mutations: {
@@ -37,6 +38,14 @@ const createStore = () => {
                     hasMoved: false
 				}
             })
+        },
+        pieceUserDragging(state, {id}) {
+            console.log('id: ',id);
+            if (id) {
+                state.pieceUserDragging = state.armies.filter(unit => unit.id === id)[0];
+            } else {
+                state.pieceUserDragging = {}
+            }
         },
         droppedCanonCardOnBoard(state, payload) {
             if (payload.id === "canon-target") {
@@ -284,6 +293,9 @@ const createStore = () => {
         },
         getArmy: (state) => (army) => {
             return state.armies.filter(unit => unit.army === army && unit.remainingLives > 0);
+        },
+        getPieceUserDragging: (state) => {
+            return state.pieceUserDragging;
         },
         getDefeatedUnits: (state) => {
             return state.armies.filter(unit => unit.remainingLives <= 0);
