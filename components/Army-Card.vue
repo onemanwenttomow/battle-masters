@@ -35,36 +35,33 @@ export default {
 		])
 	},
 	methods: {
-		drop: function(e, row, col) {
-			const piece = document.getElementById(e.dataTransfer.getData("id"));
-			const unit = this.getPieceById(e.target.id)[0];
-			console.log('unit: ',unit);
-
-			if (!piece) {
-				return;
-			}
-			if (piece.id.indexOf('canon-') === -1) {
-				return;
-			}
-			
-
+		updateStyle: function(piece) {
 			piece.style.position = "absolute";
 			piece.style.top = -15 + "px";
 			piece.style.zIndex = 10;
 			piece.style.opacity = 0.5;
 			piece.style.left = -10 + 'px';
+		},
+		checkIfCanonPieceCanBeDropped: function(piece, unit) {
 			if (piece.id.indexOf('canon-fly') > -1 || piece.id.indexOf('canon-bounce') > -1 || piece.id.indexOf('canon-explosion') > -1) {
+				return true;
+			}
+			if (piece.id.indexOf('canon-target') > -1 && unit.army === "Chaos") {
+				return true;
+			}
+		},
+		drop: function(e, row, col) {
+			const piece = document.getElementById(e.dataTransfer.getData("id"));
+			const unit = this.getPieceById(e.target.id)[0];
+			if (!piece || piece.id.indexOf('canon-') === -1) {
+				return;
+			}
+			this.updateStyle(piece);
+			if (this.checkIfCanonPieceCanBeDropped(piece, unit)) {
 				this.$store.commit('droppedCanonCardOnBoard', {id: piece.id, unitUnder: unit.id})
 				e.target.appendChild(piece);
 				return;
 			}
-
-			if (piece.id.indexOf('canon-target') > -1 && unit.army === "Chaos") {
-				this.$store.commit('droppedCanonCardOnBoard', {id: 'canon-target', unitUnder: unit.id})
-				e.target.appendChild(piece);
-				return;
-			}
-			
 		},
 		dragStart: function(e) {
 			const target = e.target;

@@ -35,7 +35,7 @@ export default {
 			'getPieceById',
 			'getNumOfRemainingOgreCards',
 			'getCanonPath'
-		]), 
+		])
 	},
 	methods: {
 		checkIfOnCanonPath: function(row, col) {
@@ -46,59 +46,76 @@ export default {
 			row = Number(row.slice(3));
 			return this.getPossibleMoves.find(move => move[0] === (row -1) && move[1] === col);
 		},
+		isCanonTargetOrUnit: function(piece, e) {
+			if (piece.id.indexOf('canon-target') > -1 || e.target.classList.contains("piece") && piece.id.indexOf('canon-target') === -1) {
+				piece.style.opacity = 0.8;
+				return true;
+			}
+		},
+		isCanonPiece: function(piece) {
+			return piece.id.indexOf('canon-fly') > -1 || piece.id.indexOf('canon-bounce') > -1 || piece.id.indexOf('canon-explosion') > -1
+		},
+		addCanonPieceToBoard: function(piece, e) {
+			piece.style.position = "absolute";
+			piece.style.top = -10 + "px";
+			piece.style.zIndex = 10;
+			piece.style.opacity = 1;
+			this.$store.commit('droppedCanonCardOnBoard', {id: piece.id})
+			e.target.appendChild(piece);
+			return true;
+		},
+		addUnitToBoard: function(piece, e, row, col) {
+			piece.style.top = -45 + "px";
+			piece.style.left = -40 + "px";
+			piece.style.zIndex = 10;
+			e.target.appendChild(piece);
+			!isNaN(row) && this.$store.commit('updateUnitPosition', {
+				id: piece.id, 
+				positions: {row, col}
+			})
+		},
+		finishOgreTurn: function(piece) {
+			const canOgreStillMove = this.getNumOfRemainingOgreCards;
+			this.$store.commit('finishTurn', {id: piece.id, canOgreStillMove});
+			return true;
+		},
+		checkForUnitsInRange: function(piece) {
+			const unit = this.getPieceById(piece.id);
+			const unitsInReach = this.checkIfUnitsInReach(piece.id);
+			unitsInReach.length && unit[0].id !== 'canon' ? 
+				this.$store.commit('canBeAttacked', {unit, unitsInReach}) :
+				this.$store.commit('finishTurn', {id: piece.id})
+		},
 		drop: function(e, row, col) {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
-			if (!piece) {
-				return;
-			}
-
-			if (piece.id.indexOf('canon-target') > -1 || Array.from(e.target.classList).includes("piece") && piece.id.indexOf('canon-target') === -1) {
-				piece.style.opacity = 0.8;
+			if (!piece || this.isCanonTargetOrUnit(piece, e)) {
 				return;
 			}
 	
             row = Number(row.slice(3) -1);
 			let moveToHighlighted = true;
 			if (this.allUnitsOnBoard) {
-				moveToHighlighted = Array.from(e.target.classList).includes("highlighted")
+				moveToHighlighted = e.target.classList.contains("highlighted");
 			}
 
-			if (piece.id.indexOf('canon-fly') > -1 || piece.id.indexOf('canon-bounce') > -1 || piece.id.indexOf('canon-explosion') > -1) {
-				piece.style.position = "absolute";
-				piece.style.top = -10 + "px";
-				piece.style.zIndex = 10;
-				piece.style.opacity = 1;
-				this.$store.commit('droppedCanonCardOnBoard', {id: piece.id})
-				e.target.appendChild(piece);
-				return;
-			} else if (!Array.from(e.target.classList).includes("river") && moveToHighlighted) {
-				piece.style.top = -45 + "px";
-				piece.style.left = -40 + "px";
-				piece.style.zIndex = 10;
-				e.target.appendChild(piece);
-				!isNaN(row) && this.$store.commit('updateUnitPosition', {
-					id: piece.id, 
-					positions: {row, col}
-				})
+			if (this.isCanonPiece(piece)) {
+				return this.addCanonPieceToBoard(piece, e)
+			} 
+			if (!e.target.classList.contains("river") && moveToHighlighted) {
+				this.addUnitToBoard(piece, e, row, col)
 			}
 
 			piece.style.opacity = 1;
-			
 			this.$store.commit('showPossibleMoves', {id: "none", moves: "none"});
+			
 			if (!this.allUnitsOnBoard) {
 				return;
 			}
 			if (piece.id === 'grimorg') {
-				const canOgreStillMove = this.getNumOfRemainingOgreCards;
-				this.$store.commit('finishTurn', {id: piece.id, canOgreStillMove});
-				return;
+				return this.finishOgreTurn(piece);
 			}
-			const unit = this.getPieceById(piece.id);
-			const unitsInReach = this.checkIfUnitsInReach(piece.id);
-			unitsInReach.length && unit[0].id !== 'canon' ? 
-				this.$store.commit('canBeAttacked', {unit, unitsInReach}) :
-				this.$store.commit('finishTurn', {id: piece.id})
 
+			this.checkForUnitsInRange(piece);
 			this.$store.commit('finishMove', {id: piece.id})
 			
 		}
