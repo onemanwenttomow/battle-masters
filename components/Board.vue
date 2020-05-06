@@ -54,10 +54,12 @@ export default {
 			}
 			row = Number(row.slice(3)) - 1;
 			let army = this.getPieceUserDragging.army;
-			if (army === 'Imperial' && row <= 1) {
+			// 1
+			if (army === 'Imperial' && row <= 4) {
 				return true;
 			}
-			if (army === 'Chaos' && row >= 10) {
+			//10
+			if (army === 'Chaos' && row >= 6) {
 				return true;
 			}
 		},
@@ -113,6 +115,9 @@ export default {
 		
 
 			if (this.isCanonPiece(piece)) {
+				if (!e.target.classList.contains("canon-path")) {
+					return;
+				}
 				return this.addCanonPieceToBoard(piece, e)
 			} 
 			if (!e.target.classList.contains("river") && moveToHighlighted) {
@@ -250,6 +255,10 @@ export default {
 }
 
 .canon-path {
+	background-color: rebeccapurple;
+}
+
+.river.canon-path {
 	background-color: rebeccapurple;
 }
 

@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="canon-decision" v-if="showDecision" @click="showDecision = false">
+        <!-- <div class="canon-decision" v-if="showDecision" @click="showDecision = false">
             <div>Move</div> or <div @click="$store.commit('finishMove', {id: 'canon'})">Attack</div>
-        </div>
+        </div> -->
 
-          
-        <div class="canon-cards-container" v-if="canonAttack">
+        <!-- v-if="canonAttack" -->
+        <div class="canon-cards-container" >
             <div 
                 class="flip-card" 
                 :class='[targetFlipped ? "canon-card-flipped" : ""]'
