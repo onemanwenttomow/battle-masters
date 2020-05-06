@@ -46,7 +46,8 @@ export default {
         return {
             showDecision: true,
             canonCards: [],
-            targetFlipped: false
+            targetFlipped: false, 
+            explosionDelay: 2000
         }
     },
 	computed: {
@@ -65,7 +66,7 @@ export default {
             const canonCardIsOnBoard = this.getCanonCardsOnBoard.find(onBoard => onBoard.id === 'canon-target');
             setTimeout(() => {
                 this.$store.commit('dealDamage', {id: canonCardIsOnBoard.unitUnder, damageDealt: 6})
-            },2000)
+            },this.explosionDelay)
         },
         flip: function(id) {
             const canonCardIsOnBoard = this.getCanonCardsOnBoard.find(onBoard => onBoard.id === id);
@@ -87,16 +88,19 @@ export default {
             const fly = canonCardIsOnBoard.id.includes('fly');
             const bounce = canonCardIsOnBoard.id.includes('bounce');
             const explosion = canonCardIsOnBoard.id.includes('explosion');
+            const firstCardIsExplosion = this.getCanonCardsOnBoard[1].id.includes('explosion');
             const unitUnder = canonCardIsOnBoard.unitUnder;
+            firstCardIsExplosion && setTimeout(()=> {
+                console.log("time to see if canon self explodes!")
+            }, this.explosionDelay + 5);
             if (!unitUnder || fly) {
                 return;
             }
             let damageDealt;
             bounce ? damageDealt = 1 : damageDealt = 6;
             setTimeout(() => {
-                this.$store.commit('dealDamage', {id: canonCardIsOnBoard.unitUnder, damageDealt})
-            },2000)
-            console.log('canonCardIsOnBoard.unitUnder: ',canonCardIsOnBoard.unitUnder);
+                this.$store.commit('dealDamage', {id: canonCardIsOnBoard.unitUnder, damageDealt});
+            }, this.explosionDelay);
         },
         dragStart: function(e) {
 			const target = e.target;
