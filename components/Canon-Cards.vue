@@ -91,7 +91,8 @@ export default {
             const firstCardIsExplosion = this.getCanonCardsOnBoard[1].id.includes('explosion');
             const unitUnder = canonCardIsOnBoard.unitUnder;
             firstCardIsExplosion && setTimeout(()=> {
-                console.log("time to see if canon self explodes!")
+                console.log("time to see if canon self explodes!");
+                this.removeRemaningCanonCards();
             }, this.explosionDelay + 5);
             if (!unitUnder || fly) {
                 return;
@@ -101,6 +102,10 @@ export default {
             setTimeout(() => {
                 this.$store.commit('dealDamage', {id: canonCardIsOnBoard.unitUnder, damageDealt});
             }, this.explosionDelay);
+        },
+        removeRemaningCanonCards: function() {
+            const target = document.querySelector('#canon-target');
+            target.remove();
         },
         dragStart: function(e) {
 			const target = e.target;
