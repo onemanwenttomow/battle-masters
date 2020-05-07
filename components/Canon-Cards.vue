@@ -90,10 +90,12 @@ export default {
             const explosion = canonCardIsOnBoard.id.includes('explosion');
             const firstCardIsExplosion = this.getCanonCardsOnBoard[1].id.includes('explosion');
             const unitUnder = canonCardIsOnBoard.unitUnder;
-            firstCardIsExplosion && setTimeout(()=> {
-                console.log("time to see if canon self explodes!");
+
+            explosion && setTimeout(()=> {
+                firstCardIsExplosion && console.log("time to see if canon self explodes!");
                 this.removeRemaningCanonCards();
             }, this.explosionDelay + 5);
+            
             if (!unitUnder || fly) {
                 return;
             }
@@ -105,6 +107,10 @@ export default {
         },
         removeRemaningCanonCards: function() {
             const target = document.querySelector('#canon-target');
+            const nonFlippedCards = this.canonCards.filter(card => !card.flipped).map(card => card.id);
+            const remainingCanonDomElems = Array.from(document.querySelectorAll('.flip-card')).filter(elem => nonFlippedCards.find(id => id == elem.id));;
+            remainingCanonDomElems.forEach(card => card.remove());
+            console.log('remainingCanonDomElems: ',remainingCanonDomElems);
             target.remove();
         },
         dragStart: function(e) {
