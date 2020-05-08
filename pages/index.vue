@@ -1,7 +1,6 @@
 <template>
 	<div v-if="gameHasStarted">
-		<!-- v-if="canonTurn" -->
-		<CanonCards  />
+		<CanonCards v-if="canonTurn" />
 		<AttackArea v-if="getAttackModeStatus" />
 		<TurnCards 
 			v-if="ogreTurn" 

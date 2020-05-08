@@ -63,7 +63,6 @@ const createStore = () => {
                 offSetPath.shift();
                 state.canonPath = offSetPath;
                 const filteredCards = state.canonCardsOnBoard.filter(card => card.id != "canon-target");
-                console.log('filterdCards: ',filteredCards);
                 state.canonCardsOnBoard = filteredCards;
             }
             state.canonCardsOnBoard.push(payload);
@@ -233,25 +232,16 @@ const createStore = () => {
             state.canonPlayingCards = cards;
         },
         updateUnitPosition(state, payload) {
-            console.log("payload.postitions: ", payload.positions);
             let oddOrEven;
             payload.positions.row % 2 === 0 ? oddOrEven = -1 : oddOrEven = 1;
             const cube = new OffsetCoord.roffsetToCube(oddOrEven, {col: payload.positions.col, row: payload.positions.row});
-            const cube2 = new OffsetCoord.roffsetToCube(oddOrEven, {col: 2, row: 2});
-            // console.log('cube2: ',cube2);
-            console.log('cube: ',cube.linedraw(cube2));
-            const cubePath = cube.linedraw(cube2);
-            const offSetPath = cubePath.map(c => new OffsetCoord.roffsetFromCube(oddOrEven, c));
-            offSetPath.pop();
-            offSetPath.shift();
-            console.log('path: ',cubePath);
-            console.log('offSetPath: ',offSetPath);
             state.armies = state.armies.map(unit => {
                 if (unit.id === payload.id) {
                     return {
                         ...unit,
                         onBoard: true,
-                        boardPosition: [payload.positions]
+                        boardPosition: [payload.positions],
+                        boardCubePosition: cube
                     }
                 } else {
                     return unit
@@ -281,7 +271,8 @@ const createStore = () => {
                     finishedTurn: false,
                     canBeAttacked: false,
                     remainingLives: unit.special === 'ogre' ? ogrePlayingCards.length : 3,
-                    boardPosition: []
+                    boardPosition: [],
+                    boardCubePosition: {}
                 }
             })
             commit('setupAllPieces', {armies, mainPlayingCards, board, ogrePlayingCards, canonPlayingCards});
@@ -356,7 +347,14 @@ const createStore = () => {
             }
         },
         getSurroundingTiles: (state, {getPieceById, getCurrentCard}) => (id, checkingFor) => {
+
             const unitToCheck = getPieceById(id)[0];
+            console.log('unitToCheck: ',unitToCheck);
+            const test = state.armies.filter(unit => {
+                console.log('unit.boardCubePosition.distance(unitToCheck.boardCubePosition) === 1: ',unit.boardCubePosition.distance(unitToCheck.boardCubePosition));
+                return unit.boardCubePosition.distance(unitToCheck.boardCubePosition) === 1
+            });
+            console.log("test: ", test);
             const unitRow = unitToCheck.boardPosition[0].row;
             const unitCol = unitToCheck.boardPosition[0].col;
             const currentCard = getCurrentCard.ids || [];
