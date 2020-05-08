@@ -395,18 +395,19 @@ const createStore = () => {
             });
             return calculatedSurroundingTiles;
         },
-        checkIfUnitsInReach: (state, {getPieceById, getOpposingArmy, getSurroundingTiles}) => (id) => {
-            const unitToCheck = getPieceById(id);
-            const army = unitToCheck[0].army;
+        checkIfUnitsInReach: (state, {getPieceById, getOpposingArmy}) => (id) => {
+            const unitToCheck = getPieceById(id)[0];
+            const army = unitToCheck.army;
             const opposingArmy = getOpposingArmy(army);
-            const surroundingTiles = getSurroundingTiles(id, 'attacking');
+            let range = 1;
+            if (unitToCheck.special === 'archer') {
+                range = 2;
+            }
+            if (unitToCheck.special === 'crossbow') {
+                range = 3;
+            }
             const enemiesInReach = opposingArmy.filter(unit => {
-				let matchingTiles = surroundingTiles.filter(tile => {
-					return tile[0] === unit.boardPosition[0].row && tile[1] === unit.boardPosition[0].col
-				});
-				if (matchingTiles.length) {
-					return matchingTiles
-				}
+                return unit.boardCubePosition.distance(unitToCheck.boardCubePosition) <= range
             });
             return enemiesInReach;
         }
