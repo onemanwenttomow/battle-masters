@@ -32,8 +32,6 @@ export default {
             'getCanonCardsOnBoard'
         ]),
         shuffledRemainingCanonCards: function() {
-            console.log('this.getCanonCards: ',this.getCanonCards);
-            console.log('this.getCanonCardsOnBoard.length: ',this.getCanonCardsOnBoard.length);
             if (this.getCanonCardsOnBoard.length === 1) {
                  return [this.getCanonCards[0]];
             } else {

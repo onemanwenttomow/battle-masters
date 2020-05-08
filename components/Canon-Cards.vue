@@ -28,7 +28,7 @@
                 @dragstart.stop="dragStart"
             >
                 <div class="flip-card-inner">
-                    <div class="flip-card-front canon-tile" @click.stop="flip(card.id)"></div>
+                    <div class="flip-card-front canon-tile" @click.stop="!explosionHasHappended && flip(card.id)"></div>
                     <div class="flip-card-back canon-tile" :style="getCanonCardsOnBoard.find(onBoard => onBoard.id === card.id) && {backgroundImage: `url(${card.img})`}"></div>
                 </div>
             </div>
@@ -60,12 +60,14 @@ export default {
         ...mapGetters(['getPieceById', 'getCanonCards', 'getCanonCardsOnBoard']), 
         canonAttack: function() {
             return this.getPieceById('canon')[0].hasMoved
+        },
+        explosionHasHappended: function() {
+            return this.canonCards.filter(card => card.flipped === true && card.id.includes('explosion')).length;
         }
     },
     mounted: function() {
         this.$store.commit('shuffle', {cards: this.getCanonCards});
         this.canonCards = this.getCanonCards;
-        console.log('this.canonCards: ',this.canonCards);
     },
     methods: {
         flipTarget() {
@@ -95,6 +97,9 @@ export default {
                     }
                 }
             });
+            this.dealCanonDamage(canonCardIsOnBoard);
+        },
+        dealCanonDamage(canonCardIsOnBoard) {
             const fly = canonCardIsOnBoard.id.includes('fly');
             const bounce = canonCardIsOnBoard.id.includes('bounce');
             const explosion = canonCardIsOnBoard.id.includes('explosion');
