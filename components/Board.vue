@@ -55,11 +55,11 @@ export default {
 			row = Number(row.slice(3)) - 1;
 			let army = this.getPieceUserDragging.army;
 			// 1
-			if (army === 'Imperial' && row <= 4) {
+			if (army === 'Imperial' && row <= 5) {
 				return true;
 			}
 			//10
-			if (army === 'Chaos' && row >= 6) {
+			if (army === 'Chaos' && row >= 5) {
 				return true;
 			}
 		},

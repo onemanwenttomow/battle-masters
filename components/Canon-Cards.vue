@@ -33,21 +33,27 @@
                 </div>
             </div>
 
-            {{getCanonCardsOnBoard}}
+            <CanonMisfire v-if="hasCanonMisfired" @close="hasCanonMisfired=false" />
         </div>
     </div>
 </template>
 
 <script>
+
+import CanonMisfire from "~/components/Canon-Misfire.vue";
 import { mapGetters } from 'vuex';
 
 export default {
+    components: {
+		CanonMisfire
+	},
     data: function() {
         return {
             showDecision: true,
             canonCards: [],
             targetFlipped: false, 
-            explosionDelay: 2000
+            explosionDelay: 2000,
+            hasCanonMisfired: false
         }
     },
 	computed: {
@@ -59,6 +65,7 @@ export default {
     mounted: function() {
         this.$store.commit('shuffle', {cards: this.getCanonCards});
         this.canonCards = this.getCanonCards;
+        console.log('this.canonCards: ',this.canonCards);
     },
     methods: {
         flipTarget() {
@@ -66,7 +73,10 @@ export default {
             const canonCardIsOnBoard = this.getCanonCardsOnBoard.find(onBoard => onBoard.id === 'canon-target');
             setTimeout(() => {
                 this.$store.commit('dealDamage', {id: canonCardIsOnBoard.unitUnder, damageDealt: 6})
-            },this.explosionDelay)
+            },this.explosionDelay);
+            this.getCanonCardsOnBoard.length === 1 && setTimeout(() => {
+                this.canonMisfire()
+            },this.explosionDelay + 500)
         },
         flip: function(id) {
             const canonCardIsOnBoard = this.getCanonCardsOnBoard.find(onBoard => onBoard.id === id);
@@ -92,7 +102,7 @@ export default {
             const unitUnder = canonCardIsOnBoard.unitUnder;
 
             explosion && setTimeout(()=> {
-                firstCardIsExplosion && console.log("time to see if canon self explodes!");
+                firstCardIsExplosion && this.canonMisfire();
                 this.removeRemaningCanonCards();
             }, this.explosionDelay + 5);
             
@@ -104,6 +114,9 @@ export default {
             setTimeout(() => {
                 this.$store.commit('dealDamage', {id: canonCardIsOnBoard.unitUnder, damageDealt});
             }, this.explosionDelay);
+        },
+        canonMisfire: function() {
+            this.hasCanonMisfired = true;
         },
         removeRemaningCanonCards: function() {
             const target = document.querySelector('#canon-target');
