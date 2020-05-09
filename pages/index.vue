@@ -9,7 +9,7 @@
 			currentCard="currentOgreCard"
 			cards="ogre"
 		/>
-		<ExtraGameTiles />
+		<ExtraGameTiles v-if="!extraPiecesAddedToBoard"/>
 		<div class="outer-container">
 			<div>
 				<TurnCards 

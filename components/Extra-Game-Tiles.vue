@@ -1,10 +1,12 @@
 <template>
 	<div class="">
 		<div
-			class="piece tower"
+			class="hexagon tower"
+            id="tower"
 			draggable
 			@dragstart="dragStart"
 		></div>
+        <button @click="$store.commit('allExtraPiecesAddedToBoard')">Ready to start game</button>
 	</div>
 </template>
 
@@ -22,7 +24,6 @@ export default {
 			setTimeout(function() {
 				target.style.opacity = 0.3;
 			}, 0);
-			this.$store.commit('pieceUserDragging', {id: e.target.id});
 		}
 	
 	}
@@ -30,5 +31,10 @@ export default {
 </script>
 
 <style>
+
+.tower {
+    background-color: grey;
+}
+
 
 </style>

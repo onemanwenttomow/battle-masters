@@ -5,7 +5,7 @@ const createStore = () => {
   return new Vuex.Store({
     state: {
         gameStarted: false,
-        extraPiecesAddedToBoard: true,
+        extraPiecesAddedToBoard: false,
         armies: [], 
         mainPlayingCards: [],
         ogrePlayingCards: [],
@@ -47,6 +47,9 @@ const createStore = () => {
             } else {
                 state.pieceUserDragging = {}
             }
+        },
+        allExtraPiecesAddedToBoard(state) {
+            state.extraPiecesAddedToBoard = true;
         },
         droppedCanonCardOnBoard(state, payload) {
             if (payload.id === "canon-target") {
