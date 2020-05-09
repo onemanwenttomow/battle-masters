@@ -287,7 +287,7 @@ const createStore = () => {
         gameHasStarted: (state) => {
             return state.gameStarted;
         },
-        extraPiecesAddedToBoard: (state) => {
+        areExtraPiecesAddedToBoard: (state) => {
             return state.extraPiecesAddedToBoard;
         },
         getArmy: (state) => (army) => {

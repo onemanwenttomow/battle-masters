@@ -104,14 +104,13 @@ export default {
 				this.$store.commit('finishTurn', {id: piece.id})
 		},
 		drop: function(e, row, col) {
-
-
 			this.$store.commit('pieceUserDragging', {id: null});
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
 			console.log('piece.id: ',piece.id);
 			if (piece.id === 'tower' && !e.target.classList.contains("river") && !e.target.classList.contains("road")) {
-				e.target.classList.add('tower');
-				piece.remove();
+				piece.style.top = -30 + "px";
+				piece.style.zIndex = 2;
+				e.target.appendChild(piece);
 			}
 			if (!piece || this.isCanonTargetOrUnit(piece, e)) {
 				return;

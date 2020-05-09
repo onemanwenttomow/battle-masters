@@ -3,10 +3,10 @@
 		<div
 			class="hexagon tower"
             id="tower"
-			draggable
+			:draggable="isDraggable"
 			@dragstart="dragStart"
 		></div>
-        <button @click="$store.commit('allExtraPiecesAddedToBoard')">Ready to start game</button>
+        <button v-if="!areExtraPiecesAddedToBoard" @click="handleClick">Ready to start game</button>
 	</div>
 </template>
 
@@ -15,9 +15,18 @@ import { mapGetters } from 'vuex';
 
 export default {
 	computed: {
-		...mapGetters([])
-	},
+        ...mapGetters(['areExtraPiecesAddedToBoard'])
+    },
+    data: function() {
+        return {
+            isDraggable: true,
+        }
+    },
 	methods: {
+        handleClick: function() {
+            this.$store.commit('allExtraPiecesAddedToBoard');
+            this.isDraggable = false;
+        },
 		dragStart: function(e) {
 			const target = e.target;
 			e.dataTransfer.setData("id", e.target.id);

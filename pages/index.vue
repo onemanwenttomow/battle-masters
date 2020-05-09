@@ -9,7 +9,7 @@
 			currentCard="currentOgreCard"
 			cards="ogre"
 		/>
-		<ExtraGameTiles v-if="!extraPiecesAddedToBoard"/>
+		<ExtraGameTiles />
 		<div class="outer-container">
 			<div>
 				<TurnCards 
@@ -20,11 +20,11 @@
 					cards="playing"
 				/>
 				<SelectedUnit v-if="selectedUnit" />
-				<ArmyCards army="Imperial" v-if="extraPiecesAddedToBoard" />		
+				<ArmyCards army="Imperial" v-if="areExtraPiecesAddedToBoard" />		
 			</div>
 			<Board />
 		</div>
-		<ArmyCards army="Chaos" v-if="extraPiecesAddedToBoard" />
+		<ArmyCards army="Chaos" v-if="areExtraPiecesAddedToBoard" />
 		<DefeatedUnits v-if="allUnitsOnBoard" />
 	</div>
 </template>
@@ -67,7 +67,7 @@ export default {
 			'getPlayingCards',
 			'getOgreCards',
 			'getCurrentCard',
-			'extraPiecesAddedToBoard'
+			'areExtraPiecesAddedToBoard'
 		]),
 		ogreTurn: function() {
 			return this.allUnitsOnBoard && this.getCurrentCard.ids && this.getCurrentCard.ids.includes('grimorg');
