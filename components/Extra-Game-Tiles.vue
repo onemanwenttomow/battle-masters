@@ -34,7 +34,6 @@ export default {
 				target.style.opacity = 0.3;
 			}, 0);
 		}
-	
 	}
 };
 </script>

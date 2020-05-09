@@ -118,6 +118,7 @@ export default {
 	
             row = Number(row.slice(3) -1);
 			const moveToHighlighted = e.target.classList.contains("highlighted");
+			const tower = e.target.classList.contains("tower")
 		
 
 			if (this.isCanonPiece(piece)) {
@@ -126,7 +127,7 @@ export default {
 				}
 				return this.addCanonPieceToBoard(piece, e)
 			} 
-			if (!e.target.classList.contains("river") && moveToHighlighted) {
+			if (!e.target.classList.contains("river") && moveToHighlighted || tower) {
 				this.addUnitToBoard(piece, e, row, col)
 			}
 
