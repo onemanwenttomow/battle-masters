@@ -5,6 +5,7 @@ const createStore = () => {
   return new Vuex.Store({
     state: {
         gameStarted: false,
+        extraPiecesAddedToBoard: false,
         armies: [], 
         mainPlayingCards: [],
         ogrePlayingCards: [],
@@ -281,6 +282,9 @@ const createStore = () => {
     getters: {
         gameHasStarted: (state) => {
             return state.gameStarted;
+        },
+        extraPiecesAddedToBoard: (state) => {
+            return state.extraPiecesAddedToBoard;
         },
         getArmy: (state) => (army) => {
             return state.armies.filter(unit => unit.army === army && unit.remainingLives > 0);

@@ -11,6 +11,7 @@
 		/>
 		<div class="outer-container">
 			<div>
+				<ExtraGameTiles />
 				<TurnCards 
 					v-if="allUnitsOnBoard" 
 					:getPlayingCards="getPlayingCards" 
@@ -19,12 +20,12 @@
 					cards="playing"
 				/>
 				<SelectedUnit v-if="selectedUnit" />
-				<ArmyCards army="Imperial" />		
+				<ArmyCards army="Imperial" v-if="extraPiecesAddedToBoard" />		
 			</div>
 			<Board />
 		</div>
-		<ArmyCards army="Chaos" />
-		<DefeatedUnits />
+		<ArmyCards army="Chaos" v-if="extraPiecesAddedToBoard" />
+		<DefeatedUnits v-if="allUnitsOnBoard" />
 	</div>
 </template>
 
@@ -37,6 +38,7 @@ import CanonCards from "~/components/Canon-Cards.vue";
 import SelectedUnit from "~/components/Selected-Unit.vue";
 import AttackArea from "~/components/Attack-Area.vue";
 import DefeatedUnits from "~/components/Defeated-Armies.vue";
+import ExtraGameTiles from "~/components/Extra-Game-Tiles.vue";
 
 import { mapGetters } from 'vuex';
 
@@ -50,7 +52,8 @@ export default {
 		SelectedUnit, 
 		AttackArea, 
 		DefeatedUnits,
-		CanonCards
+		CanonCards,
+		ExtraGameTiles
 	},
 	mounted: function() {
 		!this.gameHasStarted && this.$router.push('/welcome');
@@ -63,7 +66,8 @@ export default {
 			'gameHasStarted', 
 			'getPlayingCards',
 			'getOgreCards',
-			'getCurrentCard'
+			'getCurrentCard',
+			'extraPiecesAddedToBoard'
 		]),
 		ogreTurn: function() {
 			return this.allUnitsOnBoard && this.getCurrentCard.ids && this.getCurrentCard.ids.includes('grimorg');
