@@ -1,5 +1,5 @@
 export default {
-    mode: "universal",
+    mode: "spa",
     serverMiddleware: ["~/api/index.js"],
 
     /*
@@ -42,6 +42,14 @@ export default {
     modules: [
         '@nuxtjs/axios',
     ],
+    generate: {
+        routes: function() {
+            return [
+                '/',
+                '/welcome'
+            ];
+        }
+    },
     /*
    ** Build configuration
    */
@@ -50,14 +58,6 @@ export default {
      ** You can extend webpack config here
      */
         extend(config, ctx) {}
-    },
-
-    generate: {
-        routes: function() {
-            return [
-                '/',
-                '/welcome'
-            ]
-        }
     }
+
 };
