@@ -50,5 +50,14 @@ export default {
      ** You can extend webpack config here
      */
         extend(config, ctx) {}
+    },
+
+    generate: {
+        routes: function() {
+            return [
+                '/',
+                '/welcome'
+            ]
+        }
     }
 };
