@@ -1,0 +1,62 @@
+[
+    {
+        "id" : "tile-1",
+        "flipped": false,
+        "front": {
+            "id" : "tower", 
+            "type" : "tower"
+        },
+        "back" : {
+            "id" : "tower", 
+            "type" : "tower"
+        }
+    },
+    {
+        "id" : "tile-2",
+        "flipped": false,
+        "front": {
+            "id" : "marsh-1", 
+            "type" : "marsh"
+        },
+        "back" : {
+            "id" : "ditch-1", 
+            "type" : "ditch"
+        }
+    },
+    {
+        "id" : "tile-3",
+        "flipped": false,
+        "front": {
+            "id" : "marsh-2", 
+            "type" : "marsh"
+        },
+        "back" : {
+            "id" : "ditch-2", 
+            "type" : "ditch"
+        }
+    },
+    {
+        "id" : "tile-4",
+        "flipped": false,
+        "front": {
+            "id" : "marsh-3", 
+            "type" : "marsh"
+        },
+        "back" : {
+            "id" : "ford-1", 
+            "type" : "ford"
+        }
+    },
+    {
+        "id" : "tile-5",
+        "flipped": false,
+        "front": {
+            "id" : "ford-2", 
+            "type" : "ford"
+        },
+        "back" : {
+            "id" : "ditch-3", 
+            "type" : "ditch"
+        }
+    }
+]

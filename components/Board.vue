@@ -108,7 +108,8 @@ export default {
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
 			console.log('piece.id: ',piece.id);
 			if (piece.id === 'tower' && !e.target.classList.contains("river") && !e.target.classList.contains("road")) {
-				piece.style.top = -30 + "px";
+				piece.style.top = -105 + "px";
+				piece.style.left = -10 + "px";
 				piece.style.zIndex = 2;
 				e.target.appendChild(piece);
 			}

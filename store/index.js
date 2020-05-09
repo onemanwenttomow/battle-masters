@@ -11,6 +11,7 @@ const createStore = () => {
             ogrePlayingCards: [],
             canonPlayingCards: [],
             canonCardsOnBoard: [],
+            extraTiles: [],
             canonPath: [],
             board: [],
             unitThatCanAttack: {},
@@ -241,7 +242,8 @@ const createStore = () => {
                     mainPlayingCards,
                     board,
                     ogrePlayingCards,
-                    canonPlayingCards
+                    canonPlayingCards,
+                    extraTiles
                 }
             ) {
                 state.armies = armies;
@@ -249,6 +251,7 @@ const createStore = () => {
                 state.board = board;
                 state.ogrePlayingCards = ogrePlayingCards;
                 state.canonPlayingCards = canonPlayingCards;
+                state.extraTiles = extraTiles;
             },
             shuffle(state, { cards }) {
                 var j, x, i;
@@ -293,6 +296,7 @@ const createStore = () => {
                 const mainPlayingCards = require("~/static/main-playing-cards.json");
                 const ogrePlayingCards = require("~/static/ogre-playing-cards.json");
                 const canonPlayingCards = require("~/static/canon-playing-cards.json");
+                const extraTiles = require("~/static/extra-tiles.json");
 
                 armies = armies.map(unit => {
                     return {
@@ -318,7 +322,8 @@ const createStore = () => {
                     mainPlayingCards,
                     board,
                     ogrePlayingCards,
-                    canonPlayingCards
+                    canonPlayingCards,
+                    extraTiles
                 });
             }
         },
@@ -342,6 +347,9 @@ const createStore = () => {
             },
             getPlayingCards: state => {
                 return state.mainPlayingCards;
+            },
+            getExtraTiles: state => {
+                return state.extraTiles;
             },
             getOgreCards: state => {
                 return state.ogrePlayingCards;
