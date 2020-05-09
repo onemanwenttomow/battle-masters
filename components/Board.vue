@@ -107,7 +107,19 @@ export default {
 			this.$store.commit('pieceUserDragging', {id: null});
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
 			console.log('piece.id: ',piece.id);
-			if (piece.id === 'tower' && !e.target.classList.contains("river") && !e.target.classList.contains("road")) {
+			const towerTile = piece.id.includes('tower');
+			const marshTile = piece.id.includes('marsh');
+			const fordTile = piece.id.includes('ford');
+			const ditchTile = piece.id.includes('ditch');
+			let extraTile = towerTile || marshTile || ditchTile;
+			console.log('extraTile: ',extraTile);
+			if (extraTile && !e.target.classList.contains("river") && !e.target.classList.contains("road")) {
+				piece.style.top = -105 + "px";
+				piece.style.left = -10 + "px";
+				piece.style.zIndex = 2;
+				e.target.appendChild(piece);
+			}
+			if (fordTile && e.target.classList.contains("river") && !e.target.classList.contains("road") && !e.target.classList.contains("field")) {
 				piece.style.top = -105 + "px";
 				piece.style.left = -10 + "px";
 				piece.style.zIndex = 2;
