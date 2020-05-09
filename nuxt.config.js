@@ -1,6 +1,6 @@
 export default {
     mode: "universal",
-    serverMiddleware: ["~/api/index.js"],
+    // serverMiddleware: ["~/api/index.js"],
 
     /*
      ** Headers of the page
