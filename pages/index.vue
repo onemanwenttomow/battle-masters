@@ -9,9 +9,9 @@
 			currentCard="currentOgreCard"
 			cards="ogre"
 		/>
+		<ExtraGameTiles />
 		<div class="outer-container">
 			<div>
-				<ExtraGameTiles />
 				<TurnCards 
 					v-if="allUnitsOnBoard" 
 					:getPlayingCards="getPlayingCards" 
