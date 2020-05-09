@@ -1,11 +1,11 @@
 import Vuex from "vuex";
-import {Hex, OffsetCoord} from '../api/hex-helpers';
+import {Hex, OffsetCoord} from '~/static/hex-helpers.js';
 
 const createStore = () => {
   return new Vuex.Store({
     state: {
         gameStarted: false,
-        extraPiecesAddedToBoard: false,
+        extraPiecesAddedToBoard: true,
         armies: [], 
         mainPlayingCards: [],
         ogrePlayingCards: [],
@@ -255,12 +255,13 @@ const createStore = () => {
             await dispatch('storeDispatchFunc')
         },
         async storeDispatchFunc({ commit }) {
-            const { data } = await this.$axios.get('/api/initial-board');
-            const mainPlayingCards = data.mainPlayingCards;
-            const ogrePlayingCards= data.ogrePlayingCards;
-            const canonPlayingCards= data.canonPlayingCards;
-            const board = data.board;
-            const armies = data.armies.map(unit => {
+            const board = require('~/static/board.json');
+            let { armies } = require('~/static/armies.js');
+            const mainPlayingCards = require('~/static/main-playing-cards.json');
+            const ogrePlayingCards = require('~/static/ogre-playing-cards.json');
+            const canonPlayingCards = require('~/static/canon-playing-cards.json');
+
+            armies = armies.map(unit => {
                 return {
                     ...unit,
                     onBoard: false,
