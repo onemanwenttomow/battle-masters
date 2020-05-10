@@ -172,8 +172,13 @@ export default {
 .board {
 	display: grid;
 	grid-template-columns: repeat(12, 100px);
-	height: 1050px;
-	width: 1200px;
+	height: 70vh;
+	width: 50vw;
+	overflow: scroll;
+	/* height: 1050px; */
+	/* width: 1200px; */
+	border: 10px solid red;
+	padding: 0 50px;
 }
 
 .hexagon {

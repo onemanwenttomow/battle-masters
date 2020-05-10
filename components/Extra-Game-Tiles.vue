@@ -24,8 +24,6 @@
                 </div>
             </div>
         </div>
-
-		<h1>TESTING</h1>
         <button @click="handleClick">
             Ready to start game
         </button>
