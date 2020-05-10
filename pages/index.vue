@@ -87,6 +87,8 @@ export default {
 
 <style>
 
+
+
 .cards {
 	background-color: white;
 	display: block;
