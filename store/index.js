@@ -14,7 +14,7 @@ const createStore = () => {
             extraTiles: [],
             canonPath: [],
             board: [],
-            unitThatCanAttack: {},
+            unitThatCanAttack:  {},
             unitUnderAttack: {},
             attackModeOpen: false,
             currentCard: {},

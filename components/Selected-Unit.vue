@@ -12,7 +12,6 @@
 			>Skip Move</div>
 			<div v-else>Unit can still move</div>
 		</div>
-	{{selectedUnit}}
     </div>
 </template>
 

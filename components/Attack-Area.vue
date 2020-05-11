@@ -1,42 +1,64 @@
 <template>
 	<div class="battle-area" v-if="getUnitThatCanAttack[0] && getUnitUnderAttack[0]">
-        <h1>
-            <img :src="getUnitThatCanAttack[0].img" alt=""> v <img :src="getUnitUnderAttack[0].img" alt="">
-        </h1>
+        <div class="battle-container">
        
-        <div class="dice-container">
-            <div class="attacker">
-                <h2>{{getUnitThatCanAttack[0].name}}</h2>
-                <div v-for="(die, i) in attackingDie" :key="i" class="die-container">
-                    <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 0, die.value) ? 'user-rolled' : 'not-rolled']">
-                    <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 1, die.value) ? 'user-rolled' : 'not-rolled']">
-                    <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 2, die.value) ? 'user-rolled' : 'not-rolled']">
-                    <img class="dice-face" src="/shield.png" alt="" :class="[dieRolled(die.rolled, 3, die.value) ? 'user-rolled' : 'not-rolled']">
-                    <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 4, die.value) ? 'user-rolled' : 'not-rolled']">
-                    <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 5, die.value) ? 'user-rolled' : 'not-rolled']">
-                    <div class="roll-button" :class="[die.rolled ? 'not-rolled' : '']" @click="rollDie('attackingDie', i)">ROLL!</div>
+            <div class="dice-container">
+                <div class="attacker">
+                    <img :src="getUnitThatCanAttack[0].img" alt="" class="unit-img">
+                    <div class="damage-container">
+                        <img src="/damage.png" alt="" v-for="d in 3 - getUnitThatCanAttack[0].remainingLives" :key="d">
+                    </div>
+                    <h2>{{getUnitThatCanAttack[0].name}}</h2>
+                    <div class="total-die-container">
+                        <div v-for="(die, i) in attackingDie" :key="i" class="die-container">
+                            <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 0, die.value) ? 'user-rolled' : 'not-rolled']">
+                            <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 1, die.value) ? 'user-rolled' : 'not-rolled']">
+                            <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 2, die.value) ? 'user-rolled' : 'not-rolled']">
+                            <img class="dice-face" src="/shield.png" alt="" :class="[dieRolled(die.rolled, 3, die.value) ? 'user-rolled' : 'not-rolled']">
+                            <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 4, die.value) ? 'user-rolled' : 'not-rolled']">
+                            <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 5, die.value) ? 'user-rolled' : 'not-rolled']">
+                            <div class="roll-button" :class="[die.rolled ? 'not-rolled' : '']" @click="rollDie('attackingDie', i)">🎲</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="defender">
-                <h2>{{getUnitUnderAttack[0].name}} Remaining Lives (before battle): {{getUnitUnderAttack[0].remainingLives}}</h2>
-                <div v-for="(die, i) in defendingDie" :key="i" class="die-container">
-                    <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 0, die.value) ? 'user-rolled' : 'not-rolled']" >
-                    <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 1, die.value) ? 'user-rolled' : 'not-rolled']" >
-                    <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 2, die.value) ? 'user-rolled' : 'not-rolled']" >
-                    <img class="dice-face" src="/shield.png" alt="" :class="[dieRolled(die.rolled, 3, die.value) ? 'user-rolled' : 'not-rolled']" >
-                    <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 4, die.value) ? 'user-rolled' : 'not-rolled']" >
-                    <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 5, die.value) ? 'user-rolled' : 'not-rolled']" >
-                    <div class="roll-button" :class="[die.rolled ? 'not-rolled' : '']" @click="rollDie('defendingDie', i)">ROLL!</div>
+                <h1>⚔️</h1>
+
+                <div class="defender">
+                    <img :src="getUnitUnderAttack[0].img" alt="" class="unit-img">
+                    <div class="damage-container">
+                        <img src="/damage.png" alt="" v-for="d in 3 - getUnitUnderAttack[0].remainingLives" :key="d">
+                    </div>
+                    <h2>{{getUnitUnderAttack[0].name}}</h2>
+                    <div class="total-die-container">
+                        <div v-for="(die, i) in defendingDie" :key="i" class="die-container">
+                            <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 0, die.value) ? 'user-rolled' : 'not-rolled']" >
+                            <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 1, die.value) ? 'user-rolled' : 'not-rolled']" >
+                            <img class="dice-face" src="/skull.png" alt="" :class="[dieRolled(die.rolled, 2, die.value) ? 'user-rolled' : 'not-rolled']" >
+                            <img class="dice-face" src="/shield.png" alt="" :class="[dieRolled(die.rolled, 3, die.value) ? 'user-rolled' : 'not-rolled']" >
+                            <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 4, die.value) ? 'user-rolled' : 'not-rolled']" >
+                            <img class="dice-face" src="/blank.png" alt="" :class="[dieRolled(die.rolled, 5, die.value) ? 'user-rolled' : 'not-rolled']" >
+                            <div class="roll-button" :class="[die.rolled ? 'not-rolled' : '']" @click="rollDie('defendingDie', i)">🎲</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="damage-score">
+                    <div v-if="damageDealt >= 0">
+                        <h2>Damage Dealt </h2>
+                        <h2><span>{{damageDealt}}</span></h2>
+                    </div>
+                    <div v-else>
+                        <h2>Damage Dealt</h2>
+                        <h2><span>0</span></h2>
+                    </div>
                 </div>
             </div>
-        </div>
-       
-        <h2 v-if="damageDealt >= 0">Total Damage Dealt!: {{damageDealt}}</h2>
-        <h2 v-else>Total Damage Dealt!: 0</h2>
-        <div class="roll-button" v-if="allDieRolled" @click="endBattle">Turn finished! Click to continue</div>
         
+            <div class="roll-button" v-if="allDieRolled" @click="endBattle">Turn finished! Click to continue</div>
+            
+        </div>
     </div>
+       
 </template>
 
 <script>
@@ -106,28 +128,96 @@ export default {
 </script>
 
 <style>
+/* https://colorhunt.co/palette/180404 */
+/* 120136 */
+/* 035aa6 */
+/* 40bad5 */
+/* fcbf1e */
 .battle-area {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: brown;
+    background-color: #120136;
+    color: #120136;
     z-index: 500;
+}
+
+.battle-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
+
+.damage-container {
+    position: absolute;
+    top: 4vh;
+    right: 7vw;
+}
+
+.damage-container img {
+    width: 35px;
+    height: 35px;
+}
+
 .defender, .attacker {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: 20px;
+    min-width: 32vw;
+    min-height: 50vh;
+    background-color: #40bad5;
+    border-radius: 5px;
+    border: solid 5px #fcbf1e;
+}
+.defender h2, .attacker h2{
+    min-height: 8vh;
+    text-align: center;
+}
+
+.damage-score {
+    margin: 20px;
+    background-color: #40bad5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    border: solid 5px #fcbf1e;
+}
+
+.damage-score span {
+    font-size: 85px;
+}
+
+.damage-score h2 {
+    margin: 20px;
+}
+
+.unit-img {
+    margin: 20px;
+    border: solid 5px #fcbf1e;
 }
 
 .dice-container {
     display: flex;
     justify-content: space-around;
     margin: 20px;
+}
+
+.total-die-container {
+    margin: 20px;
+}
+
+.dice-container h1{
+    align-self: center;
+    font-size: 70px;
 }
 
 .dice-face {
@@ -140,15 +230,16 @@ export default {
 
 .user-rolled {
     opacity: 1;
+    transition: opacity 0.3s;
 }
 
 .roll-button {
+    background-color: #40bad5;
     display: inline-block;
     cursor: pointer;
-    font-size: 22px;
+    font-size: 30px;
     margin-left: 5px;
     padding: 5px;
-    background-color: white;
 }
 
 .die-container {
