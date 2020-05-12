@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div class="board">
+		<div class="board" ref="boardsize">
 			<fragment v-for="row in getBoard" v-bind:key="row.row">
 				<div
 					v-for="(hex, column) in row.type"
@@ -15,6 +15,38 @@
                     ]"
 					@dragover.prevent
 					@drop.prevent="drop($event, row.row, column)"
+				>
+					<slot />
+				</div>
+			</fragment>
+		</div>
+
+		<div class="board mini-map" >
+			<div 
+				class="mini-map-location" 
+				:style="{ 
+					height: miniMapHeight,
+					width: miniMapWidth,
+					top: miniMapTop,
+					left: miniMapLeft
+				}"
+				@mousedown="handleMouseDown"
+				@mouseup="miniMapDragging = false"
+				@mousemove="moveMiniMap"
+			></div>
+			<fragment v-for="row in getBoard" v-bind:key="row.row">
+				<div
+					v-for="(hex, column) in row.type"
+					class="hexagon"
+                    v-bind:key="row.row + column"
+					:class="[
+                        hex, 
+                        row.row, 
+						checkIfOnCanonPath(row.row, column) ? 'canon-path': '',
+                        hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
+						hex!= 'river' && preGamePossibleMoves(row.row) ? 'highlighted': '',
+                    ]"
+					@dragover.prevent
 				>
 					<slot />
 				</div>
@@ -39,7 +71,48 @@ export default {
 			'getPieceUserDragging'
 		])
 	},
+	data() {
+		return {
+			miniMapHeight: 0,
+			miniMapWidth: 0,
+			miniMapTop: "0px",
+			miniMapLeft: "0px",
+			miniMapDragging: false
+        };
+    },
+	mounted: function() {
+		console.log("REF client height: , ", this.$refs.boardsize.clientHeight);
+		console.log("REF scroll height: , ", this.$refs.boardsize.scrollHeight);
+		console.log("REF scroll top: , ", this.$refs.boardsize.scrollTop);
+		console.log("REF client width: , ", this.$refs.boardsize.clientWidth);
+		console.log("REF scroll width: , ", this.$refs.boardsize.scrollWidth);
+		console.log("REF scroll left: , ", this.$refs.boardsize.scrollLeft);
+		console.log('height of minimap: ',this.$refs.boardsize.clientHeight + "px");
+		console.log('width of minimap: ',this.$refs.boardsize.clientWidth + "px");
+		this.miniMapHeight = this.$refs.boardsize.clientHeight + "px";
+		this.miniMapWidth = this.$refs.boardsize.clientWidth + "px"
+		// this.$refs.boardsize.scrollLeft = this.$refs.boardsize.scrollWidth - this.$refs.boardsize.clientWidth
+	},
 	methods: {
+		handleMouseDown: function() {
+			this.miniMapDragging = true;
+			console.log('this.miniMapDragging: ',this.miniMapDragging);
+		},
+		moveMiniMap: function(e) {
+			if (!this.miniMapDragging) {
+				return;
+			}
+			const y = (e.pageY- this.miniMapHeight.replace("px", "")/2) * 5 - 200;
+			const x = (e.pageX -1050) * 5 -200;
+			const maxX = 440;
+			const maxY = 550;
+			console.log('maxX / x: ',(x / maxX) * 100);
+			console.log('x, y: ',x, y);
+			// this.$refs.boardsize.scrollLeft = (this.$refs.boardsize.scrollWidth - this.$refs.boardsize.clientWidth/ 100) * (x / maxX) * 100
+			
+			this.miniMapTop = y + "px";
+			this.miniMapLeft = x + "px";
+		},
 		checkIfOnCanonPath: function(row, col) {
 			row = Number(row.slice(3)) -1;
 			return this.getCanonPath.find(location => location.row === row && location.col === col) 
@@ -163,11 +236,31 @@ export default {
 </script>
 
 <style>
-.container {
+/* .container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+} */
+
+.mini-map {
+	position: relative;
 }
+
+.mini-map-location {
+	position: absolute;
+	background-color: hotpink;
+	opacity: 0.5;
+	z-index: 500;
+	cursor:grabbing;
+}
+.board.mini-map {
+	height: 1050px;
+	width: 1200px;
+	transform: scale(0.2) translate(160vw, -136vh);
+	position: absolute;
+	top: 0;
+}
+
 
 .board {
 	display: grid;

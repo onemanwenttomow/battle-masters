@@ -26,6 +26,8 @@
 		</div>
 		<ArmyCards army="Chaos" v-if="areExtraPiecesAddedToBoard" />
 		<DefeatedUnits v-if="allUnitsOnBoard" />
+		
+	
 	</div>
 </template>
 
