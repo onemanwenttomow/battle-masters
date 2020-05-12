@@ -1,5 +1,6 @@
 <template>
 	<div v-if="gameHasStarted">
+		<Board />
 		<CanonCards v-if="canonTurn" />
 		<AttackArea v-if="getAttackModeStatus" />
 		<TurnCards 
@@ -22,7 +23,6 @@
 				<SelectedUnit v-if="selectedUnit" />
 				<ArmyCards army="Imperial" v-if="areExtraPiecesAddedToBoard" />		
 			</div>
-			<Board />
 		</div>
 		<ArmyCards army="Chaos" v-if="areExtraPiecesAddedToBoard" />
 		<DefeatedUnits v-if="allUnitsOnBoard" />

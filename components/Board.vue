@@ -262,7 +262,7 @@ export default {
 .board.mini-map {
 	height: 1050px;
 	width: 1200px;
-	transform: scale(0.2) translate(160vw, -136vh);
+	transform: scale(0.2) translate(160vw, -295vh);
 	position: absolute;
 	top: 0;
 }
@@ -271,13 +271,19 @@ export default {
 .board {
 	display: grid;
 	grid-template-columns: repeat(12, 100px);
-	height: 70vh;
+	height: 95vh;
 	width: 50vw;
 	overflow: scroll;
 	/* height: 1050px; */
 	/* width: 1200px; */
 	border: 10px solid red;
 	padding: 0 50px;
+	-ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.board::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
 }
 
 .hexagon {
