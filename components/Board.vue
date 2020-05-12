@@ -21,7 +21,7 @@
 			</fragment>
 		</div>
 
-		<div class="board mini-map" >
+		<div class="board mini-map" ref="minimapsize" @click="moveMiniMap">
 			<div 
 				class="mini-map-location" 
 				:style="{ 
@@ -96,19 +96,25 @@ export default {
 	methods: {
 		handleMouseDown: function() {
 			this.miniMapDragging = true;
-			console.log('this.miniMapDragging: ',this.miniMapDragging);
 		},
 		moveMiniMap: function(e) {
-			if (!this.miniMapDragging) {
+			if (!this.miniMapDragging && e.type !== "click") {
 				return;
 			}
-			const y = (e.pageY- this.miniMapHeight.replace("px", "")/2) * 5 - 200;
-			const x = (e.pageX -1050) * 5 -200;
+			let y = (e.pageY -this.$refs.minimapsize.getBoundingClientRect().top) * 5 - 300;
+			let x = (e.pageX -this.$refs.minimapsize.getBoundingClientRect().left) * 5 - 400;
 			const maxX = 440;
 			const maxY = 550;
-			console.log('maxX / x: ',(x / maxX) * 100);
-			console.log('x, y: ',x, y);
-			// this.$refs.boardsize.scrollLeft = (this.$refs.boardsize.scrollWidth - this.$refs.boardsize.clientWidth/ 100) * (x / maxX) * 100
+			const maxXscroll = this.$refs.boardsize.scrollWidth - this.$refs.boardsize.clientWidth;
+			const maxYscroll = this.$refs.boardsize.scrollHeight - this.$refs.boardsize.clientHeight;
+			const xScrollTo = (maxXscroll / 100) * (x / maxX) * 100;
+			const yScrollTo = (maxYscroll / 100) * (y / maxY) * 100;
+			if (e.type !=="click" && x < 0 || e.type !=="click" && y < 0) {
+				this.miniMapDragging = false;
+				return;
+			}
+			this.$refs.boardsize.scrollLeft = xScrollTo;
+			this.$refs.boardsize.scrollTop = yScrollTo;
 			
 			this.miniMapTop = y + "px";
 			this.miniMapLeft = x + "px";
