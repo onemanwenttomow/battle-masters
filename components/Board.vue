@@ -40,6 +40,8 @@
 					class="hexagon"
                     v-bind:key="row.row + column"
 					:class="[
+						checkIfImperialUnitOnBoard(row.row, column) ? 'imperial-on-board': '',
+						checkIfChaosUnitOnBoard(row.row, column) ? 'chaos-on-board': '',
                         hex, 
                         row.row, 
 						checkIfOnCanonPath(row.row, column) ? 'canon-path': '',
@@ -68,7 +70,8 @@ export default {
 			'getPieceById',
 			'getNumOfRemainingOgreCards',
 			'getCanonPath',
-			'getPieceUserDragging'
+			'getPieceUserDragging',
+			'getArmyPositions'
 		])
 	},
 	data() {
@@ -98,6 +101,7 @@ export default {
 			console.log("REF scroll top: , ", this.$refs.boardsize.scrollTop);
 			console.log("REF scroll left: , ", this.$refs.boardsize.scrollLeft);
 			this.miniMapTop = this.$refs.boardsize.scrollTop + "px";
+			this.miniMapLeft = this.$refs.boardsize.scrollLeft + "px";
     	},
 		handleMouseDown: function() {
 			this.miniMapDragging = true;
@@ -124,7 +128,24 @@ export default {
 			this.miniMapTop = y + "px";
 			this.miniMapLeft = x + "px";
 		},
+		checkIfImperialUnitOnBoard: function(row, col) {
+			if (!this.allUnitsOnBoard) {
+				return;
+			}
+			row = Number(row.slice(3)) -1;
+			return this.getArmyPositions('Imperial').find(location => location.row === row && location.col === col) 
+		},
+		checkIfChaosUnitOnBoard: function(row, col) {
+			if (!this.allUnitsOnBoard) {
+				return;
+			}
+			row = Number(row.slice(3)) -1;
+			return this.getArmyPositions('Chaos').find(location => location.row === row && location.col === col) 
+		},
 		checkIfOnCanonPath: function(row, col) {
+			if (!this.allUnitsOnBoard) {
+				return;
+			}
 			row = Number(row.slice(3)) -1;
 			return this.getCanonPath.find(location => location.row === row && location.col === col) 
 		},
@@ -252,6 +273,14 @@ export default {
 	justify-content: center;
 	align-items: center;
 } */
+
+.hexagon.imperial-on-board {
+	background-color: navy;
+}
+
+.hexagon.chaos-on-board {
+	background-color: hotpink;
+}
 
 .mini-map {
 	position: relative;
