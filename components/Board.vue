@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div class="board" ref="boardsize">
+		<div class="board" ref="boardsize" @scroll="handleScroll">
 			<fragment v-for="row in getBoard" v-bind:key="row.row">
 				<div
 					v-for="(hex, column) in row.type"
@@ -79,7 +79,7 @@ export default {
 			miniMapLeft: "0px",
 			miniMapDragging: false
         };
-    },
+	},
 	mounted: function() {
 		console.log("REF client height: , ", this.$refs.boardsize.clientHeight);
 		console.log("REF scroll height: , ", this.$refs.boardsize.scrollHeight);
@@ -94,6 +94,11 @@ export default {
 		// this.$refs.boardsize.scrollLeft = this.$refs.boardsize.scrollWidth - this.$refs.boardsize.clientWidth
 	},
 	methods: {
+		handleScroll(e) {
+			console.log("REF scroll top: , ", this.$refs.boardsize.scrollTop);
+			console.log("REF scroll left: , ", this.$refs.boardsize.scrollLeft);
+			this.miniMapTop = this.$refs.boardsize.scrollTop + "px";
+    	},
 		handleMouseDown: function() {
 			this.miniMapDragging = true;
 		},
