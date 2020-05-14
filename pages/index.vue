@@ -1,33 +1,30 @@
 <template>
-	<div v-if="gameHasStarted">
+	<div v-if="gameHasStarted" class="main-container-grid">
+		<h1 class="title">Title</h1>
 		<Board />
-		<CanonCards v-if="canonTurn" />
-		<AttackArea v-if="getAttackModeStatus" />
-		<TurnCards 
-			v-if="ogreTurn" 
-			:getPlayingCards="getOgreCards" 
-			cardBack="/ogre-back.png"
-			currentCard="currentOgreCard"
-			cards="ogre"
-		/>
-		<ExtraGameTiles />
-		<div class="outer-container">
-			<div>
-				<TurnCards 
-					v-if="allUnitsOnBoard" 
-					:getPlayingCards="getPlayingCards" 
-					cardBack="/card-back.png"
-					currentCard="currentCard"
-					cards="playing"
-				/>
-				<SelectedUnit v-if="selectedUnit" />
-				<ArmyCards army="Imperial" v-if="areExtraPiecesAddedToBoard" />		
-			</div>
+		<div class="user-pieces-container">
+			<CanonCards v-if="canonTurn" />
+			<TurnCards 
+				v-if="ogreTurn" 
+				:getPlayingCards="getOgreCards" 
+				cardBack="/ogre-back.png"
+				currentCard="currentOgreCard"
+				cards="ogre"
+			/>
+			<ExtraGameTiles />
+			<ArmyCards army="Imperial" v-if="areExtraPiecesAddedToBoard" />		
+			<ArmyCards army="Chaos" v-if="areExtraPiecesAddedToBoard" />
+			<TurnCards 
+				v-if="allUnitsOnBoard" 
+				:getPlayingCards="getPlayingCards" 
+				cardBack="/card-back.png"
+				currentCard="currentCard"
+				cards="playing"
+			/>
+			<SelectedUnit v-if="selectedUnit" />
 		</div>
-		<ArmyCards army="Chaos" v-if="areExtraPiecesAddedToBoard" />
+		<AttackArea v-if="getAttackModeStatus" />
 		<DefeatedUnits v-if="allUnitsOnBoard" />
-		
-	
 	</div>
 </template>
 
@@ -89,7 +86,24 @@ export default {
 
 <style>
 
+.user-pieces-container {
+	grid-row: 2 / 3;
+	grid-column: 2 / 3;
+}
 
+.main-container-grid {
+	display: grid;
+	grid-template-columns: 50vw 50vw;
+	grid-template-rows: 250px;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.title {
+	text-align: right;
+	grid-row: 1/ 2;
+	grid-column: 2/ 3;
+}
 
 .cards {
 	background-color: white;

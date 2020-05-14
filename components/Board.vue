@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="boards-container">
 		<div class="board" ref="boardsize" @scroll="handleScroll">
 			<fragment v-for="row in getBoard" v-bind:key="row.row">
 				<div
@@ -32,7 +32,6 @@
 				}"
 				@mousedown="handleMouseDown"
 				@mouseup="miniMapDragging = false"
-				@mousemove="moveMiniMap"
 			></div>
 			<fragment v-for="row in getBoard" v-bind:key="row.row">
 				<div
@@ -129,18 +128,12 @@ export default {
 			this.miniMapLeft = x + "px";
 		},
 		checkIfImperialUnitOnBoard: function(row, col) {
-			if (!this.allUnitsOnBoard) {
-				return;
-			}
 			row = Number(row.slice(3)) -1;
-			return this.getArmyPositions('Imperial').find(location => location.row === row && location.col === col) 
+			return this.getArmyPositions('Imperial').find(location => location && location.row === row && location && location.col === col) 
 		},
 		checkIfChaosUnitOnBoard: function(row, col) {
-			if (!this.allUnitsOnBoard) {
-				return;
-			}
 			row = Number(row.slice(3)) -1;
-			return this.getArmyPositions('Chaos').find(location => location.row === row && location.col === col) 
+			return this.getArmyPositions('Chaos').find(location => location && location.row === row && location && location.col === col) 
 		},
 		checkIfOnCanonPath: function(row, col) {
 			if (!this.allUnitsOnBoard) {
@@ -268,12 +261,11 @@ export default {
 </script>
 
 <style>
-/* .container {
+.boards-container {
 	display: flex;
-	justify-content: center;
-	align-items: center;
-} */
-
+	grid-row: 1/ -1;
+	grid-column: 1/ 2;
+}
 .hexagon.imperial-on-board {
 	background-color: navy;
 }
@@ -296,7 +288,7 @@ export default {
 .board.mini-map {
 	height: 1050px;
 	width: 1200px;
-	transform: scale(0.2) translate(160vw, -295vh);
+	transform: translate(200px, -420px) scale(0.2);
 	position: absolute;
 	top: 0;
 }
@@ -306,10 +298,9 @@ export default {
 	display: grid;
 	grid-template-columns: repeat(12, 100px);
 	height: 95vh;
-	width: 50vw;
+	width: 600px;
 	overflow: scroll;
 	/* height: 1050px; */
-	/* width: 1200px; */
 	border: 10px solid red;
 	padding: 0 50px;
 	-ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -321,6 +312,7 @@ export default {
 }
 
 .hexagon {
+	user-select: none;
 	position: relative;
 	width: 99px;
 	height: 57.16px;

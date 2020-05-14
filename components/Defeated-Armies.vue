@@ -19,6 +19,10 @@ export default {
 </script>
 
 <style>
+
+.defeated-units {
+	grid-row: 3/4;
+}
 .defeated-piece {
 	position: relative;
 	display: inline-block;
