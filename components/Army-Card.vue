@@ -145,7 +145,7 @@ export default {
 	width: 80px;
 	height: 46.19px;
 	background-color: #64c7cc;
-	margin: 25px;
+	margin: 25px 10px;
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;

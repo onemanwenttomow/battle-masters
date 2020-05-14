@@ -22,9 +22,9 @@
 				cards="playing"
 			/>
 			<SelectedUnit v-if="selectedUnit" />
+			<DefeatedUnits v-if="allUnitsOnBoard" />
 		</div>
 		<AttackArea v-if="getAttackModeStatus" />
-		<DefeatedUnits v-if="allUnitsOnBoard" />
 	</div>
 </template>
 
