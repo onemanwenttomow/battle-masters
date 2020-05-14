@@ -346,7 +346,7 @@ const createStore = () => {
                 return state.armies.filter(unit => unit.remainingLives <= 0);
             },
             getArmyPositions: state => army =>  {
-                return state.armies.filter(unit => unit.army === army).map(unit => unit.boardPosition[0]);
+                return state.armies.filter(unit => unit.army === army && unit.remainingLives > 0).map(unit => unit.boardPosition[0]);
             },
             getPlayingCards: state => {
                 return state.mainPlayingCards;

@@ -288,7 +288,7 @@ export default {
 .board.mini-map {
 	height: 1050px;
 	width: 1200px;
-	transform: translate(200px, -420px) scale(0.2);
+	transform: translate(300px, -420px) scale(0.2);
 	position: absolute;
 	top: 0;
 }
@@ -297,11 +297,11 @@ export default {
 .board {
 	display: grid;
 	grid-template-columns: repeat(12, 100px);
-	height: 95vh;
-	width: 600px;
+	height: 100vh;
+	width: 800px;
 	overflow: scroll;
 	/* height: 1050px; */
-	border: 10px solid red;
+	border-right: 10px solid red;
 	padding: 0 50px;
 	-ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */

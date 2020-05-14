@@ -93,7 +93,7 @@ export default {
 
 .main-container-grid {
 	display: grid;
-	grid-template-columns: 50vw 50vw;
+	grid-template-columns: 820px 1fr;
 	grid-template-rows: 250px;
 	height: 100vh;
 	overflow: hidden;
