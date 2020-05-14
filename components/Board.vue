@@ -41,6 +41,7 @@
 					:class="[
 						checkIfImperialUnitOnBoard(row.row, column) ? 'imperial-on-board': '',
 						checkIfChaosUnitOnBoard(row.row, column) ? 'chaos-on-board': '',
+						checkIfUnitIsActive(row.row, column) ? 'mini-board-active': '',
                         hex, 
                         row.row, 
 						checkIfOnCanonPath(row.row, column) ? 'canon-path': '',
@@ -70,7 +71,8 @@ export default {
 			'getNumOfRemainingOgreCards',
 			'getCanonPath',
 			'getPieceUserDragging',
-			'getArmyPositions'
+			'getArmyPositions',
+			'getActiveUnitsPositions'
 		])
 	},
 	data() {
@@ -83,22 +85,11 @@ export default {
         };
 	},
 	mounted: function() {
-		console.log("REF client height: , ", this.$refs.boardsize.clientHeight);
-		console.log("REF scroll height: , ", this.$refs.boardsize.scrollHeight);
-		console.log("REF scroll top: , ", this.$refs.boardsize.scrollTop);
-		console.log("REF client width: , ", this.$refs.boardsize.clientWidth);
-		console.log("REF scroll width: , ", this.$refs.boardsize.scrollWidth);
-		console.log("REF scroll left: , ", this.$refs.boardsize.scrollLeft);
-		console.log('height of minimap: ',this.$refs.boardsize.clientHeight + "px");
-		console.log('width of minimap: ',this.$refs.boardsize.clientWidth + "px");
 		this.miniMapHeight = this.$refs.boardsize.clientHeight + "px";
 		this.miniMapWidth = this.$refs.boardsize.clientWidth + "px"
-		// this.$refs.boardsize.scrollLeft = this.$refs.boardsize.scrollWidth - this.$refs.boardsize.clientWidth
 	},
 	methods: {
 		handleScroll(e) {
-			console.log("REF scroll top: , ", this.$refs.boardsize.scrollTop);
-			console.log("REF scroll left: , ", this.$refs.boardsize.scrollLeft);
 			this.miniMapTop = this.$refs.boardsize.scrollTop + "px";
 			this.miniMapLeft = this.$refs.boardsize.scrollLeft + "px";
     	},
@@ -126,6 +117,14 @@ export default {
 			
 			this.miniMapTop = y + "px";
 			this.miniMapLeft = x + "px";
+		},
+		checkIfUnitIsActive: function(row, col) {
+			if (!this.allUnitsOnBoard || !this.getActiveUnitsPositions) {
+				return;
+			}
+			console.log('getActiveUnitsPositions: ',this.getActiveUnitsPositions);
+			row = Number(row.slice(3)) -1;
+			return this.getActiveUnitsPositions.find(location => location && location.row === row && location && location.col === col) 
 		},
 		checkIfImperialUnitOnBoard: function(row, col) {
 			row = Number(row.slice(3)) -1;
@@ -272,6 +271,24 @@ export default {
 
 .hexagon.chaos-on-board {
 	background-color: hotpink;
+}
+
+.hexagon.mini-board-active {
+	animation: active 2s infinite;
+}
+
+@keyframes active {
+	0% {
+		opacity: 0;
+	}
+
+	50% {
+		opacity: 1
+	}
+
+	100% {
+		opacity: 0
+	}
 }
 
 .mini-map {
