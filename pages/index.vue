@@ -1,6 +1,9 @@
 <template>
 	<div v-if="gameHasStarted" class="main-container-grid">
-		<h1 class="title">Title</h1>
+		<header>
+			<SelectedUnit v-if="selectedUnit" />
+			<h1 class="title">Title</h1>
+		</header>
 		<Board />
 		<div class="user-pieces-container">
 			<CanonCards v-if="canonTurn" />
@@ -21,7 +24,6 @@
 				currentCard="currentCard"
 				cards="playing"
 			/>
-			<SelectedUnit v-if="selectedUnit" />
 			<DefeatedUnits v-if="allUnitsOnBoard" />
 		</div>
 		<AttackArea v-if="getAttackModeStatus" />
@@ -99,10 +101,17 @@ export default {
 	overflow: hidden;
 }
 
-.title {
-	text-align: right;
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: flex-start;
 	grid-row: 1/ 2;
 	grid-column: 2/ 3;
+}
+
+.title {
+	text-align: right;
 }
 
 .cards {

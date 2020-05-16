@@ -7,10 +7,10 @@
 		<div v-if="selectedUnit.isSelected">
 			<div 
 				v-if="!selectedUnit.hasMoved" 
-				@click="$emit('unitFinishedMoving', selectedUnit)"
+				@click="finishMove(selectedUnit.id)"
 				class="skip"
 			>Skip Move</div>
-			<div v-else>Unit can still move</div>
+			<!-- <div v-else>Unit can still attack</div> -->
 		</div>
     </div>
 </template>
@@ -20,20 +20,32 @@ import { mapGetters } from 'vuex';
 
 export default {
 	computed: mapGetters([
-        'selectedUnit', 'getCurrentCard'
-    ]),
+        'selectedUnit', 'getCurrentCard', 'getPieceById', 'checkIfUnitsInReach'
+	]),
+	methods: {
+		finishMove: function(id) {
+			this.$store.commit('finishMove', {id});
+			const unit = this.getPieceById(id);
+			const unitsInReach = this.checkIfUnitsInReach(id);
+			unitsInReach.length && unit[0].id !== 'canon' ? 
+				this.$store.commit('canBeAttacked', {unit, unitsInReach}) :
+				this.$store.commit('finishTurn', {id})
+		}
+	}
 };
 </script>
 
 <style>
 .selected-unit {
-	display: inline-block;
-	width: 150px;
+	width: 200px;
 	padding: 20px;
-	margin: 20px;
 	text-align: center;
 	color: whitesmoke;
-	transform: translateX(400px);
+}
+
+.selected-unit img {
+	height: 60px;
+	width: 60px;
 }
 
 .imperial-card {
