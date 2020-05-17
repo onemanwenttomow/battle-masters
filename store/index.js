@@ -437,7 +437,7 @@ const createStore = () => {
                     return (
                         hex.distance(
                             unitToCheck.boardCubePosition
-                        ) === distanceToCheck
+                        ) <= distanceToCheck
                     );
                 });
                 const surroundingTiles = surroundingCubes.map(
