@@ -10,8 +10,8 @@
                         hex, 
                         row.row, 
 						checkIfOnCanonPath(row.row, column) ? 'canon-path': '',
-                        hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
-						hex!= 'river' && preGamePossibleMoves(row.row) ? 'highlighted': '',
+                        hex!= 'marsh' && hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
+						hex!= 'marsh' && hex!= 'river' && preGamePossibleMoves(row.row) ? 'highlighted': '',
                     ]"
 					@dragover.prevent
 					@drop.prevent="drop($event, row.row, column)"
@@ -45,8 +45,8 @@
                         hex, 
                         row.row, 
 						checkIfOnCanonPath(row.row, column) ? 'canon-path': '',
-                        hex!= 'marsh' || hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
-						hex!= 'marsh' || hex!= 'river' && preGamePossibleMoves(row.row) ? 'highlighted': '',
+                        hex!= 'marsh' && hex!= 'river' && checkIfSelected(row.row, column) ? 'highlighted': '',
+						hex!= 'marsh' && hex!= 'river' && preGamePossibleMoves(row.row) ? 'highlighted': '',
                     ]"
 					@dragover.prevent
 				>
