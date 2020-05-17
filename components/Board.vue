@@ -122,7 +122,6 @@ export default {
 			if (!this.allUnitsOnBoard || !this.getActiveUnitsPositions) {
 				return;
 			}
-			console.log('getActiveUnitsPositions: ',this.getActiveUnitsPositions);
 			row = Number(row.slice(3)) -1;
 			return this.getActiveUnitsPositions.find(location => location && location.row === row && location && location.col === col) 
 		},
@@ -143,7 +142,7 @@ export default {
 		},
 		checkIfSelected: function(row, col) {
 			row = Number(row.slice(3));
-			return this.getPossibleMoves.find(move => move[0] === (row -1) && move[1] === col);
+			return this.getPossibleMoves.find(move => move.row === (row -1) && move.col === col);
 		},
 		preGamePossibleMoves: function(row) {
 			if (this.allUnitsOnBoard) {
@@ -203,7 +202,6 @@ export default {
 		drop: function(e, row, col) {
 			this.$store.commit('pieceUserDragging', {id: null});
 			const piece = document.getElementById(e.dataTransfer.getData("id"));
-			console.log('piece.id: ',piece.id);
 			const towerTile = piece.id.includes('tower');
 			const marshTile = piece.id.includes('marsh');
 			const fordTile = piece.id.includes('ford');

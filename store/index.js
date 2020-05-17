@@ -14,6 +14,7 @@ const createStore = () => {
             extraTiles: [],
             canonPath: [],
             board: [],
+            boardPositionsAsCubes: [],
             unitThatCanAttack:  {},
             unitUnderAttack: {},
             attackModeOpen: false,
@@ -246,6 +247,21 @@ const createStore = () => {
                     extraTiles
                 }
             ) {
+                let boardPositionsAsCubes = board.map((tile, row) => {
+                    return tile.type.map((tileCol, col) => {
+                        let oddOrEven;
+                        row % 2 === 0
+                            ? (oddOrEven = -1)
+                            : (oddOrEven = 1);
+                        let cube = OffsetCoord.roffsetToCube(oddOrEven, {
+                            col,
+                            row
+                        });
+                        return cube;
+                    })
+                })
+                boardPositionsAsCubes = [].concat(...boardPositionsAsCubes);
+                state.boardPositionsAsCubes = boardPositionsAsCubes;
                 state.armies = armies;
                 state.mainPlayingCards = mainPlayingCards;
                 state.board = board;
@@ -411,106 +427,23 @@ const createStore = () => {
                     )[0].showPossibleMoves;
                 }
             },
-            getSurroundingTiles: (state, { getPieceById, getCurrentCard }) => (
-                id,
-                checkingFor
-            ) => {
+            getSurroundingTiles: (state, { getPieceById, getCurrentCard }) => (id) => {
                 const unitToCheck = getPieceById(id)[0];
-                console.log("unitToCheck: ", unitToCheck);
-                const test = state.armies.filter(unit => {
-                    console.log(
-                        "unit.boardCubePosition.distance(unitToCheck.boardCubePosition) === 1: ",
-                        unit.boardCubePosition.distance(
-                            unitToCheck.boardCubePosition
-                        )
-                    );
+                const currentCard = getCurrentCard.ids || [];
+                let distanceToCheck;
+                currentCard.includes("movetwice") ? distanceToCheck = 2 : distanceToCheck = 1;
+                const surroundingCubes = state.boardPositionsAsCubes.filter(tile => {
+                    let hex = new Hex(tile.q, tile.r, tile.s);
                     return (
-                        unit.boardCubePosition.distance(
+                        hex.distance(
                             unitToCheck.boardCubePosition
-                        ) === 1
+                        ) === distanceToCheck
                     );
                 });
-                console.log("test: ", test);
-                const unitRow = unitToCheck.boardPosition[0].row;
-                const unitCol = unitToCheck.boardPosition[0].col;
-                const currentCard = getCurrentCard.ids || [];
-                const unitIsArcher =
-                    unitToCheck.special === "archer" ||
-                    unitToCheck.special === "crossbow";
-                const checkDoubleTiles =
-                    unitIsArcher && checkingFor === "attacking";
-                if (
-                    checkDoubleTiles ||
-                    (currentCard.includes("movetwice") &&
-                        checkingFor !== "attacking")
-                ) {
-                    unitRow % 2 === 0
-                        ? (surroundingTiles = [
-                              [-2, -1],
-                              [-2, 0],
-                              [-2, 1],
-                              [-1, -1],
-                              [-1, 0],
-                              [-1, 1],
-                              [-1, 2],
-                              [0, -2],
-                              [0, -1],
-                              [0, 1],
-                              [0, 2],
-                              [1, -1],
-                              [1, 0],
-                              [1, 1],
-                              [1, 2],
-                              [2, -1],
-                              [2, 0],
-                              [2, 1]
-                          ])
-                        : (surroundingTiles = [
-                              [-2, -1],
-                              [-2, 0],
-                              [-2, 1],
-                              [-1, -2],
-                              [-1, -1],
-                              [-1, 0],
-                              [-1, 1],
-                              [0, -2],
-                              [0, -1],
-                              [0, 1],
-                              [0, 2],
-                              [1, -2],
-                              [1, -1],
-                              [1, 0],
-                              [1, 1],
-                              [2, -1],
-                              [2, 0],
-                              [2, 1]
-                          ]);
-                } else {
-                    unitRow % 2 === 0
-                        ? (surroundingTiles = [
-                              [-1, 1],
-                              [-1, 0],
-                              [0, -1],
-                              [0, 1],
-                              [1, 1],
-                              [1, 0]
-                          ])
-                        : (surroundingTiles = [
-                              [-1, -1],
-                              [-1, 0],
-                              [0, -1],
-                              [0, 1],
-                              [1, -1],
-                              [1, 0]
-                          ]);
-                }
-                let surroundingTiles;
-                const calculatedSurroundingTiles = surroundingTiles.map(
-                    tile => {
-                        return [tile[0] + unitRow, tile[1] + unitCol];
-                    }
+                const surroundingTiles = surroundingCubes.map(
+                    c => new OffsetCoord.roffsetFromCube(1, c)
                 );
-                return calculatedSurroundingTiles;
+                return surroundingTiles;
             },
             checkIfUnitsInReach: (
                 state,
