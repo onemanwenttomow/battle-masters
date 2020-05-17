@@ -435,15 +435,16 @@ const createStore = () => {
                 const surroundingCubes = state.boardPositionsAsCubes.filter(tile => {
                     let hex = new Hex(tile.q, tile.r, tile.s);
                     return (
-                        hex.distance(
-                            unitToCheck.boardCubePosition
-                        ) <= distanceToCheck
+                        hex.distance(unitToCheck.boardCubePosition) <= distanceToCheck
                     );
                 });
                 const surroundingTiles = surroundingCubes.map(
                     c => new OffsetCoord.roffsetFromCube(1, c)
                 );
-                return surroundingTiles;
+                const surroundTilesWithoutUnits = surroundingTiles.filter(tile => {
+                    return !state.armies.find(unit => unit.boardPosition[0].col === tile.col && unit.boardPosition[0].row === tile.row)
+                })
+                return surroundTilesWithoutUnits;
             },
             checkIfUnitsInReach: (
                 state,
