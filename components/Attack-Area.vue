@@ -6,7 +6,7 @@
                 <div class="attacker">
                     <img :src="getUnitThatCanAttack[0].img" alt="" class="unit-img">
                     <div class="damage-container">
-                        <img src="/damage.png" alt="" v-for="d in 3 - getUnitThatCanAttack[0].remainingLives" :key="d">
+                        <img src="/damage.png" alt="" v-for="d in getUnitThatCanAttack[0].damageReceived" :key="d">
                     </div>
                     <h2>{{getUnitThatCanAttack[0].name}}</h2>
                     <div class="total-die-container">
@@ -27,7 +27,7 @@
                 <div class="defender">
                     <img :src="getUnitUnderAttack[0].img" alt="" class="unit-img">
                     <div class="damage-container">
-                        <img src="/damage.png" alt="" v-for="d in 3 - getUnitUnderAttack[0].remainingLives" :key="d">
+                        <img src="/damage.png" alt="" v-for="d in getUnitUnderAttack[0].damageReceived" :key="d">
                     </div>
                     <h2>{{getUnitUnderAttack[0].name}}</h2>
                     <div class="total-die-container">
@@ -106,6 +106,9 @@ export default {
             const totalDamage = this.attackingDie.filter(die => die.rolled && die.value <= 2).length;
             const totalDefense = this.defendingDie.filter(die => die.rolled && die.value === 3).length;
             this.damageDealt = totalDamage - totalDefense;
+            if (this.damageDealt < 0) {
+                this.damageDealt = 0;
+            }
         },
         endBattle: function() {
             this.$store.commit('battleOver', {damageDealt: this.damageDealt});

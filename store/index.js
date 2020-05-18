@@ -15,7 +15,7 @@ const createStore = () => {
             canonPath: [],
             board: [],
             boardPositionsAsCubes: [],
-            unitThatCanAttack:  {},
+            unitThatCanAttack: {},
             unitUnderAttack: {},
             attackModeOpen: false,
             currentCard: {},
@@ -33,6 +33,11 @@ const createStore = () => {
             },
             currentCard(state, { card }) {
                 state.currentCard = card;
+                const numberOfUnitsLeftOnBoard = card.ids.filter(id => state.armies.find(unit => unit.id === id && unit.damageReceived < 3)).length;
+                if (numberOfUnitsLeftOnBoard === 0) {
+                    // remove correct card
+                    console.log('card: ',card);
+                }
                 state.armies = state.armies.map(unit => {
                     return {
                         ...unit,
@@ -43,7 +48,6 @@ const createStore = () => {
                 });
             },
             pieceUserDragging(state, { id }) {
-                console.log("id: ", id);
                 if (id) {
                     state.pieceUserDragging = state.armies.filter(
                         unit => unit.id === id
@@ -155,12 +159,11 @@ const createStore = () => {
                 }
             },
             dealDamage(state, { id, damageDealt }) {
-                console.log("id, damageDealt: ", id, damageDealt);
                 state.armies = state.armies.map(unit => {
                     if (unit.id === id) {
                         return {
                             ...unit,
-                            remainingLives: unit.remainingLives - damageDealt
+                            damageReceived: unit.damageReceived + damageDealt
                         };
                     } else {
                         return unit;
@@ -181,7 +184,7 @@ const createStore = () => {
                     if (unit.id === state.unitUnderAttack[0].id) {
                         return {
                             ...unit,
-                            remainingLives: unit.remainingLives - damageDealt,
+                            damageReceived: unit.damageReceived + damageDealt,
                             canBeAttacked: false
                         };
                     } else if (unit.id === state.unitThatCanAttack[0].id) {
@@ -250,16 +253,14 @@ const createStore = () => {
                 let boardPositionsAsCubes = board.map((tile, row) => {
                     return tile.type.map((tileCol, col) => {
                         let oddOrEven;
-                        row % 2 === 0
-                            ? (oddOrEven = -1)
-                            : (oddOrEven = 1);
+                        row % 2 === 0 ? (oddOrEven = -1) : (oddOrEven = 1);
                         let cube = OffsetCoord.roffsetToCube(oddOrEven, {
                             col,
                             row
                         });
                         return cube;
-                    })
-                })
+                    });
+                });
                 boardPositionsAsCubes = [].concat(...boardPositionsAsCubes);
                 state.boardPositionsAsCubes = boardPositionsAsCubes;
                 state.armies = armies;
@@ -325,10 +326,7 @@ const createStore = () => {
                         hasAttacked: false,
                         finishedTurn: false,
                         canBeAttacked: false,
-                        remainingLives:
-                            unit.special === "ogre"
-                                ? ogrePlayingCards.length
-                                : 3,
+                        damageReceived: 0,
                         boardPosition: [],
                         boardCubePosition: {}
                     };
@@ -352,20 +350,26 @@ const createStore = () => {
             },
             getArmy: state => army => {
                 return state.armies.filter(
-                    unit => unit.army === army && unit.remainingLives > 0
+                    unit => unit.army === army && unit.damageReceived < 3
                 );
             },
             getPieceUserDragging: state => {
                 return state.pieceUserDragging;
             },
             getDefeatedUnits: state => {
-                return state.armies.filter(unit => unit.remainingLives <= 0);
+                return state.armies.filter(unit => unit.damageReceived >= 3);
             },
-            getArmyPositions: state => army =>  {
-                return state.armies.filter(unit => unit.army === army && unit.remainingLives > 0).map(unit => unit.boardPosition[0]);
+            getArmyPositions: state => army => {
+                return state.armies
+                    .filter(
+                        unit => unit.army === army && unit.damageReceived < 3
+                    )
+                    .map(unit => unit.boardPosition[0]);
             },
-            getActiveUnitsPositions: state =>  {
-                return state.armies.filter(unit => unit.isSelected && !unit.finishedTurn).map(u => u.boardPosition[0]);
+            getActiveUnitsPositions: state => {
+                return state.armies
+                    .filter(unit => unit.isSelected && !unit.finishedTurn)
+                    .map(u => u.boardPosition[0]);
             },
             getPlayingCards: state => {
                 return state.mainPlayingCards;
@@ -427,23 +431,38 @@ const createStore = () => {
                     )[0].showPossibleMoves;
                 }
             },
-            getSurroundingTiles: (state, { getPieceById, getCurrentCard }) => (id) => {
+            getSurroundingTiles: (
+                state,
+                { getPieceById, getCurrentCard }
+            ) => id => {
                 const unitToCheck = getPieceById(id)[0];
                 const currentCard = getCurrentCard.ids || [];
                 let distanceToCheck;
-                currentCard.includes("movetwice") ? distanceToCheck = 2 : distanceToCheck = 1;
-                const surroundingCubes = state.boardPositionsAsCubes.filter(tile => {
-                    let hex = new Hex(tile.q, tile.r, tile.s);
-                    return (
-                        hex.distance(unitToCheck.boardCubePosition) <= distanceToCheck
-                    );
-                });
+                currentCard.includes("movetwice")
+                    ? (distanceToCheck = 2)
+                    : (distanceToCheck = 1);
+                const surroundingCubes = state.boardPositionsAsCubes.filter(
+                    tile => {
+                        let hex = new Hex(tile.q, tile.r, tile.s);
+                        return (
+                            hex.distance(unitToCheck.boardCubePosition) <=
+                            distanceToCheck
+                        );
+                    }
+                );
                 const surroundingTiles = surroundingCubes.map(
                     c => new OffsetCoord.roffsetFromCube(1, c)
                 );
-                const surroundTilesWithoutUnits = surroundingTiles.filter(tile => {
-                    return !state.armies.find(unit => unit.boardPosition[0].col === tile.col && unit.boardPosition[0].row === tile.row)
-                })
+                const surroundTilesWithoutUnits = surroundingTiles.filter(
+                    tile => {
+                        return !state.armies.find(
+                            unit =>
+                                unit.damageReceived < 3 &&
+                                unit.boardPosition[0].col === tile.col &&
+                                unit.boardPosition[0].row === tile.row
+                        );
+                    }
+                );
                 return surroundTilesWithoutUnits;
             },
             checkIfUnitsInReach: (

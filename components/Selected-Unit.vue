@@ -3,7 +3,7 @@
         <h3>{{selectedUnit.name}}</h3>
 		<img :src="selectedUnit.img" :alt="selectedUnit.name">
 		<h4>Combat Value: {{selectedUnit.combatValue}}</h4>
-		<h4>Damaged Sustained: {{3 - selectedUnit.remainingLives}}/3</h4>
+		<h4>Damaged Sustained: {{selectedUnit.damageReceived}}/3</h4>
 		<div v-if="selectedUnit.isSelected">
 			<div 
 				v-if="!selectedUnit.hasMoved" 
