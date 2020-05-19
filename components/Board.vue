@@ -141,6 +141,8 @@ export default {
 			return this.getCanonPath.find(location => location.row === row && location.col === col) 
 		},
 		checkIfSelected: function(row, col) {
+			// add a check to see if class row4 index col child has class marsh.
+			// if so return false...
 			row = Number(row.slice(3));
 			return this.getPossibleMoves.find(move => move.row === (row -1) && move.col === col);
 		},

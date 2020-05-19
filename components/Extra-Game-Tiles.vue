@@ -44,7 +44,6 @@ export default {
         };
     },
     mounted: function() {
-        console.log("this.getExtraTiles: ", this.getExtraTiles);
         this.extraTiles = this.getExtraTiles;
     },
     methods: {
