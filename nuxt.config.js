@@ -64,6 +64,14 @@ export default {
                 vuex: {
                     mutations: [{ news: "testingSockets"}]
                 }
+            },
+            {
+                name: "local",
+                url: "localhost:8080",
+                default: true, 
+                vuex: {
+                    mutations: [{ news: "testingSockets"}]
+                }
             }
         ]
     },

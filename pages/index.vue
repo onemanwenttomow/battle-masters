@@ -57,6 +57,10 @@ export default {
 		ExtraGameTiles
 	},
 	mounted: function() {
+		this.socket = this.$nuxtSocket({
+			name: 'heroku',
+			reconnection: false
+		})
 		!this.gameHasStarted && this.$router.push('/welcome');
 	},
 	computed: {
