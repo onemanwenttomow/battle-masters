@@ -13,6 +13,7 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.9.5",
     "nuxt": "^2.0.0",
+    "nuxt-socket-io": "^1.0.25",
     "vue-fragment": "^1.5.1"
   },
   "devDependencies": {}

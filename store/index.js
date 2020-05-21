@@ -31,6 +31,9 @@ const createStore = () => {
             startGame(state) {
                 state.gameStarted = true;
             },
+            testingSockets(x) {
+                console.log("socket event!", x)
+            },
             currentCard(state, { card }) {
                 state.currentCard = card;
                 const numberOfUnitsLeftOnBoard = card.ids.filter(id => state.armies.find(unit => unit.id === id && unit.damageReceived < 3)).length;

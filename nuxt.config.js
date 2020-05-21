@@ -51,7 +51,22 @@ export default {
     /*
      ** Nuxt.js modules
      */
-    modules: ["@nuxtjs/axios"],
+    modules: [
+        "@nuxtjs/axios",
+        "nuxt-socket-io"
+    ],
+    io: {
+        sockets: [
+            {
+                name: "heroku",
+                url: "https://battlemasters-sockets-server.herokuapp.com/",
+                default: true, 
+                vuex: {
+                    mutations: [{ news: "testingSockets"}]
+                }
+            }
+        ]
+    },
     generate: {
         routes: function() {
             return ["/", "/welcome"];
