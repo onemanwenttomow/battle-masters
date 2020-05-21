@@ -58,8 +58,8 @@ export default {
 	},
 	mounted: function() {
 		this.socket = this.$nuxtSocket({
-			name: 'heroku',
-			reconnection: false
+			name: 'local',
+			reconnection: true
 		})
 		!this.gameHasStarted && this.$router.push('/welcome');
 	},

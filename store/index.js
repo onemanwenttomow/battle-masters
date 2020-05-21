@@ -31,7 +31,7 @@ const createStore = () => {
             startGame(state) {
                 state.gameStarted = true;
             },
-            testingSockets(x) {
+            testingSockets(state, x) {
                 console.log("socket event!", x)
             },
             currentCard(state, { card }) {

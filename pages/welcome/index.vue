@@ -1,28 +1,33 @@
 <template>
     <div>
-        <nuxt-link to="/" >
-            <div class="welcome-container" @click="startGame">
-                <img src="/bm-logo.PNG" alt="battle masters logo">
-                <img src="/main-image.PNG" alt="battle masters cover"> 
-            </div>
-        </nuxt-link>
-        
+        <div class="welcome-container">
+            <img src="/bm-logo.PNG" alt="battle masters logo" />
+            <img src="/main-image.PNG" alt="battle masters cover" />
+            <nuxt-link to="/">
+                <button @click="startGame">Play on 1 Machine</button>
+            </nuxt-link>
+            <button @click="$router.push(generateGameCode)">Play on 2 Machines</button>
+           
+        </div>
     </div>
 </template>
 
 <script>
-
 export default {
-	methods: {
+    computed: {
+        generateGameCode() {
+            return  "/2p/" + Math.random().toString(36).substring(2, 5).toUpperCase() + Math.random().toString(36).substring(2, 5).toUpperCase();
+        }
+    },
+    methods: {
         startGame: function() {
-            this.$store.commit('startGame');
+            this.$store.commit("startGame");
         }
     }
 };
 </script>
 
 <style>
-
 .welcome-container {
     display: flex;
     flex-direction: column;
@@ -30,13 +35,11 @@ export default {
     align-items: center;
 }
 
-.welcome-container img:first-child{
+.welcome-container img:first-child {
     width: 50vw;
 }
 
-.welcome-container img:last-child{
+.welcome-container img:nth-child(2) {
     width: 30vw;
 }
-
-
 </style>
