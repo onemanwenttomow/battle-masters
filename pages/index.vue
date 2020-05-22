@@ -57,10 +57,7 @@ export default {
 		ExtraGameTiles
 	},
 	mounted: function() {
-		this.socket = this.$nuxtSocket({
-			name: 'local',
-			reconnection: true
-		})
+		
 		!this.gameHasStarted && this.$router.push('/welcome');
 	},
 	computed: {

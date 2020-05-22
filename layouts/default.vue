@@ -4,6 +4,18 @@
   </div>
 </template>
 
+<script>
+
+export default {
+	
+	mounted: function() {
+		
+	
+	}
+};
+</script>
+
+
 <style>
 html {
   font-family: 'Press Start 2P', cursive;
