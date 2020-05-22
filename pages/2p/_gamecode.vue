@@ -1,8 +1,9 @@
 <template>
     <div>
-        <h1>Welcome to a 2 player, 2 computer game. First of all share the url below with the other player</h1>
+        <h1 v-if="showCodeToCopy">Welcome to a 2 player, 2 computer game. First of all share the url below with the other player</h1>
         <h3 v-if="showCodeToCopy" @click="copySign" :class="[userCopied? 'user-copied' : '']">{{gameCode}}</h3>
         <h1>You are: {{player}} </h1>
+        <h3 v-if="!showCodeToCopy">Pick either Imperial or Chaos</h3>
     </div>
 </template>
 
@@ -14,16 +15,26 @@ export default {
 			reconnection: true
 		})
         console.log('this.$route: ',this.$route);
-        this.socket.emit('check if room exists', {roomId: this.$route.params.gamecode});
+
+        this.socket.on('player2 joined', () => {
+            console.log("player 2 joined!!!")
+            this.showCodeToCopy = false;
+        })
+
+        this.player = localStorage.getItem('player')
+        this.socket.emit('check if room exists', {roomId: this.$route.params.gamecode, player:localStorage.getItem('player')});
         this.socket.on('room', rooms => {
             console.log('rooms: ',rooms);
             console.log('localStorage.getItem(): ',localStorage.getItem('player'));
+            console.log('this.player: ',this.player);
             if (rooms[this.$route.params.gamecode]) {
                 if (rooms[this.$route.params.gamecode].player2) {
                     this.showCodeToCopy = false
                     localStorage.setItem('player', 'player2')
+                    this.player = 'player2'
                 } else {
                     localStorage.setItem('player', 'player1')
+                    this.player = 'player1'
                 }
             } else {
                 localStorage.removeItem('player')
