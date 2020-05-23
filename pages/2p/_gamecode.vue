@@ -90,9 +90,9 @@ export default {
             if (this.player === 'player2' && this[army] === 'player1') {
                 return;
             }
-            army === 'imperialArmy' ? 
-                this.chaosArmy = '':
-                this.imperialArmy = '';
+            // army === 'imperialArmy' ? 
+            //     this.chaosArmy = '':
+            //     this.imperialArmy = '';
             
 
             console.log('army: ',army);
