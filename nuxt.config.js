@@ -83,7 +83,7 @@ export default {
         routes: function() {
             const routes =  ["/", "/welcome"];
             for (let i = 1; i < 9; i++) {
-                routes.push('/2p/ROOM' + i);
+                routes.push('/2p/room' + i);
             }
             return routes;
         }

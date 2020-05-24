@@ -26,14 +26,14 @@ export default {
             if (rooms.length)  {
                 let latestRoom = Number(rooms[rooms.length -1].slice(4))
                 latestRoom++
-                this.roomCode = "ROOM" + latestRoom;
+                this.roomCode = "room" + latestRoom;
             }
         })
 
     },
     data: function() {
         return {
-            roomCode: 'ROOM1'
+            roomCode: 'room1'
         }
     },
     computed: {
