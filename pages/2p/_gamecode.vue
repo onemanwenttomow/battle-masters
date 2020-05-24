@@ -89,6 +89,7 @@ export default {
             console.log('rooms: ',rooms);
             console.log('localStorage.getItem(): ',localStorage.getItem('player'));
             console.log('this.player: ',this.player);
+            console.log("*********", rooms[this.$route.params.gamecode])
             if (rooms[this.$route.params.gamecode]) {
                 if (rooms[this.$route.params.gamecode].player2) {
                     this.showCodeToCopy = false;
