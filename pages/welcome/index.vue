@@ -4,9 +4,9 @@
             <img src="/bm-logo.PNG" alt="battle masters logo" />
             <img src="/main-image.PNG" alt="battle masters cover" />
             <nuxt-link to="/">
-                <button @click="startGame">Play on 1 Machine</button>
+                <button class="nes-btn" @click="startGame">Play on 1 Machine</button>
             </nuxt-link>
-            <button @click="$router.push(generateGameCode)">Play on 2 Machines</button>
+            <button class="nes-btn" @click="$router.push(generateGameCode)">Play on 2 Machines</button>
            
         </div>
     </div>

@@ -1,22 +1,48 @@
 <template>
-    <div>
-        <h1 v-if="showCodeToCopy">Welcome to a 2 player, 2 computer game. First of all share the url below with the other player</h1>
-        <h3 v-if="showCodeToCopy" @click="copySign" :class="[userCopied? 'user-copied' : '']">{{gameCode}}</h3>
-        <h1>You are: <span :class="player">{{player}}</span> </h1>
-        <transition name="fade">
-            <div v-if="showCodeToCopy && userCopied">
-                <p>Waiting for player 2 to join...</p>
-                <Spinner />
+    <div class="centered-container">
+        <div class="nes-container is-centered with-title">
+            <h1 class="title">Welcome to a 2 player, 2 computer game</h1>
+            <h2 v-if="showCodeToCopy">First of all share the url below with the other player</h2>
+            
+            <div v-if="showCodeToCopy">
+                <div class="nes-container is-dark">
+                    <code :class="[userCopied? 'user-copied' : '']">{{gameCode}}</code>
+                </div>
+
+                <div class="btn-container">
+                    <div class="nes-balloon from-left code-copied-balloon" :class="[userCopied? '' : 'hide']">
+                        Code copied
+                    </div>
+                    <button @click="copySign" class="nes-btn copycode">Copy code</button>
+                </div>
             </div>
-        </transition>
-        <transition name="fade">
-            <h3 v-if="!showCodeToCopy">
-                Pick either 
-                <span @click="togglePlayerChoice('imperialArmy')" :class="imperialArmy">Imperial</span> or 
-                <span @click="togglePlayerChoice('chaosArmy')" :class="chaosArmy">Chaos</span>
-            </h3>
-        </transition>
+            <h1>You are:</h1>
+            <div class="nes-badge">
+                <span :class="player">{{player}}</span>
+            </div>
+            <transition name="fade">
+                <div v-if="showWaiting">
+                    <p>Waiting for player 2 to join...</p>
+                    <Spinner />
+                </div>
+            </transition>
+            <transition name="fade">
+                <div v-if="!showCodeToCopy">
+                    <h3>Pick either </h3>
+                    <button @click="togglePlayerChoice('imperialArmy')" class="nes-btn" :class="imperialArmy">Imperial</button> or 
+                    <button @click="togglePlayerChoice('chaosArmy')" class="nes-btn" :class="chaosArmy">Chaos</button>
+                </div>
+            </transition>
+            <div>
+                <nuxt-link to="/">
+                        <button class="nes-btn" @click="startGame" :disabled="!imperialArmy || !chaosArmy">Start Game</button>
+                </nuxt-link>
+
+            </div>
+        </div>
+
     </div>
+    
 </template>
 
 
@@ -28,8 +54,17 @@ import Spinner from "~/components/Spinner.vue";
 export default {
     components: {
 		Spinner
-	},
-	
+    },
+     data: function() {
+        return {
+            userCopied: false,
+            showCodeToCopy: true, 
+            showWaiting: false,
+            player: '',
+            imperialArmy: '',
+            chaosArmy: '',
+        }
+    },
     mounted: function() {
         this.socket = this.$nuxtSocket({
 			name: 'local',
@@ -45,6 +80,7 @@ export default {
         this.socket.on('player2 joined', () => {
             console.log("player 2 joined!!!")
             this.showCodeToCopy = false;
+            this.showWaiting = false;
         })
 
         this.player = localStorage.getItem('player')
@@ -55,7 +91,7 @@ export default {
             console.log('this.player: ',this.player);
             if (rooms[this.$route.params.gamecode]) {
                 if (rooms[this.$route.params.gamecode].player2) {
-                    this.showCodeToCopy = false
+                    this.showCodeToCopy = false;
                     localStorage.setItem('player', 'player2')
                     this.player = 'player2'
                 } else {
@@ -72,16 +108,10 @@ export default {
             return this.$route.params.gamecode;
         }
     },
-    data: function() {
-        return {
-            userCopied: false,
-            showCodeToCopy: true, 
-            player: '',
-            imperialArmy: '',
-            chaosArmy: '',
-        }
-    },
     methods: {
+        startGame: function() {
+            this.$store.commit("startGame");
+        },
         togglePlayerChoice(army) {
             console.log('this.player: ',this.player);
             if (this.player === 'player1' && this[army] === 'player2') {
@@ -90,9 +120,6 @@ export default {
             if (this.player === 'player2' && this[army] === 'player1') {
                 return;
             }
-            // army === 'imperialArmy' ? 
-            //     this.chaosArmy = '':
-            //     this.imperialArmy = '';
             
             if (army === 'imperialArmy' && this.chaosArmy === this.player) {
                 this.chaosArmy = '';
@@ -116,6 +143,10 @@ export default {
         copySign() {
             navigator.clipboard.writeText(location.href);
             this.userCopied = true;
+            this.showWaiting = true;
+            setTimeout(() => {
+                this.userCopied = false;
+            }, 1000)
             this.socket.emit('new room', {roomId: this.$route.params.gamecode});
         }, 
         getPlayer: function() {
@@ -128,16 +159,63 @@ export default {
 
 <style>
 
+.centered-container {
+    padding: 0 2rem;
+    margin: 0 2rem;
+}
+
+.nes-badge .player1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    background-color: #209cee;
+    box-shadow: 0 0.5em #209cee, 0 -0.5em #209cee, 0.5em 0 #209cee, -0.5em 0 #209cee;
+}
+
+.nes-badge .player2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 0.5em #92cc41, 0 -0.5em #92cc41, 0.5em 0 #92cc41, -0.5em 0 #92cc41;
+}
+
 .player1 {
-    background-color: hotpink;
+    background-color: #209cee;
 }
 
 .player2 {
-    background-color: navy;
+    background-color: #92cc41;
+}
+
+.hide {
+    display: none;
+}
+
+.btn-container {
+    position: relative;
 }
 
 .user-copied {
     background-color: green;
+}
+
+.code-copied-balloon {
+    position: absolute;
+    top: -86px;
+}
+
+button:disabled {
+    color: #212529;
+    cursor: not-allowed;
+    background-color: #d3d3d3;
+    box-shadow: inset -4px -4px #adafbc;
+    opacity: .6;
 }
 
 .fade-enter-active, .fade-leave-active {

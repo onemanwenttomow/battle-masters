@@ -29,6 +29,10 @@ export default {
             {
                 rel: "stylesheet",
                 href: "https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+            },
+            {
+                rel: "stylesheet",
+                href:"https://unpkg.com/nes.css@2.3.0/css/nes.min.css"
             }
         ]
     },
