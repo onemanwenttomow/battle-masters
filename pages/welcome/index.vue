@@ -23,9 +23,11 @@ export default {
         this.socket.emit('check if room exists', {roomId: '', player: ''});
         this.socket.on('room', rooms => {
             rooms = Object.keys(rooms);
-            let latestRoom = Number(rooms[rooms.length -1].slice(4))
-            latestRoom++
-            this.roomCode = "ROOM" + latestRoom;
+            if (rooms.length)  {
+                let latestRoom = Number(rooms[rooms.length -1].slice(4))
+                latestRoom++
+                this.roomCode = "ROOM" + latestRoom;
+            }
         })
 
     },
@@ -36,7 +38,7 @@ export default {
     },
     computed: {
         generateGameCode() {
-            return '2p/' + this.roomCode;
+            return '/2p/' + this.roomCode;
             // return  "/2p/" + Math.random().toString(36).substring(2, 5).toUpperCase() + Math.random().toString(36).substring(2, 5).toUpperCase();
         }
     },
