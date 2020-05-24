@@ -2,7 +2,7 @@
     <div>
         <h1 v-if="showCodeToCopy">Welcome to a 2 player, 2 computer game. First of all share the url below with the other player</h1>
         <h3 v-if="showCodeToCopy" @click="copySign" :class="[userCopied? 'user-copied' : '']">{{gameCode}}</h3>
-        <h1>You are: {{player}} </h1>
+        <h1>You are: <span :class="player">{{player}}</span> </h1>
         <transition name="fade">
             <div v-if="showCodeToCopy && userCopied">
                 <p>Waiting for player 2 to join...</p>
@@ -94,6 +94,13 @@ export default {
             //     this.chaosArmy = '':
             //     this.imperialArmy = '';
             
+            if (army === 'imperialArmy' && this.chaosArmy === this.player) {
+                this.chaosArmy = '';
+            }
+
+            if (army === 'chaosArmy' && this.imperialArmy === this.player) {
+                this.imperialArmy = '';
+            }
 
             console.log('army: ',army);
             this[army] === this.player ? this[army] = '' : this[army] = this.player;
