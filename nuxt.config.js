@@ -81,7 +81,11 @@ export default {
     },
     generate: {
         routes: function() {
-            return ["/", "/welcome"];
+            const routes =  ["/", "/welcome"];
+            for (let i = 1; i < 9; i++) {
+                routes.push('/2p/ROOM' + i);
+            }
+            return routes;
         }
     },
     /*

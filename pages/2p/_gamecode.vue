@@ -27,7 +27,7 @@
                 </div>
             </transition>
             <transition name="fade">
-                <div v-if="!showCodeToCopy">
+                <div v-if="!showCodeToCopy" class="army-choice-container">
                     <h3>Pick either </h3>
                     <button @click="togglePlayerChoice('imperialArmy')" class="nes-btn" :class="imperialArmy">Imperial</button> or 
                     <button @click="togglePlayerChoice('chaosArmy')" class="nes-btn" :class="chaosArmy">Chaos</button>
@@ -67,7 +67,7 @@ export default {
     },
     mounted: function() {
         this.socket = this.$nuxtSocket({
-			name: 'local',
+			name: 'heroku',
 			reconnection: true
 		})
         console.log('this.$route: ',this.$route);
@@ -159,9 +159,13 @@ export default {
 
 <style>
 
+.army-choice-container {
+    margin-bottom: 0.5rem;
+}
+
 .centered-container {
     padding: 0 2rem;
-    margin: 0 2rem;
+    margin: 2rem 2rem;
 }
 
 .nes-badge .player1 {
