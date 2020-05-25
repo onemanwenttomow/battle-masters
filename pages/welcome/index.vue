@@ -2,11 +2,15 @@
     <div>
         <div class="welcome-container">
             <img src="/bm-logo.PNG" alt="battle masters logo" />
-            <img src="/main-image.PNG" alt="battle masters cover" />
-            <nuxt-link to="/">
-                <button class="nes-btn" @click="startGame">Play on 1 Machine</button>
-            </nuxt-link>
-            <button class="nes-btn" @click="$router.push(generateGameCode)">Play on 2 Machines</button>
+            <div class="nes-container is-rounded start-container">
+                <img src="/main-image.PNG" alt="battle masters cover" />
+                <div class="start-button-container">
+                    <nuxt-link to="/">
+                        <button class="nes-btn" @click="startGame">Play on 1 Machine</button>
+                    </nuxt-link>
+                    <button class="nes-btn" @click="$router.push(generateGameCode)">Play on 2 Machines</button>
+                </div>
+            </div>
            
         </div>
     </div>
@@ -51,6 +55,14 @@ export default {
 </script>
 
 <style>
+
+.start-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 2vw;
+}
 .welcome-container {
     display: flex;
     flex-direction: column;
@@ -58,8 +70,13 @@ export default {
     align-items: center;
 }
 
+.start-container {
+    display: flex;
+    width: 70vw;
+}
+
 .welcome-container img:first-child {
-    width: 50vw;
+    width: 40vw;
 }
 
 .welcome-container img:nth-child(2) {

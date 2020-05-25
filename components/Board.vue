@@ -318,6 +318,7 @@ export default {
 	width: 800px;
 	overflow: scroll;
 	/* height: 1050px; */
+	box-sizing: content-box;
 	border-right: 10px solid red;
 	padding: 0 50px;
 	-ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -329,6 +330,7 @@ export default {
 }
 
 .hexagon {
+	box-sizing: content-box;
 	user-select: none;
 	position: relative;
 	width: 99px;

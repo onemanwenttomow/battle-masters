@@ -1,11 +1,11 @@
 <template>
     <div class="centered-container">
-        <div class="nes-container is-centered with-title">
+        <div class="nes-container is-centered with-title inline">
             <h1 class="title">Welcome to a 2 player, 2 computer game</h1>
-            <h2 v-if="showCodeToCopy">First of all share the url below with the other player</h2>
+            <h2 class="title-50" v-if="showCodeToCopy">First of all share the url below with the other player</h2>
             
             <div v-if="showCodeToCopy">
-                <div class="nes-container is-dark">
+                <div class="nes-container is-dark inline">
                     <code :class="[userCopied? 'user-copied' : '']">{{gameCode}}</code>
                 </div>
 
@@ -164,9 +164,19 @@ export default {
     margin-bottom: 0.5rem;
 }
 
+.title-50 {
+    width: 50vw;
+}
+
+.inline {
+    display: inline-block;
+}
+
 .centered-container {
     padding: 0 2rem;
     margin: 2rem 2rem;
+    display: flex;
+    justify-content: center;
 }
 
 .nes-badge .player1 {
@@ -190,11 +200,11 @@ export default {
     box-shadow: 0 0.5em #92cc41, 0 -0.5em #92cc41, 0.5em 0 #92cc41, -0.5em 0 #92cc41;
 }
 
-.player1 {
+.player1, .player1:hover {
     background-color: #209cee;
 }
 
-.player2 {
+.player2, .player2:hover {
     background-color: #92cc41;
 }
 
@@ -213,6 +223,7 @@ export default {
 .code-copied-balloon {
     position: absolute;
     top: -86px;
+    right: 72px;
 }
 
 button:disabled {

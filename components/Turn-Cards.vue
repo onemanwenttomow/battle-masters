@@ -23,7 +23,8 @@ export default {
 	data() {
 		return {
 			shuffledPlayingCards: [],
-			shuffledPlayingCardsCopy: []
+			shuffledPlayingCardsCopy: [],
+			canPickNextCard: true
 		};
 	},
 	computed: mapGetters([
@@ -55,8 +56,13 @@ export default {
 			return a;
         },
         nextCard: function(card) {
+			if (!this.canPickNextCard) {
+				return;
+			}
 			card.flipped = true;
+			this.canPickNextCard = false;
 			setTimeout(() => {
+				this.canPickNextCard = true;
 				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1];
 				if (card.type && card.type === 'attack') {
 					const unitsInReach = this.checkIfUnitsInReach('grimorg');
