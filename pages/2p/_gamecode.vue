@@ -83,24 +83,24 @@ export default {
             this.showWaiting = false;
         })
 
-        this.player = localStorage.getItem('player')
-        this.socket.emit('check if room exists', {roomId: this.$route.params.gamecode, player:localStorage.getItem('player')});
+        this.player = sessionStorage.getItem('player')
+        this.socket.emit('check if room exists', {roomId: this.$route.params.gamecode, player:this.player});
         this.socket.on('room', rooms => {
             console.log('rooms: ',rooms);
-            console.log('localStorage.getItem(): ',localStorage.getItem('player'));
+            console.log('sessionStorage.getItem(): ',sessionStorage.getItem('player'));
             console.log('this.player: ',this.player);
             console.log("*********", rooms[this.$route.params.gamecode])
             if (rooms[this.$route.params.gamecode]) {
                 if (rooms[this.$route.params.gamecode].player2) {
                     this.showCodeToCopy = false;
-                    localStorage.setItem('player', 'player2')
+                    sessionStorage.setItem('player', 'player2')
                     this.player = 'player2'
                 } else {
-                    localStorage.setItem('player', 'player1')
+                    sessionStorage.setItem('player', 'player1')
                     this.player = 'player1'
                 }
             } else {
-                localStorage.removeItem('player')
+                sessionStorage.removeItem('player')
             }
         })
     },
@@ -152,7 +152,7 @@ export default {
         }, 
         getPlayer: function() {
             // console.log('localStorage.getItem();: ',localStorage.getItem('player'));
-            this.player = localStorage.getItem('player')
+            this.player = sessionStorage.getItem('player')
         }
     }
 };
