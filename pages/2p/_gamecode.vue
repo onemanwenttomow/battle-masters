@@ -34,10 +34,7 @@
                 </div>
             </transition>
             <div>
-                <nuxt-link to="/">
-                        <button class="nes-btn" @click="startGame" :disabled="!imperialArmy || !chaosArmy">Start Game</button>
-                </nuxt-link>
-
+                <button class="nes-btn" @click="startGame" :disabled="!imperialArmy || !chaosArmy">Start Game</button>
             </div>
         </div>
 
@@ -69,8 +66,7 @@ export default {
         this.socket = this.$nuxtSocket({
 			name: 'heroku',
 			reconnection: true
-		})
-        console.log('this.$route: ',this.$route);
+		});
 
         this.socket.on('army chosen', ({imperialArmy, chaosArmy, player}) => {
             this.imperialArmy= imperialArmy;
@@ -111,7 +107,8 @@ export default {
     },
     methods: {
         startGame: function() {
-            this.$store.commit("startGame");
+            this.socket.emit('start game', {roomId: this.$route.params.gamecode});
+            this.$store.commit("startGame")
         },
         togglePlayerChoice(army) {
             console.log('this.player: ',this.player);
@@ -151,7 +148,6 @@ export default {
             this.socket.emit('new room', {roomId: this.$route.params.gamecode});
         }, 
         getPlayer: function() {
-            // console.log('localStorage.getItem();: ',localStorage.getItem('player'));
             this.player = sessionStorage.getItem('player')
         }
     }

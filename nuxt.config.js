@@ -66,7 +66,10 @@ export default {
                 url: "https://battlemasters-sockets-server.herokuapp.com/",
                 default: true, 
                 vuex: {
-                    mutations: [{ news: "testingSockets"}]
+                    mutations: [
+                        { news: "testingSockets" }, 
+                        { startgame: "startGame" }
+                    ]
                 }
             },
             {
@@ -74,7 +77,9 @@ export default {
                 url: "localhost:8080",
                 default: true, 
                 vuex: {
-                    mutations: [{ news: "testingSockets"}]
+                    mutations: [
+                        { startgame: "startGame" }
+                    ]
                 }
             }
         ]

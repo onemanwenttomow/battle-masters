@@ -29,7 +29,9 @@ const createStore = () => {
         },
         mutations: {
             startGame(state) {
+                console.log('$nuxt.$router.push: ',$nuxt.$router.push);
                 state.gameStarted = true;
+                $nuxt.$router.push('/');
             },
             testingSockets(state, x) {
                 console.log("socket event!", x)

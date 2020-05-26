@@ -2,7 +2,7 @@
     <div>
         <div class="welcome-container">
             <img src="/bm-logo.PNG" alt="battle masters logo" />
-            <div class="nes-container is-rounded start-container">
+            <div class="nes-container is-rounded start-container inline">
                 <img src="/main-image.PNG" alt="battle masters cover" />
                 <div class="start-button-container">
                     <nuxt-link to="/">
@@ -27,8 +27,10 @@ export default {
         this.socket.emit('check if room exists', {roomId: '', player: ''});
         this.socket.on('room', rooms => {
             rooms = Object.keys(rooms);
+            console.log('rooms: ',rooms);
             if (rooms.length)  {
                 let latestRoom = Number(rooms[rooms.length -1].slice(4))
+                console.log('latestRoom: ',latestRoom);
                 latestRoom++
                 this.roomCode = "room" + latestRoom;
             }
@@ -72,14 +74,13 @@ export default {
 
 .start-container {
     display: flex;
-    width: 70vw;
 }
 
 .welcome-container img:first-child {
     width: 40vw;
 }
 
-.welcome-container img:nth-child(2) {
+.nes-container img:nth-child(1) {
     width: 30vw;
 }
 </style>
