@@ -4,9 +4,13 @@
 			v-for="unit in getArmy(army)"
 			:key="unit.id"
 			class="piece"
-			:class="[checkIfSelected(unit) ? 'selected' : '', unit.canBeAttacked ? 'can-be-attacked' : ''] "
+			:class="[
+				checkIfSelected(unit) ? 'selected' : '', 
+				unit.canBeAttacked ? 'can-be-attacked' : '',
+				getUserChosenArmy === army ? '' : 'non-drag'
+			]"
 			:id="unit.id"
-			:draggable="checkIfDraggable(unit.isSelected, unit.finishedTurn)"
+			:draggable="checkIfDraggable(unit.isSelected, unit.finishedTurn, army)"
 			@dragstart="dragStart"
 			@drop.prevent="drop($event)"
 			@mousedown="showPossibleMoves($event, unit.isSelected, unit.hasMoved, unit.boardPosition, unit.id)"
@@ -31,7 +35,8 @@ export default {
 			'getUnitThatCanAttack', 
 			'getPieceById',
 			'getCurrentOgreCard',
-			'getCurrentCard'
+			'getCurrentCard',
+			'getUserChosenArmy'
 		])
 	},
 	methods: {
@@ -78,7 +83,12 @@ export default {
 			}
 			return unit.isSelected && !unit.finishedTurn && ogreCheck && !this.getCurrentOgreCard.cardUsed;
 		},
-		checkIfDraggable: function(isSelected, finishedMove) {
+		checkIfDraggable: function(isSelected, finishedMove, army) {
+			console.log('check if draggable: ',army, this.getUserChosenArmy !== army);
+			if (this.getUserChosenArmy !== army) {
+
+				return false;
+			}
 			if (finishedMove) {
 				return false;
 			}
@@ -127,6 +137,15 @@ export default {
 </script>
 
 <style>
+
+.non-drag {
+	user-drag: none; 
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
 
 .army {
 	border: solid 2px green;

@@ -72,7 +72,8 @@ export default {
 			'getCanonPath',
 			'getPieceUserDragging',
 			'getArmyPositions',
-			'getActiveUnitsPositions'
+			'getActiveUnitsPositions',
+			'getUserChosenArmy'
 		])
 	},
 	data() {
@@ -86,7 +87,9 @@ export default {
 	},
 	mounted: function() {
 		this.miniMapHeight = this.$refs.boardsize.clientHeight + "px";
-		this.miniMapWidth = this.$refs.boardsize.clientWidth + "px"
+		this.miniMapWidth = this.$refs.boardsize.clientWidth + "px";
+
+		console.log('thos.getUserChosenArmy: ',this.getUserChosenArmy);
 	},
 	methods: {
 		handleScroll(e) {

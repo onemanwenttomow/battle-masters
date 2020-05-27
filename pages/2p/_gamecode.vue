@@ -64,7 +64,7 @@ export default {
     },
     mounted: function() {
         this.socket = this.$nuxtSocket({
-			name: 'heroku',
+			name: 'local',
 			reconnection: true
 		});
 
@@ -107,8 +107,15 @@ export default {
     },
     methods: {
         startGame: function() {
-            this.socket.emit('start game', {roomId: this.$route.params.gamecode});
-            this.$store.commit("startGame")
+            console.log('this.player, this.army: ',this.player, this.chaosArmy, this.imperialArmy);
+            let army;
+            this.chaosArmy === this.player ?
+                army = 'Chaos' : 
+                army = 'Imperial'
+            console.log('army: ',army);
+
+            this.socket.emit('start game', {roomId: this.$route.params.gamecode, army, player: this.player});
+            this.$store.commit("startGame", {army})
         },
         togglePlayerChoice(army) {
             console.log('this.player: ',this.player);

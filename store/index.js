@@ -7,6 +7,7 @@ const createStore = () => {
             gameStarted: false,
             extraPiecesAddedToBoard: false,
             armies: [],
+            chosenArmy: '',
             mainPlayingCards: [],
             ogrePlayingCards: [],
             canonPlayingCards: [],
@@ -28,9 +29,10 @@ const createStore = () => {
             numberOfOgreCardsLeft: 6
         },
         mutations: {
-            startGame(state) {
-                console.log('$nuxt.$router.push: ',$nuxt.$router.push);
+            startGame(state, {army = ""}) {
+                console.log('army in VUEX: ',army);
                 state.gameStarted = true;
+                state.chosenArmy = army;
                 $nuxt.$router.push('/');
             },
             testingSockets(state, x) {
@@ -349,6 +351,9 @@ const createStore = () => {
         getters: {
             gameHasStarted: state => {
                 return state.gameStarted;
+            },
+            getUserChosenArmy: state => {
+                return state.chosenArmy;
             },
             areExtraPiecesAddedToBoard: state => {
                 return state.extraPiecesAddedToBoard;
