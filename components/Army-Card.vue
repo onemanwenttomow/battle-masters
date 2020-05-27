@@ -7,7 +7,7 @@
 			:class="[
 				checkIfSelected(unit) ? 'selected' : '', 
 				unit.canBeAttacked ? 'can-be-attacked' : '',
-				getUserChosenArmy === army ? '' : 'non-drag'
+				getUserChosenArmy === army || getUserChosenArmy === '' ? '' : 'non-drag'
 			]"
 			:id="unit.id"
 			:draggable="checkIfDraggable(unit.isSelected, unit.finishedTurn, army)"
@@ -84,9 +84,7 @@ export default {
 			return unit.isSelected && !unit.finishedTurn && ogreCheck && !this.getCurrentOgreCard.cardUsed;
 		},
 		checkIfDraggable: function(isSelected, finishedMove, army) {
-			console.log('check if draggable: ',army, this.getUserChosenArmy !== army);
-			if (this.getUserChosenArmy !== army) {
-
+			if (this.getUserChosenArmy !== army && this.getUserChosenArmy !== '') {
 				return false;
 			}
 			if (finishedMove) {
