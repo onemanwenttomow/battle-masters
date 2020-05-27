@@ -64,7 +64,7 @@ export default {
     },
     mounted: function() {
         this.socket = this.$nuxtSocket({
-			name: 'local',
+			name: 'heroku',
 			reconnection: true
 		});
 

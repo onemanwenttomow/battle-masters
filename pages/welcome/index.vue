@@ -21,7 +21,7 @@ export default {
     mounted: function() {
         console.log("check if room is free...");
         this.socket = this.$nuxtSocket({
-			name: 'local',
+			name: 'heroku',
 			reconnection: true
         })
         this.socket.emit('check if room exists', {roomId: '', player: ''});
