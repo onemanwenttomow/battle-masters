@@ -19,7 +19,6 @@
 <script>
 export default {
     mounted: function() {
-        console.log("check if room is free...");
         this.socket = this.$nuxtSocket({
 			name: 'heroku',
 			reconnection: true
@@ -27,10 +26,8 @@ export default {
         this.socket.emit('check if room exists', {roomId: '', player: ''});
         this.socket.on('room', rooms => {
             rooms = Object.keys(rooms);
-            console.log('rooms: ',rooms);
             if (rooms.length)  {
                 let latestRoom = Number(rooms[rooms.length -1].slice(4))
-                console.log('latestRoom: ',latestRoom);
                 latestRoom++
                 this.roomCode = "room" + latestRoom;
             }
@@ -45,7 +42,6 @@ export default {
     computed: {
         generateGameCode() {
             return '/2p/' + this.roomCode;
-            // return  "/2p/" + Math.random().toString(36).substring(2, 5).toUpperCase() + Math.random().toString(36).substring(2, 5).toUpperCase();
         }
     },
     methods: {

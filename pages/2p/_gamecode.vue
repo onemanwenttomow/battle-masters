@@ -74,7 +74,6 @@ export default {
         });
 
         this.socket.on('player2 joined', () => {
-            console.log("player 2 joined!!!")
             this.showCodeToCopy = false;
             this.showWaiting = false;
         })
@@ -82,10 +81,6 @@ export default {
         this.player = sessionStorage.getItem('player')
         this.socket.emit('check if room exists', {roomId: this.$route.params.gamecode, player:this.player});
         this.socket.on('room', rooms => {
-            console.log('rooms: ',rooms);
-            console.log('sessionStorage.getItem(): ',sessionStorage.getItem('player'));
-            console.log('this.player: ',this.player);
-            console.log("*********", rooms[this.$route.params.gamecode])
             if (rooms[this.$route.params.gamecode]) {
                 if (rooms[this.$route.params.gamecode].player2) {
                     this.showCodeToCopy = false;
@@ -107,36 +102,28 @@ export default {
     },
     methods: {
         startGame: function() {
-            console.log('this.player, this.army: ',this.player, this.chaosArmy, this.imperialArmy);
             let army;
             this.chaosArmy === this.player ?
                 army = 'Chaos' : 
                 army = 'Imperial'
-            console.log('army: ',army);
 
             this.socket.emit('start game', {roomId: this.$route.params.gamecode, army, player: this.player});
             this.$store.commit("startGame", {army})
         },
         togglePlayerChoice(army) {
-            console.log('this.player: ',this.player);
             if (this.player === 'player1' && this[army] === 'player2') {
                 return;
             }
             if (this.player === 'player2' && this[army] === 'player1') {
                 return;
-            }
-            
+            } 
             if (army === 'imperialArmy' && this.chaosArmy === this.player) {
                 this.chaosArmy = '';
             }
-
             if (army === 'chaosArmy' && this.imperialArmy === this.player) {
                 this.imperialArmy = '';
             }
-
-            console.log('army: ',army);
             this[army] === this.player ? this[army] = '' : this[army] = this.player;
-            console.log('this[army]: ',this[army]);
             this.socket.emit('chosen army', {
                 imperialArmy: this.imperialArmy, 
                 chaosArmy: this.chaosArmy,
