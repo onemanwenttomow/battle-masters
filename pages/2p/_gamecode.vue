@@ -66,7 +66,9 @@ export default {
         this.socket = this.$nuxtSocket({
 			name: 'heroku',
 			reconnection: true
-		});
+        });
+        
+        sessionStorage.setItem('roomId', this.$route.params.gamecode);
 
         this.socket.on('army chosen', ({imperialArmy, chaosArmy, player}) => {
             this.imperialArmy= imperialArmy;

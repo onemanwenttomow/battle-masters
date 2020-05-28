@@ -4,7 +4,7 @@
 			<SelectedUnit v-if="selectedUnit" />
 			<h1 class="title">Title</h1>
 		</header>
-		<Board />
+		<Board v-if="socket" :socket="socket"/>
 		<div class="user-pieces-container">
 			<CanonCards v-if="canonTurn" />
 			<TurnCards 
@@ -14,7 +14,7 @@
 				currentCard="currentOgreCard"
 				cards="ogre"
 			/>
-			<ExtraGameTiles />
+			<ExtraGameTiles v-if="socket" :socket="socket" />
 			<ArmyCards army="Imperial" v-if="areExtraPiecesAddedToBoard" />		
 			<ArmyCards army="Chaos" v-if="areExtraPiecesAddedToBoard" />
 			<TurnCards 
@@ -57,7 +57,20 @@ export default {
 		CanonCards,
 		ExtraGameTiles
 	},
+	data: function() {
+		return {
+			socket: ''
+		}
+	},
 	mounted: function() {
+		this.socket = this.$nuxtSocket({
+			name: 'heroku',
+			reconnection: true
+		})
+		this.gameHasStarted && this.socket.emit('new socket id', {
+			player: sessionStorage.getItem('player'),
+			roomId: sessionStorage.getItem('roomId')
+		})
 		
 		!this.gameHasStarted && this.$router.push('/welcome');
 	},

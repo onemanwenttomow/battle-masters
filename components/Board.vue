@@ -85,11 +85,23 @@ export default {
 			miniMapDragging: false
         };
 	},
+	props: ['socket'],
 	mounted: function() {
 		this.miniMapHeight = this.$refs.boardsize.clientHeight + "px";
 		this.miniMapWidth = this.$refs.boardsize.clientWidth + "px";
 
 		console.log('thos.getUserChosenArmy: ',this.getUserChosenArmy);
+		this.socket.on('other player dropped tile', ({id, row, col}) => {
+			console.log('id, row, col: ',id, row, col);
+			const elem = document.querySelectorAll(`.${row}`)[col];
+			const piece = document.getElementById(id);
+			console.log('elem: ',elem);
+			piece.style.top = -105 + "px";
+			piece.style.left = -10 + "px";
+			piece.style.zIndex = 2;
+			piece.style.opacity = 1;
+			elem.appendChild(piece);
+		});
 	},
 	methods: {
 		handleScroll(e) {
@@ -225,6 +237,13 @@ export default {
 				piece.style.zIndex = 2;
 				e.target.appendChild(piece);
 			}
+			this.socket.emit('tile drag end', {
+				id: piece.id, 
+				player: sessionStorage.getItem('player'),
+				roomId: sessionStorage.getItem('roomId'),
+				row, 
+				col
+			});
 			if (!piece || this.isCanonTargetOrUnit(piece, e)) {
 				return;
 			}

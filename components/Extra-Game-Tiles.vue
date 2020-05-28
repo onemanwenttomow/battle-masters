@@ -43,8 +43,9 @@ export default {
             isDraggable: true
         };
     },
+    props: ['socket'],
     mounted: function() {
-        this.extraTiles = this.getExtraTiles;
+        this.extraTiles = this.getExtraTiles;  
     },
     methods: {
         flip: function(card) {
@@ -57,7 +58,19 @@ export default {
         },
         dragStart: function(e) {
             const target = e.target;
-            e.dataTransfer.setData("id", e.target.id);
+            e.dataTransfer.setData("id", target.id);
+            console.log('this.socket: ', this.socket); 
+            console.log('target.id: ',target.id);
+            this.socket.emit('tile drag start', {
+                id: target.id, 
+                player: sessionStorage.getItem('player'),
+                roomId: sessionStorage.getItem('roomId')
+            });
+            this.socket.on('other player picked up tile', ({id}) => {
+                console.log('id in tile drag: ',id);
+                console.log('document.getElementById(id): ',document.getElementById(id));
+                document.getElementById(id).style.opacity = 0;
+            });
             setTimeout(function() {
                 target.style.opacity = 0.3;
             }, 0);
