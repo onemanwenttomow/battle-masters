@@ -73,7 +73,8 @@ export default {
 			'getPieceUserDragging',
 			'getArmyPositions',
 			'getActiveUnitsPositions',
-			'getUserChosenArmy'
+			'getUserChosenArmy',
+			'getExtraTiles'
 		])
 	},
 	data() {
@@ -93,14 +94,18 @@ export default {
 		console.log('thos.getUserChosenArmy: ',this.getUserChosenArmy);
 		this.socket.on('other player dropped tile', ({id, row, col}) => {
 			console.log('id, row, col: ',id, row, col);
+			console.log('this.getExtraTiles: ',this.getExtraTiles);
+			const extraTiles1 = this.getExtraTiles.map(tile => tile.front.id);
+			const extraTiles2 = this.getExtraTiles.map(tile => tile.back.id);
+			const extraTiles = [...extraTiles1, ...extraTiles2];
+			console.log('extraTiles: ',extraTiles.includes(id));
 			const elem = document.querySelectorAll(`.${row}`)[col];
 			const piece = document.getElementById(id);
-			console.log('elem: ',elem);
-			piece.style.top = -105 + "px";
-			piece.style.left = -10 + "px";
-			piece.style.zIndex = 2;
-			piece.style.opacity = 1;
-			elem.appendChild(piece);
+			if (extraTiles.includes(id)) {
+				this.addExtraTileToBoard(piece, elem);
+			} else {
+				this.addUnitToBoard(piece, elem, row, col)
+			}
 		});
 	},
 	methods: {
@@ -194,15 +199,21 @@ export default {
 			e.target.appendChild(piece);
 			return true;
 		},
-		addUnitToBoard: function(piece, e, row, col) {
+		addUnitToBoard: function(piece, elem, row, col) {
 			piece.style.top = -45 + "px";
 			piece.style.left = -40 + "px";
 			piece.style.zIndex = 10;
-			e.target.appendChild(piece);
+			elem.appendChild(piece);
 			!isNaN(row) && this.$store.commit('updateUnitPosition', {
 				id: piece.id, 
 				positions: {row, col}
 			})
+		},
+		addExtraTileToBoard: function(piece, elem) {
+			piece.style.top = -105 + "px";
+			piece.style.left = -10 + "px";
+			piece.style.zIndex = 2;
+			elem.appendChild(piece);
 		},
 		finishOgreTurn: function(piece) {
 			const canOgreStillMove = this.getNumOfRemainingOgreCards;
@@ -224,18 +235,11 @@ export default {
 			const fordTile = piece.id.includes('ford');
 			const ditchTile = piece.id.includes('ditch');
 			let extraTile = towerTile || marshTile || ditchTile;
-			console.log('extraTile: ',extraTile);
 			if (extraTile && !e.target.classList.contains("river") && !e.target.classList.contains("road")) {
-				piece.style.top = -105 + "px";
-				piece.style.left = -10 + "px";
-				piece.style.zIndex = 2;
-				e.target.appendChild(piece);
+				this.addExtraTileToBoard(piece, e.target);
 			}
 			if (fordTile && e.target.classList.contains("river") && !e.target.classList.contains("road") && !e.target.classList.contains("field")) {
-				piece.style.top = -105 + "px";
-				piece.style.left = -10 + "px";
-				piece.style.zIndex = 2;
-				e.target.appendChild(piece);
+				this.addExtraTileToBoard(piece, e.target);
 			}
 			this.socket.emit('tile drag end', {
 				id: piece.id, 
@@ -260,7 +264,7 @@ export default {
 				return this.addCanonPieceToBoard(piece, e)
 			} 
 			if (!e.target.classList.contains("river") && moveToHighlighted || tower) {
-				this.addUnitToBoard(piece, e, row, col)
+				this.addUnitToBoard(piece, e.target, row, col)
 			}
 
 			piece.style.opacity = 1;
