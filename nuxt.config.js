@@ -62,23 +62,25 @@ export default {
     io: {
         sockets: [
             {
-                name: "heroku",
+                name: "local",
                 url: "https://battlemasters-sockets-server.herokuapp.com/",
                 default: true, 
                 vuex: {
                     mutations: [
                         { news: "testingSockets" }, 
-                        { startgame: "startGame" }
+                        { startgame: "startGame" },
+                        { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"}
                     ]
                 }
             },
             {
-                name: "local",
+                name: "heroku",
                 url: "localhost:8080",
                 default: true, 
                 vuex: {
                     mutations: [
-                        { startgame: "startGame" }
+                        { startgame: "startGame" },
+                        { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"}
                     ]
                 }
             }

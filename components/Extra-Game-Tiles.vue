@@ -54,6 +54,10 @@ export default {
         },
         handleClick: function() {
             this.$store.commit("allExtraPiecesAddedToBoard");
+            this.socket.emit('allExtraPiecesAddedToBoard', {
+                player: sessionStorage.getItem('player'),
+                roomId: sessionStorage.getItem('roomId')
+            });
             this.isDraggable = false;
         },
         dragStart: function(e) {
