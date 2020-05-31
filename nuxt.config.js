@@ -69,7 +69,8 @@ export default {
                     mutations: [
                         { news: "testingSockets" }, 
                         { startgame: "startGame" },
-                        { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"}
+                        { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"},
+                        { finishMove: "finishMove"}
                     ]
                 }
             },
@@ -80,7 +81,9 @@ export default {
                 vuex: {
                     mutations: [
                         { startgame: "startGame" },
-                        { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"}
+                        { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"},
+                        { finishMove: "finishMove"},
+                        { updateUnitPosition: "updateUnitPosition"}
                     ]
                 }
             }

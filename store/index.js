@@ -123,6 +123,7 @@ const createStore = () => {
                 state.currentOgreCard = card;
             },
             finishMove(state, { id }) {
+                console.log('finishMove!: ',id);
                 if (id === "grimorg") {
                     state.currentOgreCard.cardUsed = true;
                 } else {
@@ -288,6 +289,7 @@ const createStore = () => {
                 state.canonPlayingCards = cards;
             },
             updateUnitPosition(state, payload) {
+                console.log('updateUnitPosition!!!!:', payload);
                 let oddOrEven;
                 payload.positions.row % 2 === 0
                     ? (oddOrEven = -1)

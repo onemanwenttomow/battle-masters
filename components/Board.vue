@@ -104,7 +104,14 @@ export default {
 			if (extraTiles.includes(id)) {
 				this.addExtraTileToBoard(piece, elem);
 			} else {
-				this.addUnitToBoard(piece, elem, row, col)
+				this.addUnitToBoard(piece, elem, row, col);
+				console.log('sessionStorage.getItem("player"): ',sessionStorage.getItem("player"));
+				this.socket.emit("updateUnitPosition", {
+					id: piece.id, 
+					player: sessionStorage.getItem('player'),
+					roomId: sessionStorage.getItem('roomId'),
+					positions: {row: Number(row.slice(3) -1), col}
+				})
 			}
 		});
 	},
@@ -278,6 +285,11 @@ export default {
 			}
 
 			this.checkForUnitsInRange(piece);
+			this.socket.emit('finishMove', {
+				id: piece.id, 
+				player: sessionStorage.getItem('player'),
+				roomId: sessionStorage.getItem('roomId'),
+			})
 			this.$store.commit('finishMove', {id: piece.id})
 			
 		}
