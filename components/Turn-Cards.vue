@@ -29,7 +29,8 @@ export default {
 	},
 	computed: mapGetters([
 		'checkIfUnitsInReach',
-		'getPieceById'
+		'getPieceById',
+		'getActiveUnitsPositions'
     ]),
 	props: ['getPlayingCards', 'cardBack', 'currentCard', 'cards', 'socket'],
 	mounted: function() {
@@ -97,8 +98,9 @@ export default {
 			}, 1000)
 		},
         nextCard: function(card, i) {
+			console.log('this.getActiveUnitsPositions: ',this.getActiveUnitsPositions);
 			console.log('card in next card: ',card);
-			if (!this.canPickNextCard) { return; }
+			if (!this.canPickNextCard || this.getActiveUnitsPositions.length) { return; }
 			this.socket.emit("card flipped", {
 				player: sessionStorage.getItem('player'),
 				roomId: sessionStorage.getItem('roomId'),

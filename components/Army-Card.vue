@@ -123,6 +123,8 @@ export default {
 		selected: function(e, card) {
 			const userChosenArmy = this.getUserChosenArmy;
 			const twoPlayerGame = sessionStorage.getItem('player');
+			this.$store.commit('userSelected', {id: card.id})
+
 			if (twoPlayerGame) {
 				console.log('card.army: ',card.army);
 				if (userChosenArmy === card.army) {
@@ -141,7 +143,6 @@ export default {
 				})
 				return;
 			} 
-			this.$store.commit('userSelected', {id: card.id})
 		}
 	}
 };

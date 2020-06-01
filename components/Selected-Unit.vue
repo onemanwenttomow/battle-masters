@@ -20,12 +20,19 @@ import { mapGetters } from 'vuex';
 
 export default {
 	computed: mapGetters([
-        'selectedUnit', 'getCurrentCard', 'getPieceById', 'checkIfUnitsInReach'
+        'selectedUnit', 'getCurrentCard', 'getPieceById', 'checkIfUnitsInReach', 'userChosenArmy'
 	]),
 	methods: {
 		finishMove: function(id) {
-			this.$store.commit('finishMove', {id});
+			const userChosenArmy = this.getUserChosenArmy;
+			const twoPlayerGame = sessionStorage.getItem('player');
 			const unit = this.getPieceById(id);
+			if (twoPlayerGame) {
+				if (userChosenArmy !== unit.army) {
+					return;
+				}
+			}
+			this.$store.commit('finishMove', {id});
 			const unitsInReach = this.checkIfUnitsInReach(id);
 			unitsInReach.length && unit[0].id !== 'canon' ? 
 				this.$store.commit('canBeAttacked', {unit, unitsInReach}) :
