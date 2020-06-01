@@ -70,7 +70,9 @@ export default {
                         { news: "testingSockets" }, 
                         { startgame: "startGame" },
                         { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"},
-                        { finishMove: "finishMove"}
+                        { finishMove: "finishMove"},
+                        { updateUnitPosition: "updateUnitPosition"},
+                        { currentCard: "currentCard" }
                     ]
                 }
             },
@@ -83,7 +85,8 @@ export default {
                         { startgame: "startGame" },
                         { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"},
                         { finishMove: "finishMove"},
-                        { updateUnitPosition: "updateUnitPosition"}
+                        { updateUnitPosition: "updateUnitPosition"},
+                        { currentCard: "currentCard" }
                     ]
                 }
             }

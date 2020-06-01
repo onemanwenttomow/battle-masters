@@ -31,9 +31,19 @@ export default {
 		'checkIfUnitsInReach',
 		'getPieceById'
     ]),
-	props: ['getPlayingCards', 'cardBack', 'currentCard', 'cards'],
+	props: ['getPlayingCards', 'cardBack', 'currentCard', 'cards', 'socket'],
 	mounted: function() {
 		this.shuffleCards();
+		this.socket.on('playingCardsFromServer', ({playingCards}) => {
+			console.log('playingCards in socket on playingCards: ',playingCards);
+			if (playingCards) {
+				this.shuffledPlayingCardsCopy = playingCards;
+			}
+		});
+		this.socket.on('card flipped', ({card}) => {
+			console.log("card flipped!!!!!!" , card);
+			this.nextCard(this.shuffledPlayingCardsCopy[this.shuffledPlayingCardsCopy.length - 1]);
+		});
 	},
 	methods: {
 		shuffleCards: function() {
@@ -44,6 +54,13 @@ export default {
 					flipped: false
 				}
 			});
+			if (sessionStorage.getItem('player') === 'player1' && this.cards === "playing") {
+				this.socket.emit('playingCards', {
+					playingCards: this.shuffledPlayingCardsCopy,
+					player: sessionStorage.getItem('player'),
+					roomId: sessionStorage.getItem('roomId'),
+				});
+			}
 		},
 		shuffle: function(a) {
 			var j, x, i;
@@ -61,6 +78,11 @@ export default {
 			}
 			card.flipped = true;
 			this.canPickNextCard = false;
+			this.socket.emit("card flipped", {
+				player: sessionStorage.getItem('player'),
+				roomId: sessionStorage.getItem('roomId'),
+				card
+			})
 			setTimeout(() => {
 				this.canPickNextCard = true;
 				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1];
@@ -71,6 +93,11 @@ export default {
 				}
 				this.shuffledPlayingCards.pop();
 				this.$store.commit(this.currentCard, { card, numberOfOgreCardsLeft: this.shuffledPlayingCards.length });
+				this.socket.emit('currentCard', {
+					card, numberOfOgreCardsLeft: 
+					this.shuffledPlayingCards.length,
+					roomId: sessionStorage.getItem('roomId'),
+				});
 				if (this.shuffledPlayingCards.length === 0 && this.cards !== "ogre") {
 					this.shuffleCards();
 				}

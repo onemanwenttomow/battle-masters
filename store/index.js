@@ -39,6 +39,7 @@ const createStore = () => {
                 console.log("socket event!", x)
             },
             currentCard(state, { card }) {
+                console.log('card in currentCard!: ',card);
                 state.currentCard = card;
                 const numberOfUnitsLeftOnBoard = card.ids.filter(id => state.armies.find(unit => unit.id === id && unit.damageReceived < 3)).length;
                 if (numberOfUnitsLeftOnBoard === 0) {

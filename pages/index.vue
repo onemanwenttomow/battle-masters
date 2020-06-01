@@ -6,13 +6,14 @@
 		</header>
 		<Board v-if="socket" :socket="socket"/>
 		<div class="user-pieces-container">
-			<CanonCards v-if="canonTurn" />
+			<CanonCards v-if="canonTurn" :socket="socket"/>
 			<TurnCards 
 				v-if="ogreTurn" 
 				:getPlayingCards="getOgreCards" 
 				cardBack="/ogre-back.png"
 				currentCard="currentOgreCard"
 				cards="ogre"
+				:socket="socket"
 			/>
 			<ExtraGameTiles v-if="socket" :socket="socket" />
 			<ArmyCards army="Imperial" v-if="areExtraPiecesAddedToBoard" />		
@@ -23,6 +24,7 @@
 				cardBack="/card-back.png"
 				currentCard="currentCard"
 				cards="playing"
+				:socket="socket"
 			/>
 			<DefeatedUnits v-if="allUnitsOnBoard" />
 		</div>
