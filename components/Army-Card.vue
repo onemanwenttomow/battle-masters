@@ -25,7 +25,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-	props: ["army"],
+	props: ["army", "socket"],
 	computed: {
 		...mapGetters([
 			'getArmy', 
@@ -121,11 +121,24 @@ export default {
             }
 		},
 		selected: function(e, card) {
-			if (e.target.classList.contains('can-be-attacked')) {
+			const userChosenArmy = this.getUserChosenArmy;
+			const twoPlayerGame = sessionStorage.getItem('player');
+			if (twoPlayerGame) {
+				console.log('card.army: ',card.army);
+				if (userChosenArmy === card.army) {
+					return;
+				}
+			}
 
+			if (e.target.classList.contains('can-be-attacked')) {
 				this.$store.commit('startAttack', {
 					unitUnderAttack: this.getPieceById(card.id)
 				});
+				this.socket.emit('startAttack', {
+					player: sessionStorage.getItem('player'),
+					roomId: sessionStorage.getItem('roomId'),
+					unitUnderAttack: this.getPieceById(card.id)
+				})
 				return;
 			} 
 			this.$store.commit('userSelected', {id: card.id})

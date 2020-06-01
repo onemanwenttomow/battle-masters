@@ -233,6 +233,19 @@ export default {
 			unitsInReach.length && unit[0].id !== 'canon' ? 
 				this.$store.commit('canBeAttacked', {unit, unitsInReach}) :
 				this.$store.commit('finishTurn', {id: piece.id})
+
+			unitsInReach.length && unit[0].id !== 'canon' ? 
+				this.socket.emit('canBeAttacked', {
+					player: sessionStorage.getItem('player'),
+					roomId: sessionStorage.getItem('roomId'),
+					unit, 
+					unitsInReach
+				}) :
+				this.socket.emit('finishTurn', {
+					player: sessionStorage.getItem('player'),
+					roomId: sessionStorage.getItem('roomId'),
+					id: piece.id
+				})
 		},
 		drop: function(e, row, col) {
 			this.$store.commit('pieceUserDragging', {id: null});

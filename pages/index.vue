@@ -16,8 +16,8 @@
 				:socket="socket"
 			/>
 			<ExtraGameTiles v-if="socket" :socket="socket" />
-			<ArmyCards army="Imperial" v-if="areExtraPiecesAddedToBoard" />		
-			<ArmyCards army="Chaos" v-if="areExtraPiecesAddedToBoard" />
+			<ArmyCards army="Imperial" v-if="areExtraPiecesAddedToBoard" :socket="socket"/>		
+			<ArmyCards army="Chaos" v-if="areExtraPiecesAddedToBoard" :socket="socket"/>
 			<TurnCards 
 				v-if="allUnitsOnBoard" 
 				:getPlayingCards="getPlayingCards" 
@@ -28,7 +28,7 @@
 			/>
 			<DefeatedUnits v-if="allUnitsOnBoard" />
 		</div>
-		<AttackArea v-if="getAttackModeStatus" />
+		<AttackArea v-if="getAttackModeStatus" :socket="socket"/>
 	</div>
 </template>
 

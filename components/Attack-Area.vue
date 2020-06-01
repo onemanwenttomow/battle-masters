@@ -65,6 +65,12 @@
 import { mapGetters } from 'vuex';
 
 export default {
+    computed: {
+		...mapGetters([
+        	'getUnitThatCanAttack', 'getUnitUnderAttack', 'getCurrentCard', 'getUserChosenArmy'
+        ])
+    },
+    props: ['socket'],
     data() {
 		return {
             attackingDie: [],
@@ -77,6 +83,8 @@ export default {
         const plusOneIncluded = this.getCurrentCard.ids.includes('plus1');
         let extraRoll = 0;
         plusOneIncluded && extraRoll++;
+        console.log('this.getUnitThatCanAttack[0]: ',this.getUnitThatCanAttack[0]);
+        console.log(' this.getUnitUnderAttack[0]: ', this.getUnitUnderAttack[0]);
         for (let i = 0; i < this.getUnitThatCanAttack[0].combatValue + extraRoll; i++) {
             this.attackingDie.push({
                 rolled: false,
@@ -90,6 +98,32 @@ export default {
                 value:  Math.floor(Math.random() * 5)
             });
         }
+
+        const twoPlayerGame = sessionStorage.getItem('player');
+        if (twoPlayerGame) {
+
+            if (twoPlayerGame === 'player1') {
+                this.socket.emit("attack area die setup", {
+                    player: sessionStorage.getItem('player'),
+                    roomId: sessionStorage.getItem('roomId'),
+                    defendingDie: this.defendingDie,
+                    attackingDie: this.attackingDie
+                })
+            } else {
+                this.socket.on("attack area die setup", ({defendingDie, attackingDie}) => {
+                    this.defendingDie = defendingDie;
+                    this.attackingDie = attackingDie;
+                });
+            }
+            this.socket.on('rollDie', ({die, i}) => {
+                die === "defendingDie" ? 
+                    this.defendingDie[i].rolled = true:
+                    this.attackingDie[i].rolled = true;
+                this.checkIfAllDieRolled();
+                this.damageUpdate();
+            });
+        }
+
     },
     methods: {
         dieRolled: function(rolled, num, value) {
@@ -100,7 +134,6 @@ export default {
                 this.defendingDie.filter(die => !die.rolled).length === 0) {
                 this.allDieRolled = true;
             }
-            
         },
         damageUpdate: function() {
             const totalDamage = this.attackingDie.filter(die => die.rolled && die.value <= 2).length;
@@ -112,21 +145,43 @@ export default {
         },
         endBattle: function() {
             this.$store.commit('battleOver', {damageDealt: this.damageDealt});
+            const twoPlayerGame = sessionStorage.getItem('player');
+            if (twoPlayerGame) {
+                this.socket.emit('battleOver', {
+                    player: sessionStorage.getItem('player'),
+                    roomId: sessionStorage.getItem('roomId'),
+                    damageDealt: this.damageDealt
+                });
+            }
         },
         rollDie: function(die, i) {
+            const twoPlayerGame = sessionStorage.getItem('player');
+            if (twoPlayerGame) {
+                const userChosenArmy = this.getUserChosenArmy;
+                const defendingDie = die === "defendingDie";
+                const attackingDie = die !== "defendingDie"
+                if (defendingDie && this.getUnitUnderAttack[0].army !== userChosenArmy) {
+                    return;
+                }
+                if (attackingDie && this.getUnitThatCanAttack[0].army !== userChosenArmy) {
+                    return;
+                }
+            }
             die === "defendingDie" ? 
                 this.defendingDie[i].rolled = true:
                 this.attackingDie[i].rolled = true;
+            if (twoPlayerGame) {
+                this.socket.emit("rollDie", {
+                    player: sessionStorage.getItem('player'),
+                    roomId: sessionStorage.getItem('roomId'),
+                    die, 
+                    i
+                });
+            }
             this.checkIfAllDieRolled();
             this.damageUpdate();
         }
-    },
-    computed: {
-		...mapGetters([
-        	'getUnitThatCanAttack', 'getUnitUnderAttack', 'getCurrentCard'
-        ])
-	},
-	
+    }
 };
 </script>
 

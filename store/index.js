@@ -144,6 +144,7 @@ const createStore = () => {
                 }
             },
             finishTurn(state, { id, canOgreStillMove }) {
+
                 state.armies = state.armies.map(unit => {
                     if (unit.id === id) {
                         return {
@@ -236,6 +237,7 @@ const createStore = () => {
                 });
             },
             canBeAttacked(state, { unit, unitsInReach }) {
+                console.log('unitsInReach, unit in Can Be Attacked!: ',unitsInReach, unit);
                 state.armies = state.armies.map(unit => {
                     return {
                         ...unit,

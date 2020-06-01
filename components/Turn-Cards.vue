@@ -43,8 +43,6 @@ export default {
 			});
 			this.socket.on('card flipped', ({card, i}) => {
 				const cardToFlip = this.shuffledPlayingCardsCopy[i];
-				console.log("card flipped!!!!!!" , card);
-				console.log('cardToFlip: ',cardToFlip);
 				this.handleNextCard(cardToFlip);
 			});
 		}
@@ -78,7 +76,6 @@ export default {
 			return a;
 		},
 		handleNextCard: function(card) {
-			console.log('card in handleNextCard: ',card);
 			this.shuffledPlayingCardsCopy
 
 			card.flipped = true;
@@ -92,16 +89,8 @@ export default {
 					const unit = this.getPieceById('grimorg');
 					unitsInReach.length && this.$store.commit('canBeAttacked', {unit, unitsInReach}); 
 				}
-				console.log('card in setTimeout: ',card);
 				this.shuffledPlayingCards.pop();
 				this.$store.commit(this.currentCard, { card, numberOfOgreCardsLeft: this.shuffledPlayingCards.length });
-				// if (this.cards === 'playing') {
-				// 	this.socket.emit('currentCard', {
-				// 		card, numberOfOgreCardsLeft: 
-				// 		this.shuffledPlayingCards.length,
-				// 		roomId: sessionStorage.getItem('roomId'),
-				// 	});
-				// }
 				if (this.shuffledPlayingCards.length === 0 && this.cards !== "ogre") {
 					this.shuffleCards();
 				}

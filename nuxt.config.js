@@ -72,7 +72,11 @@ export default {
                         { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"},
                         { finishMove: "finishMove"},
                         { updateUnitPosition: "updateUnitPosition"},
-                        { currentCard: "currentCard" }
+                        { currentCard: "currentCard" },
+                        { startAttack: "startAttack" },
+                        { canBeAttacked: "canBeAttacked" },
+                        { finishTurn: "finishTurn" },
+                        { battleOver: "battleOver" }
                     ]
                 }
             },
@@ -86,7 +90,11 @@ export default {
                         { allExtraPiecesAddedToBoard: "allExtraPiecesAddedToBoard"},
                         { finishMove: "finishMove"},
                         { updateUnitPosition: "updateUnitPosition"},
-                        { currentCard: "currentCard" }
+                        { currentCard: "currentCard" },
+                        { startAttack: "startAttack" },
+                        { canBeAttacked: "canBeAttacked" },
+                        { finishTurn: "finishTurn" },
+                        { battleOver: "battleOver" }
                     ]
                 }
             }
