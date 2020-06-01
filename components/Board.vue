@@ -91,21 +91,16 @@ export default {
 		this.miniMapHeight = this.$refs.boardsize.clientHeight + "px";
 		this.miniMapWidth = this.$refs.boardsize.clientWidth + "px";
 
-		console.log('thos.getUserChosenArmy: ',this.getUserChosenArmy);
 		this.socket.on('other player dropped tile', ({id, row, col}) => {
-			console.log('id, row, col: ',id, row, col);
-			console.log('this.getExtraTiles: ',this.getExtraTiles);
 			const extraTiles1 = this.getExtraTiles.map(tile => tile.front.id);
 			const extraTiles2 = this.getExtraTiles.map(tile => tile.back.id);
 			const extraTiles = [...extraTiles1, ...extraTiles2];
-			console.log('extraTiles: ',extraTiles.includes(id));
 			const elem = document.querySelectorAll(`.${row}`)[col];
 			const piece = document.getElementById(id);
 			if (extraTiles.includes(id)) {
 				this.addExtraTileToBoard(piece, elem);
 			} else {
 				this.addUnitToBoard(piece, elem, row, col);
-				console.log('sessionStorage.getItem("player"): ',sessionStorage.getItem("player"));
 				this.socket.emit("updateUnitPosition", {
 					id: piece.id, 
 					player: sessionStorage.getItem('player'),

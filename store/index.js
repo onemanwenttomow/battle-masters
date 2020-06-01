@@ -30,7 +30,6 @@ const createStore = () => {
         },
         mutations: {
             startGame(state, {army = ""}) {
-                console.log('army in VUEX: ',army);
                 state.gameStarted = true;
                 state.chosenArmy = army;
                 $nuxt.$router.push('/');
@@ -107,6 +106,14 @@ const createStore = () => {
                 state.canonCardsOnBoard = [];
                 state.canonPath = [];
             },
+            skipTurn(state) {
+                state.armies = state.armies.map(unit => {
+                    return {
+                        ...unit, 
+                        finishedTurn: true
+                    }
+                })
+            },
             currentOgreCard(state, { card, numberOfOgreCardsLeft }) {
                 state.armies = state.armies.map(unit => {
                     if (unit.id === "grimorg") {
@@ -124,7 +131,6 @@ const createStore = () => {
                 state.currentOgreCard = card;
             },
             finishMove(state, { id }) {
-                console.log('finishMove!: ',id);
                 if (id === "grimorg") {
                     state.currentOgreCard.cardUsed = true;
                 } else {
@@ -237,7 +243,6 @@ const createStore = () => {
                 });
             },
             canBeAttacked(state, { unit, unitsInReach }) {
-                console.log('unitsInReach, unit in Can Be Attacked!: ',unitsInReach, unit);
                 state.armies = state.armies.map(unit => {
                     return {
                         ...unit,
@@ -292,7 +297,6 @@ const createStore = () => {
                 state.canonPlayingCards = cards;
             },
             updateUnitPosition(state, payload) {
-                console.log('updateUnitPosition!!!!:', payload);
                 let oddOrEven;
                 payload.positions.row % 2 === 0
                     ? (oddOrEven = -1)

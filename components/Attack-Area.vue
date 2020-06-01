@@ -83,8 +83,6 @@ export default {
         const plusOneIncluded = this.getCurrentCard.ids.includes('plus1');
         let extraRoll = 0;
         plusOneIncluded && extraRoll++;
-        console.log('this.getUnitThatCanAttack[0]: ',this.getUnitThatCanAttack[0]);
-        console.log(' this.getUnitUnderAttack[0]: ', this.getUnitUnderAttack[0]);
         for (let i = 0; i < this.getUnitThatCanAttack[0].combatValue + extraRoll; i++) {
             this.attackingDie.push({
                 rolled: false,

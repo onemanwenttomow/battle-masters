@@ -10,7 +10,6 @@
 				@click="finishMove(selectedUnit.id)"
 				class="skip"
 			>Skip Move</div>
-			<!-- <div v-else>Unit can still attack</div> -->
 		</div>
     </div>
 </template>

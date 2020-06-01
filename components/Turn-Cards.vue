@@ -12,6 +12,9 @@
 				<div class="side back" :style="{ backgroundImage: `url(${card.img})`}"></div>
 			</div>
 		</div>
+		<div v-if="cards === 'playing'" @click="skipTurn">
+			Skip turn
+		</div>
 	</fragment>
 </template>
 
@@ -30,7 +33,9 @@ export default {
 	computed: mapGetters([
 		'checkIfUnitsInReach',
 		'getPieceById',
-		'getActiveUnitsPositions'
+		'getActiveUnitsPositions',
+		'getCurrentCard',
+		'getUserChosenArmy'
     ]),
 	props: ['getPlayingCards', 'cardBack', 'currentCard', 'cards', 'socket'],
 	mounted: function() {
@@ -47,8 +52,35 @@ export default {
 				this.handleNextCard(cardToFlip);
 			});
 		}
+
+		if (this.cards === 'ogre') {
+			this.socket.on('ogreCardsFromServer', ({shuffledPlayingCardsCopy, shuffledPlayingCards}) => {
+				if (shuffledPlayingCardsCopy) {
+					this.shuffledPlayingCardsCopy = shuffledPlayingCardsCopy;
+					this.shuffledPlayingCards = shuffledPlayingCards
+				}
+			});
+			this.socket.on('ogre card flipped', ({card, i}) => {
+				const cardToFlip = this.shuffledPlayingCardsCopy[i];
+				this.handleNextCard(cardToFlip);
+			});
+		}
 	},
 	methods: {
+		skipTurn: function() {
+			const twoPlayerGame = sessionStorage.getItem('player');
+			if (!this.getCurrentCard.ids) {
+				return;
+			}
+			if (twoPlayerGame) {
+				const unitToCheck = this.getCurrentCard.ids[0];
+				const armyToCheck = this.getPieceById(unitToCheck)[0].army;
+				if (this.getUserChosenArmy !== armyToCheck) {
+					return;
+				}
+			}
+			this.$store.commit('skipTurn');
+		},
 		shuffleCards: function() {
 			this.shuffledPlayingCards = this.shuffle(this.getPlayingCards.slice());
 			this.shuffledPlayingCardsCopy = this.shuffledPlayingCards.slice().map(card => {
@@ -57,8 +89,12 @@ export default {
 					flipped: false
 				}
 			});
+			let cardsToEmit;
+			this.cards === 'playing' ?
+				cardsToEmit = "playingCards" : 
+				cardsToEmit = "ogreCards"
 			if (sessionStorage.getItem('player') === 'player1' && this.cards === "playing") {
-				this.socket.emit('playingCards', {
+				this.socket.emit(cardsToEmit, {
 					shuffledPlayingCardsCopy: this.shuffledPlayingCardsCopy,
 					shuffledPlayingCards: this.shuffledPlayingCards,
 					player: sessionStorage.getItem('player'),
@@ -98,10 +134,12 @@ export default {
 			}, 1000)
 		},
         nextCard: function(card, i) {
-			console.log('this.getActiveUnitsPositions: ',this.getActiveUnitsPositions);
-			console.log('card in next card: ',card);
 			if (!this.canPickNextCard || this.getActiveUnitsPositions.length) { return; }
-			this.socket.emit("card flipped", {
+			let cardToFlip;
+			this.cards === 'playing' ?
+				cardToFlip = "card flipped" : 
+				cardToFlip = "ogre card flipped"
+			this.socket.emit(cardToFlip, {
 				player: sessionStorage.getItem('player'),
 				roomId: sessionStorage.getItem('roomId'),
 				card, 
