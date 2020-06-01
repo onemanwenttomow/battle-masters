@@ -8,7 +8,7 @@
 				:class="card.flipped ? 'flipcard' : ''"
 				:style="card.flipped ? [{ zIndex: `-${i}`}] : ''"
 			>
-				<div class="side" :style="{ backgroundImage: `url(${cardBack})`}" @click="nextCard(card)"></div>
+				<div class="side" :style="{ backgroundImage: `url(${cardBack})`}" @click="nextCard(card, i)"></div>
 				<div class="side back" :style="{ backgroundImage: `url(${card.img})`}"></div>
 			</div>
 		</div>
@@ -34,16 +34,20 @@ export default {
 	props: ['getPlayingCards', 'cardBack', 'currentCard', 'cards', 'socket'],
 	mounted: function() {
 		this.shuffleCards();
-		this.socket.on('playingCardsFromServer', ({playingCards}) => {
-			console.log('playingCards in socket on playingCards: ',playingCards);
-			if (playingCards) {
-				this.shuffledPlayingCardsCopy = playingCards;
-			}
-		});
-		this.socket.on('card flipped', ({card}) => {
-			console.log("card flipped!!!!!!" , card);
-			this.nextCard(this.shuffledPlayingCardsCopy[this.shuffledPlayingCardsCopy.length - 1]);
-		});
+		if (this.cards === 'playing') {
+			this.socket.on('playingCardsFromServer', ({shuffledPlayingCardsCopy, shuffledPlayingCards}) => {
+				if (shuffledPlayingCardsCopy) {
+					this.shuffledPlayingCardsCopy = shuffledPlayingCardsCopy;
+					this.shuffledPlayingCards = shuffledPlayingCards
+				}
+			});
+			this.socket.on('card flipped', ({card, i}) => {
+				const cardToFlip = this.shuffledPlayingCardsCopy[i];
+				console.log("card flipped!!!!!!" , card);
+				console.log('cardToFlip: ',cardToFlip);
+				this.handleNextCard(cardToFlip);
+			});
+		}
 	},
 	methods: {
 		shuffleCards: function() {
@@ -56,7 +60,8 @@ export default {
 			});
 			if (sessionStorage.getItem('player') === 'player1' && this.cards === "playing") {
 				this.socket.emit('playingCards', {
-					playingCards: this.shuffledPlayingCardsCopy,
+					shuffledPlayingCardsCopy: this.shuffledPlayingCardsCopy,
+					shuffledPlayingCards: this.shuffledPlayingCards,
 					player: sessionStorage.getItem('player'),
 					roomId: sessionStorage.getItem('roomId'),
 				});
@@ -71,18 +76,14 @@ export default {
 				a[j] = x;
 			}
 			return a;
-        },
-        nextCard: function(card) {
-			if (!this.canPickNextCard) {
-				return;
-			}
+		},
+		handleNextCard: function(card) {
+			console.log('card in handleNextCard: ',card);
+			this.shuffledPlayingCardsCopy
+
 			card.flipped = true;
 			this.canPickNextCard = false;
-			this.socket.emit("card flipped", {
-				player: sessionStorage.getItem('player'),
-				roomId: sessionStorage.getItem('roomId'),
-				card
-			})
+			
 			setTimeout(() => {
 				this.canPickNextCard = true;
 				const card = this.shuffledPlayingCards[this.shuffledPlayingCards.length -1];
@@ -91,17 +92,31 @@ export default {
 					const unit = this.getPieceById('grimorg');
 					unitsInReach.length && this.$store.commit('canBeAttacked', {unit, unitsInReach}); 
 				}
+				console.log('card in setTimeout: ',card);
 				this.shuffledPlayingCards.pop();
 				this.$store.commit(this.currentCard, { card, numberOfOgreCardsLeft: this.shuffledPlayingCards.length });
-				this.socket.emit('currentCard', {
-					card, numberOfOgreCardsLeft: 
-					this.shuffledPlayingCards.length,
-					roomId: sessionStorage.getItem('roomId'),
-				});
+				// if (this.cards === 'playing') {
+				// 	this.socket.emit('currentCard', {
+				// 		card, numberOfOgreCardsLeft: 
+				// 		this.shuffledPlayingCards.length,
+				// 		roomId: sessionStorage.getItem('roomId'),
+				// 	});
+				// }
 				if (this.shuffledPlayingCards.length === 0 && this.cards !== "ogre") {
 					this.shuffleCards();
 				}
 			}, 1000)
+		},
+        nextCard: function(card, i) {
+			console.log('card in next card: ',card);
+			if (!this.canPickNextCard) { return; }
+			this.socket.emit("card flipped", {
+				player: sessionStorage.getItem('player'),
+				roomId: sessionStorage.getItem('roomId'),
+				card, 
+				i
+			});
+			this.handleNextCard(card);
         }
 	}
 };
