@@ -62,7 +62,7 @@ export default {
     io: {
         sockets: [
             {
-                name: "local",
+                name: "heroku",
                 url: "https://battlemasters-sockets-server.herokuapp.com/",
                 default: true, 
                 vuex: {
@@ -81,7 +81,7 @@ export default {
                 }
             },
             {
-                name: "heroku",
+                name: "local",
                 url: "localhost:8080",
                 default: true, 
                 vuex: {
